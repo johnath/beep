@@ -1,0 +1,56 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: beep 1.2.2-12\n"
+"Report-Msgid-Bugs-To: beep@packages.debian.org\n"
+"POT-Creation-Date: 2004-12-06 11:56+0100\n"
+"PO-Revision-Date: 2004-12-06 12:08+0100\n"
+"Last-Translator: Stefano Melchior <stefano.melchior@openlabs.it>\n"
+"Language-Team: Italian <debian-l10n-italian@lists.debian.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: select
+#. Choices
+#: ../templates:3
+msgid ""
+"suid root for all, suid root with only group audio executable, not suid at "
+"all"
+msgstr ""
+"suid root per tutti, suid root solamente con gli eseguibili audio del "
+"gruppo, nient'affatto suid"
+
+#. Type: select
+#. Description
+#: ../templates:5
+msgid "How to handle suid root for beep program?"
+msgstr "Come gestire suid root per il programma beep?"
+
+#. Type: select
+#. Description
+#: ../templates:5
+msgid ""
+"beep must be run as root since it needs to access the speaker hardware. "
+"There are several posibilities to make the program usable:  Either only for "
+"root (no suid bit at all), executable only by users of the group audio, or "
+"usable for all."
+msgstr ""
+"beep deve essere lanciato come root dato che ha l'esigenza di accedere "
+"fisicamente agli autoparlanti. Ci sono diverse possibilità di rendere il "
+"programma fruibile: o solamente a root (non si usa affatto il bit suid), o "
+"solamente agli utenti del gruppo audio, oppure a tutti."
+
+#. Type: select
+#. Description
+#: ../templates:5
+msgid ""
+"Because each program that is suid root is security risk this is not done by "
+"default.  However, the program is quite small (~150 lines of code) and is "
+"fairly easy to verify the safety of the code yourself, if you don't trust my "
+"judgement."
+msgstr ""
+"Dal momento che ogni programma che usa suid root è un rischio per la "
+"sicurezza, questo non viene abilitato come opzione predefinita. Comunque, il "
+"programma abbastanza piccolo (circa 150 linee di codice) e semplice da "
+"permettere la propria verifica della sicurezza del codice, qualora non ci si "
+"fidasse del giudizio dell'autore."

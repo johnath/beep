@@ -1,0 +1,92 @@
+#!/usr/bin/make -f
+# debian/rules file for beep
+
+PACKAGE = beep
+TMP = $(CURDIR)/debian/$(PACKAGE)
+
+FLAGS = -g -Wall
+INSTALL = install
+INSTALL_FILE    = $(INSTALL) -p    -oroot -groot -m644
+INSTALL_PROGRAM = $(INSTALL) -p    -oroot -groot -m755
+INSTALL_SCRIPT  = $(INSTALL) -p    -oroot -groot -m755
+INSTALL_DIR     = $(INSTALL) -p -d -oroot -groot -m755
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	FLAGS += -O0
+else
+	FLAGS += -O2
+endif
+ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+	INSTALL_PROGRAM += -s
+	STRIP = true
+endif
+
+
+clean:
+	$(checkdir)
+	$(checkroot)
+	-rm -rf $(TMP) debian/substvars debian/files build-stamp
+	-$(MAKE) clean
+
+
+build: build-stamp
+build-stamp:
+	$(checkdir)
+	$(MAKE) FLAGS="$(FLAGS)"
+	touch build-stamp
+
+
+install: build
+	$(checkdir)
+	$(checkroot)
+	-rm -rf $(TMP) debian/substvars
+	$(INSTALL_DIR) $(TMP)
+	cd $(TMP) && $(INSTALL_DIR) usr/bin usr/share/man/man1 \
+		usr/share/doc/$(PACKAGE)
+	$(MAKE) install INSTALL_DIR=$(TMP)/usr/bin \
+		 MAN_DIR=$(TMP)/usr/share/man/man1
+	-test "$(STRIP)" = "true" && \
+		strip --remove-section=.comment --remove-section=.note \
+			--strip-unneeded $(TMP)/usr/bin/beep
+	chown root.audio $(TMP)/usr/bin/beep 
+	$(INSTALL_FILE) CREDITS README $(TMP)/usr/share/doc/$(PACKAGE)
+	$(INSTALL_FILE) CHANGELOG $(TMP)/usr/share/doc/$(PACKAGE)/changelog
+	cd $(TMP)/usr/share/doc/$(PACKAGE) && gzip -9 changelog README
+
+
+# Build architecture-independent files here.
+binary-indep: build
+# We have nothing to do by default.
+
+
+binary-arch: build install
+	$(checkdir)
+	$(checkroot)
+	$(INSTALL_DIR) $(TMP)/DEBIAN
+	$(INSTALL_FILE) debian/README.Debian debian/copyright \
+		$(TMP)/usr/share/doc/$(PACKAGE)
+	$(INSTALL_FILE) debian/changelog \
+		$(TMP)/usr/share/doc/$(PACKAGE)/changelog.Debian
+	gzip -9 $(TMP)/usr/share/doc/$(PACKAGE)/changelog.Debian
+	$(INSTALL_SCRIPT) debian/postinst debian/postrm debian/config \
+		$(TMP)/DEBIAN
+	po2debconf debian/templates > $(TMP)/DEBIAN/templates
+	dpkg-shlibdeps -Tdebian/substvars -dDepends $(TMP)/usr/bin/beep
+	dpkg-gencontrol -ldebian/changelog -isp -Tdebian/substvars -p$(PACKAGE) \
+		-P$(TMP)
+	cd $(TMP) && find * -type f ! -regex '^DEBIAN/.*' -print0 | \
+		xargs -r0 md5sum > DEBIAN/md5sums
+	dpkg --build $(TMP) ..
+
+
+binary: binary-arch
+
+define checkdir
+	test -f debian/rules
+endef
+
+define checkroot
+	test root = "`whoami`"
+endef
+
+.PHONY: clean build install binary-arch binary

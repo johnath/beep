@@ -1,0 +1,67 @@
+#
+#    Translators, if you are not familiar with the PO format, gettext
+#    documentation is worth reading, especially sections dedicated to
+#    this format, e.g. by running:
+#         info -n '(gettext)PO Files'
+#         info -n '(gettext)Header Entry'
+#
+#    Some information specific to po-debconf are available at
+#            /usr/share/doc/po-debconf/README-trans
+#         or http://www.debian.org/intl/l10n/po-debconf/README-trans
+#
+#    Developers do not need to manually edit POT or PO files.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: beep 1.2.2-11\n"
+"Report-Msgid-Bugs-To: beep@packages.debian.org\n"
+"POT-Creation-Date: 2004-12-06 11:56+0100\n"
+"PO-Revision-Date: 2003-09-07 20:58+0100\n"
+"Last-Translator: Tim Vandermeersch <qber66@skolelinux.no>\n"
+"Language-Team: dutch <debian-l10n-dutch@lists.debian.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: select
+#. Choices
+#: ../templates:3
+msgid ""
+"suid root for all, suid root with only group audio executable, not suid at "
+"all"
+msgstr ""
+"suid root voor alles, suid root enkel met groep audio uitvoerbare bestanden, "
+"geen suid"
+
+#. Type: select
+#. Description
+#: ../templates:5
+msgid "How to handle suid root for beep program?"
+msgstr "Hoe suid root af te handelen voor beep programma?"
+
+#. Type: select
+#. Description
+#: ../templates:5
+msgid ""
+"beep must be run as root since it needs to access the speaker hardware. "
+"There are several posibilities to make the program usable:  Either only for "
+"root (no suid bit at all), executable only by users of the group audio, or "
+"usable for all."
+msgstr ""
+"beep dient als root te draaien omdat het toegang nodig heeft tot de "
+"luidspreker hardware. Er zijn verschillende mogelijkheden om het "
+"programmabruikbaar te maken: Ofwel enkel voor root (geen suid bit), enkel "
+"uitvoerbaar door gebruikers in de audio groep, of onbruikbaar voor iedereen."
+
+#. Type: select
+#. Description
+#: ../templates:5
+msgid ""
+"Because each program that is suid root is security risk this is not done by "
+"default.  However, the program is quite small (~150 lines of code) and is "
+"fairly easy to verify the safety of the code yourself, if you don't trust my "
+"judgement."
+msgstr ""
+"Omdat elk suid root programma een veiligheids risico is wordt dit niet "
+"standaard gedaan. Het programma is vrij klein (~150 regels code) en is "
+"redelijk makkelijk om zelf te verifiëren, als u mijn oordeel niet vertrouwd."

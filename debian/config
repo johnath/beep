@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+# how to suid the beep program
+db_input medium beep/suid_option || true
+db_go
+
+exit 0

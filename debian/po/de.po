@@ -1,0 +1,68 @@
+#
+#    Translators, if you are not familiar with the PO format, gettext
+#    documentation is worth reading, especially sections dedicated to
+#    this format, e.g. by running:
+#         info -n '(gettext)PO Files'
+#         info -n '(gettext)Header Entry'
+#
+#    Some information specific to po-debconf are available at
+#            /usr/share/doc/po-debconf/README-trans
+#         or http://www.debian.org/intl/l10n/po-debconf/README-trans
+#
+#    Developers do not need to manually edit POT or PO files.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: beep 1.2.2-10\n"
+"Report-Msgid-Bugs-To: beep@packages.debian.org\n"
+"POT-Creation-Date: 2004-12-06 11:56+0100\n"
+"PO-Revision-Date: 2003-03-08 17:54+0100\n"
+"Last-Translator: Gerfried Fuchs <alfie@debian.org>\n"
+"Language-Team: German <de@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: select
+#. Choices
+#: ../templates:3
+msgid ""
+"suid root for all, suid root with only group audio executable, not suid at "
+"all"
+msgstr ""
+"suid root für alle, suid root nur für Gruppe audio ausführbar, nicht suid "
+"gesetzt"
+
+#. Type: select
+#. Description
+#: ../templates:5
+msgid "How to handle suid root for beep program?"
+msgstr "Wie soll beep suid root gesetzt werden?"
+
+#. Type: select
+#. Description
+#: ../templates:5
+msgid ""
+"beep must be run as root since it needs to access the speaker hardware. "
+"There are several posibilities to make the program usable:  Either only for "
+"root (no suid bit at all), executable only by users of the group audio, or "
+"usable for all."
+msgstr ""
+"beep muss als root ausgeführt werden, da es auf den Lautsprecher zugreifen "
+"muss. Es gibt mehrere Möglichkeiten, das Programm benutzbar zu machen: "
+"Entweder nur für root (gar kein suid), benutzbar von den Mitgliedern der "
+"Gruppe audio, oder für alle benutzbar."
+
+#. Type: select
+#. Description
+#: ../templates:5
+msgid ""
+"Because each program that is suid root is security risk this is not done by "
+"default.  However, the program is quite small (~150 lines of code) and is "
+"fairly easy to verify the safety of the code yourself, if you don't trust my "
+"judgement."
+msgstr ""
+"Da jedes Programm, das suid root gesetzt ist, ein potentielles "
+"Sicherheitsproblem ist, wird dies daher nicht automatisch durchgeführt. Das "
+"Programm ist jedoch recht kurz (~150 Zeilen Code) und kann von Ihnen sehr "
+"leicht geprüft werden, falls Sie meiner Einschätzung nicht vertrauen."

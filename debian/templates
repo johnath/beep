@@ -1,0 +1,14 @@
+Template: beep/suid_option
+Type: select
+_Choices: suid root for all, suid root with only group audio executable, not suid at all
+Default: suid root with only group audio executable
+_Description: How to handle suid root for beep program?
+ beep must be run as root since it needs to access the speaker hardware.
+ There are several posibilities to make the program usable:  Either only
+ for root (no suid bit at all), executable only by users of the group
+ audio, or usable for all.
+ .
+ Because each program that is suid root is security risk this is not done
+ by default.  However, the program is quite small (~150 lines of code) and
+ is fairly easy to verify the safety of the code yourself, if you don't
+ trust my judgement.

@@ -1,0 +1,43 @@
+#!/bin/sh -e
+# postinst for beep
+
+# Source debconf library.
+if [ -e /usr/share/debconf/confmodule ]; then
+	. /usr/share/debconf/confmodule
+fi
+
+if [ "$1" != configure ]; then
+	exit 0
+fi
+
+suid=false
+if [ -e /usr/share/debconf/confmodule ]; then
+	db_get beep/suid_option
+	suid="$RET"
+fi
+
+# repair typo in option (see #135866)
+if [ "$suid" = "suid root with only group audio executeable" ] ; then
+	db_set beep/suid_option "suid root with only group audio executable"
+	suid="suid root with only group audio executable"
+fi
+
+if [ -x /usr/sbin/dpkg-statoverride ] ; then
+	if ! dpkg-statoverride --list /usr/bin/beep >/dev/null ; then
+		if [ "$suid" = "suid root for all" ] ; then
+			chmod 4755 /usr/bin/beep
+		elif [ "$suid" = "suid root with only group audio executable" ] ; then
+			chmod 4754 /usr/bin/beep
+		elif [ "$suid" = "not suid at all" ] ; then
+			chmod 0755 /usr/bin/beep
+		fi
+	fi
+else
+	if [ "$suid" = "suid root for all" ] ; then
+		chmod 4755 /usr/bin/beep
+	elif [ "$suid" = "suid root with only group audio executable" ] ; then
+		chmod 4754 /usr/bin/beep
+	elif [ "$suid" = "not suid at all" ] ; then
+		chmod 0755 /usr/bin/beep
+	fi
+fi

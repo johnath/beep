@@ -218,11 +218,13 @@ void play_beep(beep_parms_t parms) {
   int i; /* loop counter */
 
   /* try to snag the console */
-  if((console_fd = open("/dev/console", O_WRONLY)) == -1) {
-    fprintf(stderr, "Could not open /dev/console for writing.\n");
-    printf("\a");  /* Output the only beep we can, in an effort to fall back on usefulness */
-    perror("open");
-    exit(1);
+  if((console_fd = open("/dev/tty0", O_WRONLY)) == -1) {
+    if((console_fd = open("/dev/vc/0", O_WRONLY)) == -1) {
+      fprintf(stderr, "Could not open /dev/tty0 or /dev/vc/0 for writing.\n");
+      printf("\a");  /* Output the only beep we can, in an effort to fall back on usefulness */
+      perror("open");
+      exit(1);
+    }
   }
   
   /* Beep */

@@ -1,0 +1,17 @@
+Source: beep
+Section: sound
+Priority: optional
+Maintainer: Gerfried Fuchs <alfie@debian.org>
+Build-Depends: po-debconf
+Standards-Version: 3.6.1
+
+Package: beep
+Architecture: any
+Depends: ${shlibs:Depends}, debconf (>= 0.5)
+Description: Advanced pc-speaker beeper
+ beep does what you'd expect: it beeps. But unlike printf "\a" beep allows
+ you to control pitch, duration, and repetitions. Its job is to live inside
+ shell/perl scripts and allow more granularity than one has otherwise. It is
+ controlled completely through command line options. It's not supposed to be
+ complex, and it isn't - but it makes system monitoring (or whatever else it
+ gets hacked into) much more informative.

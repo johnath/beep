@@ -1,0 +1,141 @@
+beep (1.2.2-14) unstable; urgency=medium
+
+  * The "l10n R us" release.
+  * Added the following translations of the debconf files:
+    - Japanese, by Hideki Yamane (closes: #242415)
+    - Catalan, by Miguel Gea Milvaques (closes: #284151)
+    Thanks to all of them.
+
+ -- Gerfried Fuchs <alfie@debian.org>  Mon, 06 Dec 2004 12:10:11 +0100
+
+beep (1.2.2-13) unstable; urgency=low
+
+  * Added Italian debconf file from Stefano Melchior.
+
+ -- Gerfried Fuchs <alfie@debian.org>  Mon, 22 Mar 2004 21:50:36 +0100
+
+beep (1.2.2-12) unstable; urgency=low
+
+  * Added Dutch debconf file from Tim Vandermeersch (closes: #209118)
+  * Updated Russian template, thanks to Ilgiz Kalmetev.
+  * Updated to policy version 3.6.1, no changes needed.
+  * Switched to utf8 for the changelog.Debian.
+
+ -- Gerfried Fuchs <alfie@debian.org>  Thu, 02 Oct 2003 11:35:43 +0000
+
+beep (1.2.2-11) unstable; urgency=low
+
+  * Added the following translations of the debconf files:
+    - French, by Daniel Déchelotte (closes: #185067)
+    - Brazilian Portuguese, by Andre Luis Lopes (closes: #184955)
+    Thanks to all of them.
+
+ -- Gerfried Fuchs <alfie@debian.org>  Mon, 17 Mar 2003 16:23:03 +0100
+
+beep (1.2.2-10) unstable; urgency=low
+
+  * debian/rules:
+    - converted to po-debconf
+    - generalized the file a little bit more
+  * debian/control:
+    - updated to policy version 3.5.8, no changes needed.
+
+ -- Gerfried Fuchs <alfie@debian.org>  Sat, 08 Mar 2003 18:06:20 +0100
+
+beep (1.2.2-9) unstable; urgency=low
+
+  * Removed doubled sentence in english debconf templates file, and rewrote
+    parts of sentences in the german one.
+
+ -- Gerfried Fuchs <alfie@debian.org>  Thu, 24 Oct 2002 17:00:19 +0200
+
+beep (1.2.2-8) unstable; urgency=low
+
+  * Fixed typos in german templates.de file (closes: #163176). Thanks for
+    noticing them, Christian (although I won't remove the first , -- it's
+    there for rethorical reasons).
+  * Removed /usr/doc -> /usr/share/doc handling from maintainer scripts.
+
+ -- Gerfried Fuchs <alfie@debian.org>  Thu, 03 Oct 2002 11:59:05 +0200
+
+beep (1.2.2-7) unstable; urgency=low
+
+  * Updated to policy 3.5.7: support for DEB_BUILD_OPTIONS added.
+
+ -- Gerfried Fuchs <alfie@debian.org>  Sun, 08 Sep 2002 21:27:23 +0200
+
+beep (1.2.2-6) unstable; urgency=low
+
+  * Corrected Goswin's surname in previous changelog entry (sorry!).
+      (closes: #157900)
+
+ -- Gerfried Fuchs <alfie@debian.org>  Sat, 24 Aug 2002 15:59:57 +0200
+
+beep (1.2.2-5) unstable; urgency=low
+
+  * Applied devfs support patch from Goswin Brederlow (closes: #148884)
+
+ -- Gerfried Fuchs <alfie@debian.org>  Tue, 13 Aug 2002 21:27:56 +0200
+
+beep (1.2.2-4) unstable; urgency=high
+
+  * Missing Build-Depends: debconf-utils -- thanks, lamont (closes: #145547)
+
+ -- Gerfried Fuchs <alfie@debian.org>  Thu, 02 May 2002 16:18:22 +0200
+
+beep (1.2.2-3) unstable; urgency=high
+
+  * Install postrm file, too (no idea how I missed that, stupid me...)
+  * Installed only main debconf templates file, didn't merge them :-((  Do it
+    now -- no other changes, would be nice to have the translation in woody.
+
+ -- Gerfried Fuchs <alfie@debian.org>  Tue, 30 Apr 2002 20:24:20 +0200
+
+beep (1.2.2-2) unstable; urgency=medium
+
+  * Open /dev/tty0 instead of /dev/console (closes: #134015)
+
+ -- Gerfried Fuchs <alfie@debian.org>  Tue, 23 Apr 2002 17:33:29 +0200
+
+beep (1.2.2-1) unstable; urgency=low
+
+  * New upstream release
+  * printf("\a") now if it can't open /dev/console (closes: #134466)
+  * Put a sane paragraph into the copyright file, not only the location of the
+    GPL on Debian Systems.
+
+ -- Gerfried Fuchs <alfie@debian.org>  Tue, 02 Apr 2002 08:21:36 +0200
+
+beep (1.2.1-5) unstable; urgency=low
+
+  * Updated watchfile to uscan version=2.
+
+ -- Gerfried Fuchs <alfie@debian.org>  Mon, 18 Mar 2002 11:30:31 +0100
+
+beep (1.2.1-4) unstable; urgency=medium
+
+  * Added russion templates file -- thanks to Ilgiz Kalmetev (closes: #137619)
+  * changed from char to int to make it work on systems where char is unsigned
+    -- thanks to Daniel Eisenbud (closes: #136281) --> urgency reason
+
+ -- Gerfried Fuchs <alfie@debian.org>  Mon, 11 Mar 2002 12:52:08 +0100
+
+beep (1.2.1-3) unstable; urgency=low
+
+  * Rewrote the templates file with hints from JoeyH, dancer and Francesco --
+    thanks, dudes (closes: #135866, #134811)
+  * Cleaned up rules file a little bit.
+
+ -- Gerfried Fuchs <alfie@debian.org>  Wed, 27 Feb 2002 12:47:54 +0100
+
+beep (1.2.1-2) unstable; urgency=low
+
+  * Un-debhepler-ized rules file.
+
+ -- Gerfried Fuchs <alfie@debian.org>  Wed, 13 Feb 2002 13:15:33 +0100
+
+beep (1.2.1-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Gerfried Fuchs <alfie@debian.org>  Fri, 08 Feb 2002 12:38:28 +0100
