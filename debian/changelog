@@ -1,3 +1,10 @@
+beep (1.2.2-15) unstable; urgency=high
+
+  * Added additional debconf translation:
+    - Czech by Miroslav Kure (closes: #293000)
+
+ -- Gerfried Fuchs <alfie@debian.org>  Thu, 12 May 2005 10:18:50 +0200
+
 beep (1.2.2-14) unstable; urgency=medium
 
   * The "l10n R us" release.

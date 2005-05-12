@@ -1,0 +1,67 @@
+#
+#    Translators, if you are not familiar with the PO format, gettext
+#    documentation is worth reading, especially sections dedicated to
+#    this format, e.g. by running:
+#         info -n '(gettext)PO Files'
+#         info -n '(gettext)Header Entry'
+#
+#    Some information specific to po-debconf are available at
+#            /usr/share/doc/po-debconf/README-trans
+#         or http://www.debian.org/intl/l10n/po-debconf/README-trans
+#
+#    Developers do not need to manually edit POT or PO files.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: beep\n"
+"Report-Msgid-Bugs-To: beep@packages.debian.org\n"
+"POT-Creation-Date: 2004-12-06 11:56+0100\n"
+"PO-Revision-Date: 2005-01-31 17:13+0100\n"
+"Last-Translator: Miroslav Kure <kurem@debian.cz>\n"
+"Language-Team: Czech <provoz@debian.cz>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: select
+#. Choices
+#: ../templates:3
+msgid ""
+"suid root for all, suid root with only group audio executable, not suid at "
+"all"
+msgstr ""
+"suid root pro v¹echny, suid root spustitelný skupinou audio, bez suid bitu"
+
+#. Type: select
+#. Description
+#: ../templates:5
+msgid "How to handle suid root for beep program?"
+msgstr "Jak nastavit suid root bit pro program beep?"
+
+#. Type: select
+#. Description
+#: ../templates:5
+msgid ""
+"beep must be run as root since it needs to access the speaker hardware. "
+"There are several posibilities to make the program usable:  Either only for "
+"root (no suid bit at all), executable only by users of the group audio, or "
+"usable for all."
+msgstr ""
+"beep musí bì¾et pod u¾ivatelem root, proto¾e musí mít pøístup ke zvukovému "
+"hardwaru. Existuje nìkolik mo¾ností, jak toho dosáhnout: buï bude pou¾itelný "
+"jen pro u¾ivatele root (bez suid bitu), spustitelný u¾ivateli skupiny audio, "
+"nebo bude spustitelný pro v¹echny."
+
+#. Type: select
+#. Description
+#: ../templates:5
+msgid ""
+"Because each program that is suid root is security risk this is not done by "
+"default.  However, the program is quite small (~150 lines of code) and is "
+"fairly easy to verify the safety of the code yourself, if you don't trust my "
+"judgement."
+msgstr ""
+"Proto¾e je ka¾dý suid root program bezpeènostním rizikem, není poslední "
+"mo¾nost implicitní. Tento program je v¹ak velmi malý (~150 øádkù kódu) a "
+"pokud nevìøíte autorovi, celkem jednodu¹e si mù¾ete bezpeènost kódu "
+"prostudovat sami."
