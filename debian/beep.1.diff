@@ -1,0 +1,37 @@
+--- beep.1.orig	2005-10-18 19:44:09.000000000 +0200
++++ beep.1	2005-10-18 19:55:39.000000000 +0200
+@@ -1,9 +1,9 @@
+-.TH BEEP 1 "March 2002"
++.TH BEEP 1 "October 2005"
+ .SH NAME
+ beep \- beep the pc speaker any number of ways
+ .SH SYNOPSIS
+ .B beep
+-[\-f N] [\-l N] [\-r N] [\-d N] [\-D N] [\-s] [\-c]
++[\-\-verbose | \-\-debug] [\-f N] [\-l N] [\-r N] [\-d N] [\-D N] [\-s] [\-c]
+ .HP
+ .B beep
+ [ OPTIONS ] [-n] [--new] [ OPTIONS ]
+@@ -20,6 +20,12 @@
+ All options have default values, meaning that just typing '\fBbeep\fR' will work.  If an option is specified more than once on the command line, subsequent options override their predecessors.  So '\fBbeep\fR \-f 200 \-f 300' will beep at 300Hz.
+ .SH OPTIONS
+ .TP
++\fB\-\-verbose\fR, \fB\-\-debug\fR
++enable debug output. This option prints a line like the following before each
++beep:
++
++[DEBUG] 5 times 200 ms beeps (100 delay between, 0 delay after) @ 1000.00 Hz
++.TP
+ \fB\-f\fR N
+ beep at N Hz, where 0 < N < 20000.  As a general ballpark, the regular terminal beep is around 750Hz.  N is not, incidentally, restricted to whole numbers.
+ .TP
+@@ -59,7 +65,8 @@
+ .TP
+ As part of a log-watching pipeline
+ 
+-tail -f /var/log/xferlog | grep 'passwd' | \fBbeep\fR -f 1000 -r 5 -s
++tail -f /var/log/xferlog | grep --line-buffered 'passwd' | \\
++\fBbeep\fR -f 1000 -r 5 -s
+ .TP
+ When using -c mode, I recommend using a short -D, and a shorter -l, so that the beeps don't blur together.  Something like this will get you a cheesy 1970's style beep-as-you-type-each-letter effect
+ 

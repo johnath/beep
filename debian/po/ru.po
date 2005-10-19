@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2004-12-06 11:56+0100\n"
+"POT-Creation-Date: 2005-06-14 00:09+0200\n"
 "PO-Revision-Date: 2003-10-02 17:10+0500\n"
 "Last-Translator: Ilgiz Kalmetev <translator@ilgiz.pp.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -35,7 +35,8 @@ msgstr ""
 #. Type: select
 #. Description
 #: ../templates:5
-msgid "How to handle suid root for beep program?"
+#, fuzzy
+msgid "How do you want to handle suid root for the beep program?"
 msgstr "Как обработать suid root для программы beep?"
 
 #. Type: select
@@ -55,11 +56,12 @@ msgstr ""
 #. Type: select
 #. Description
 #: ../templates:5
+#, fuzzy
 msgid ""
-"Because each program that is suid root is security risk this is not done by "
-"default.  However, the program is quite small (~150 lines of code) and is "
-"fairly easy to verify the safety of the code yourself, if you don't trust my "
-"judgement."
+"Since each program set as suid root can be a security risk this is not done "
+"by default.  However, the program is quite small (~150 lines of code), so it "
+"is fairly easy to verify the safety of the code yourself, if you don't trust "
+"my judgement."
 msgstr ""
 "Программы, у которых установлен suid root, являются потенциально уязвимыми, "
 "поэтому suid-бит по умолчанию не устанавливается. Однако, программа "

@@ -1,3 +1,30 @@
+beep (1.2.2-16) unstable; urgency=low
+
+  * The "update for the masses" release.
+  * Added debconf alternative for debconf-2.0 to Depends (closes: #331759)
+  * Added suggestions by Clytie Siddall to debian/templates file.
+  * Added additional debconf translations:
+    - Vietnamese by Clytie Siddall (closes: #313153)
+    - Swedish by Daniel Nylander (closes: #330941)
+    - Spanish by César Gómez Martín (closes: #333878)
+  * Updated debconf translation:
+    - Czech by Miroslav Kure
+    - German by myself
+    - Japanese by Hideki Yamane
+    - Catalan by Miguel Gea Milvaques (closes: #334199)
+    - Italian by Stefano Melchior (closes: #334240)
+    - French by Daniel Déchelotte (closes: #334486)
+  * Use ":" as seperator in chown instead of deprecated ".".
+  * Build-Depends patch added to be able to fix the wrong example in the
+    manpage (closes: #330020)
+  * Patched beep to accept an --verbose or --debug option, patched manpage
+    accordingly (closes: #297791)
+  * Print warning on multiple -f values (closes: #270056)
+  * Finally lowercased synopsis.
+  * Updated Standards-Version to 3.6.2, no changes needed.
+
+ -- Gerfried Fuchs <alfie@debian.org>  Wed, 19 Oct 2005 11:58:56 +0200
+
 beep (1.2.2-15) unstable; urgency=high
 
   * Added additional debconf translation:

@@ -1,0 +1,63 @@
+# Vietnamese translation for beep.
+# Copyright © 2005 Free Software Foundation, Inc.
+# Clytie Siddall <clytie@riverland.net.au>, 2005.
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: beep 1.2.2-15\n"
+"Report-Msgid-Bugs-To: beep@packages.debian.org\n"
+"POT-Creation-Date: 2005-06-14 00:09+0200\n"
+"PO-Revision-Date: 2005-06-12 18:01+0930\n"
+"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
+"Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+
+#. Type: select
+#. Choices
+#: ../templates:3
+msgid ""
+"suid root for all, suid root with only group audio executable, not suid at "
+"all"
+msgstr ""
+"«suid root» cho tất cả, «suid root» chỉ với tập tin có thể chạy âm thanh "
+"nhóm, không có «suid root»"
+
+#. Type: select
+#. Description
+#: ../templates:5
+#, fuzzy
+msgid "How do you want to handle suid root for the beep program?"
+msgstr "Bạn có muốn quản lý «suid root» cho chương trình beep như thế nào?"
+
+#. Type: select
+#. Description
+#: ../templates:5
+msgid ""
+"beep must be run as root since it needs to access the speaker hardware. "
+"There are several posibilities to make the program usable:  Either only for "
+"root (no suid bit at all), executable only by users of the group audio, or "
+"usable for all."
+msgstr ""
+"Trình beep phải chạy là người chủ (root) vì nó cần phải truy cập phần cứng "
+"loa. Vì vậy, bạn cần chọn mức độ truy cập thích hợp:\n"
+"• chỉ cho phép người chủ truy cập trình này (không có bit suid)\n"
+"• chỉ cho phép người dùng trong nhóm audio chạy trình này\n"
+"• cho phép mọi người truy cập trình này."
+
+#. Type: select
+#. Description
+#: ../templates:5
+#, fuzzy
+msgid ""
+"Since each program set as suid root can be a security risk this is not done "
+"by default.  However, the program is quite small (~150 lines of code), so it "
+"is fairly easy to verify the safety of the code yourself, if you don't trust "
+"my judgement."
+msgstr ""
+"Vì mỗi chương trình với bit suid được lập có thể rủi ro bảo mật, tùy chọn "
+"này không phải mặc định. Tuy nhiên, trình beep hơi nhỏ (~150 dòng mã) thì "
+"hơi dễ dàng để tự kiểm lại mức độ an toàn của mã này, nếu bạn muốn làm như "
+"thế."

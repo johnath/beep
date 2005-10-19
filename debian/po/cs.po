@@ -15,12 +15,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beep\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2004-12-06 11:56+0100\n"
-"PO-Revision-Date: 2005-01-31 17:13+0100\n"
+"POT-Creation-Date: 2005-06-14 00:09+0200\n"
+"PO-Revision-Date: 2005-10-10 12:34+0200\n"
 "Last-Translator: Miroslav Kure <kurem@debian.cz>\n"
-"Language-Team: Czech <provoz@debian.cz>\n"
+"Language-Team: Czech <debian-l10-czech@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #. Type: select
@@ -30,13 +30,13 @@ msgid ""
 "suid root for all, suid root with only group audio executable, not suid at "
 "all"
 msgstr ""
-"suid root pro v¹echny, suid root spustitelnı skupinou audio, bez suid bitu"
+"suid root pro vÅ¡echny, suid root spustitelnÃ½ skupinou audio, bez suid bitu"
 
 #. Type: select
 #. Description
 #: ../templates:5
-msgid "How to handle suid root for beep program?"
-msgstr "Jak nastavit suid root bit pro program beep?"
+msgid "How do you want to handle suid root for the beep program?"
+msgstr "Jak chcete nastavit suid root bit pro program beep?"
 
 #. Type: select
 #. Description
@@ -47,21 +47,21 @@ msgid ""
 "root (no suid bit at all), executable only by users of the group audio, or "
 "usable for all."
 msgstr ""
-"beep musí bì¾et pod u¾ivatelem root, proto¾e musí mít pøístup ke zvukovému "
-"hardwaru. Existuje nìkolik mo¾ností, jak toho dosáhnout: buï bude pou¾itelnı "
-"jen pro u¾ivatele root (bez suid bitu), spustitelnı u¾ivateli skupiny audio, "
-"nebo bude spustitelnı pro v¹echny."
+"beep musÃ­ bÄ›Å¾et pod uÅ¾ivatelem root, protoÅ¾e musÃ­ mÃ­t pÅ™Ã­stup ke zvukovÃ©mu "
+"hardwaru. Existuje nÄ›kolik moÅ¾nostÃ­, jak toho dosÃ¡hnout: buÄ bude pouÅ¾itelnÃ½ "
+"jen pro uÅ¾ivatele root (bez suid bitu), spustitelnÃ½ uÅ¾ivateli skupiny audio, "
+"nebo bude spustitelnÃ½ pro vÅ¡echny."
 
 #. Type: select
 #. Description
 #: ../templates:5
 msgid ""
-"Because each program that is suid root is security risk this is not done by "
-"default.  However, the program is quite small (~150 lines of code) and is "
-"fairly easy to verify the safety of the code yourself, if you don't trust my "
-"judgement."
+"Since each program set as suid root can be a security risk this is not done "
+"by default.  However, the program is quite small (~150 lines of code), so it "
+"is fairly easy to verify the safety of the code yourself, if you don't trust "
+"my judgement."
 msgstr ""
-"Proto¾e je ka¾dı suid root program bezpeènostním rizikem, není poslední "
-"mo¾nost implicitní. Tento program je v¹ak velmi malı (~150 øádkù kódu) a "
-"pokud nevìøíte autorovi, celkem jednodu¹e si mù¾ete bezpeènost kódu "
+"ProtoÅ¾e je kaÅ¾dÃ½ suid root program bezpeÄnostnÃ­m rizikem, je lepÅ¡Ã­ suid bit "
+"nenastavovat. Tento program je vÅ¡ak velmi malÃ½ (~150 Å™Ã¡dkÅ¯ kÃ³du),  "
+"takÅ¾e pokud nevÄ›Å™Ã­te autorovi, mÅ¯Å¾ete si celkem jednoduÅ¡e bezpeÄnost kÃ³du "
 "prostudovat sami."

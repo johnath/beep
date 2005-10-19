@@ -48,7 +48,11 @@ install: build
 	-test "$(STRIP)" = "true" && \
 		strip --remove-section=.comment --remove-section=.note \
 			--strip-unneeded $(TMP)/usr/bin/beep
-	chown root.audio $(TMP)/usr/bin/beep 
+	gunzip $(TMP)/usr/share/man/man1/beep.1.gz
+	cd $(TMP)/usr/share/man/man1 && patch beep.1 $(TMP)/../beep.1.diff
+	-rm -f $(TMP)/usr/share/man/man1/beep.1.orig
+	gzip --best $(TMP)/usr/share/man/man1/beep.1
+	chown root:audio $(TMP)/usr/bin/beep 
 	$(INSTALL_FILE) CREDITS README $(TMP)/usr/share/doc/$(PACKAGE)
 	$(INSTALL_FILE) CHANGELOG $(TMP)/usr/share/doc/$(PACKAGE)/changelog
 	cd $(TMP)/usr/share/doc/$(PACKAGE) && gzip -9 changelog README
