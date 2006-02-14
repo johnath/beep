@@ -1,3 +1,16 @@
+beep (1.2.2-17) unstable; urgency=low
+
+  * Added additional debconf translations:
+    - Portuguese by Miguel Figueiredo (closes: #344676)
+  * Updated debconf translation:
+    - Vietnamese by Clytie Siddall (closes: #343851)
+  * Fixed breakage raised with --verbose patch (closes: #335027)
+  * Added udev generation (closes: #350220)
+  * Applied patch from Alessandro Zummo for evdev and general device node
+    support (closes: #350214)
+
+ -- Gerfried Fuchs <alfie@debian.org>  Tue, 14 Feb 2006 01:27:06 +0100
+
 beep (1.2.2-16) unstable; urgency=low
 
   * The "update for the masses" release.

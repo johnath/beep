@@ -15,3 +15,14 @@ Description: advanced pc-speaker beeper
  controlled completely through command line options. It's not supposed to be
  complex, and it isn't - but it makes system monitoring (or whatever else it
  gets hacked into) much more informative.
+
+Package: beep-udeb
+Architecture: any
+Section: debian-installer
+Depends: ${shlibs:Depends}
+Description: advanced pc-speaker beeper
+ beep does what you'd expect: it beeps. However, it offers various
+ additional features, such as the ability to control pitch, duration,
+ and repetitions.
+ .
+ beep-udeb is a minimal package used by debian-installer.
