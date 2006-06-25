@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2005-06-14 00:09+0200\n"
+"POT-Creation-Date: 2006-06-21 05:05-0500\n"
 "PO-Revision-Date: 2003-10-02 17:10+0500\n"
 "Last-Translator: Ilgiz Kalmetev <translator@ilgiz.pp.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -35,9 +35,8 @@ msgstr ""
 #. Type: select
 #. Description
 #: ../templates:5
-#, fuzzy
-msgid "How do you want to handle suid root for the beep program?"
-msgstr "Как обработать suid root для программы beep?"
+msgid "Install beep as:"
+msgstr ""
 
 #. Type: select
 #. Description
@@ -67,3 +66,7 @@ msgstr ""
 "поэтому suid-бит по умолчанию не устанавливается. Однако, программа "
 "исключительно мала (~150 строк кода), и Вы очень легко можете проверить "
 "безопасность ее кода сами, если не доверяете мне."
+
+#, fuzzy
+#~ msgid "How do you want to handle suid root for the beep program?"
+#~ msgstr "Как обработать suid root для программы beep?"

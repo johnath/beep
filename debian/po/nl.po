@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beep 1.2.2-11\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2005-06-14 00:09+0200\n"
+"POT-Creation-Date: 2006-06-21 05:05-0500\n"
 "PO-Revision-Date: 2003-09-07 20:58+0100\n"
 "Last-Translator: Tim Vandermeersch <qber66@skolelinux.no>\n"
 "Language-Team: dutch <debian-l10n-dutch@lists.debian.org>\n"
@@ -36,9 +36,8 @@ msgstr ""
 #. Type: select
 #. Description
 #: ../templates:5
-#, fuzzy
-msgid "How do you want to handle suid root for the beep program?"
-msgstr "Hoe suid root af te handelen voor beep programma?"
+msgid "Install beep as:"
+msgstr ""
 
 #. Type: select
 #. Description
@@ -67,3 +66,7 @@ msgstr ""
 "Omdat elk suid root programma een veiligheids risico is wordt dit niet "
 "standaard gedaan. Het programma is vrij klein (~150 regels code) en is "
 "redelijk makkelijk om zelf te verifiëren, als u mijn oordeel niet vertrouwd."
+
+#, fuzzy
+#~ msgid "How do you want to handle suid root for the beep program?"
+#~ msgstr "Hoe suid root af te handelen voor beep programma?"

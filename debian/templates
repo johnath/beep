@@ -2,7 +2,7 @@ Template: beep/suid_option
 Type: select
 _Choices: suid root for all, suid root with only group audio executable, not suid at all
 Default: suid root with only group audio executable
-_Description: How do you want to handle suid root for the beep program?
+_Description: Install beep as:
  beep must be run as root since it needs to access the speaker hardware.
  There are several posibilities to make the program usable:  Either only
  for root (no suid bit at all), executable only by users of the group

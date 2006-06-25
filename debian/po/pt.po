@@ -1,14 +1,12 @@
 # Portuguese translation for beep's debconf messages.
-# 2005, Miguel Figueiredo <elmig@debianpt.org>
-#
-# 2005-12-24 - Initial translation
+# 2005-2006, Miguel Figueiredo <elmig@debianpt.org>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: beep 1.2.2-16\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2005-06-14 00:09+0200\n"
-"PO-Revision-Date: 2005-12-24 15:08+0000\n"
+"POT-Creation-Date: 2006-06-21 05:05-0500\n"
+"PO-Revision-Date: 2006-06-28 02:07-0500\n"
 "Last-Translator: Miguel Figueiredo <elmig@debianpt.org>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
 "MIME-Version: 1.0\n"
@@ -27,8 +25,8 @@ msgstr ""
 #. Type: select
 #. Description
 #: ../templates:5
-msgid "How do you want to handle suid root for the beep program?"
-msgstr "Como deseja lidar com o suid root para o programa beep?"
+msgid "Install beep as:"
+msgstr "Instalar beep como:"
 
 #. Type: select
 #. Description
@@ -39,10 +37,10 @@ msgid ""
 "root (no suid bit at all), executable only by users of the group audio, or "
 "usable for all."
 msgstr ""
-"O beep tem de ser executado como root já que necessita de acesso ao "
-"hardware do altifalante. Existem várias possibilidades de tornar o "
-"programa utilizável:  Quer apenas para o root (sem o bit suid), executável "
-"apenas para utilizadores do grupo audio, ou utilizável para todos."
+"O beep tem de ser executado como root já que necessita de acesso ao hardware "
+"do altifalante. Existem várias possibilidades de tornar o programa "
+"utilizável:  Quer apenas para o root (sem o bit suid), executável apenas "
+"para utilizadores do grupo audio, ou utilizável para todos."
 
 #. Type: select
 #. Description
@@ -53,7 +51,7 @@ msgid ""
 "is fairly easy to verify the safety of the code yourself, if you don't trust "
 "my judgement."
 msgstr ""
-"Já que cada programa como suid root pode ser um risco de segurança isto "
-"não é feito por omissão.  No entanto, o programa é bastante pequeno (~150 "
-"linhas de código), por isso é bastante fácil verificar por si mesmo a "
-"segurança do código, se não acreditar no meu julgamento."
+"Já que cada programa como suid root pode ser um risco de segurança isto não "
+"é feito por omissão.  No entanto, o programa é bastante pequeno (~150 linhas "
+"de código), por isso é bastante fácil verificar por si mesmo a segurança do "
+"código, se não acreditar no meu julgamento."

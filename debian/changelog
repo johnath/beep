@@ -1,3 +1,22 @@
+beep (1.2.2-18) unstable; urgency=low
+
+  * Use install instead of make install which just copies over the files...
+  * Changed postrm to remove bashism.
+  * Reverted part of the evdev patch: One needs to explicitly ask for using
+    /dev/input/event0 with the -e switch instead of it being tried
+    automatically (closes: #354694)
+  * Bumped Standards-Version to 3.7.2, no changes needed.
+  * Add overrides for using-first-person-in-templates, it's about me as
+    package maintainer.
+  * Changed templates texting for the select prompt.
+  * Translations updated: Brazilian Portuguese (Felipe Augusto van de Wiel),
+    German (myself), Catalan (Miguel Gea Milvaques), Spanish (David Martínez
+    Moreno), Swedish (Daniel Nylander), Portuguese (Miguel Figueiredo), Czech
+    (Miroslav Kure), Vietnamese (Clytie Siddall), French (Daniel Déchelotte,
+    closes: #375358)
+
+ -- Gerfried Fuchs <alfie@debian.org>  Sun, 25 Jun 2006 11:12:11 -0500
+
 beep (1.2.2-17) unstable; urgency=low
 
   * Added additional debconf translations:
@@ -5,7 +24,7 @@ beep (1.2.2-17) unstable; urgency=low
   * Updated debconf translation:
     - Vietnamese by Clytie Siddall (closes: #343851)
   * Fixed breakage raised with --verbose patch (closes: #335027)
-  * Added udev generation (closes: #350220)
+  * Added udeb generation (closes: #350220)
   * Applied patch from Alessandro Zummo for evdev and general device node
     support (closes: #350214)
 

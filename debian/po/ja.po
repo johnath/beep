@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beep 1.2.2-12\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2005-06-14 00:09+0200\n"
+"POT-Creation-Date: 2006-06-21 05:05-0500\n"
 "PO-Revision-Date: 2005-10-17 12:32+0200\n"
 "Last-Translator: Hideki Yamane <henrich@debian.or.jp>\n"
 "Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
@@ -37,8 +37,8 @@ msgstr ""
 #. Type: select
 #. Description
 #: ../templates:5
-msgid "How do you want to handle suid root for the beep program?"
-msgstr "beep プログラムへの suid root 設定をどうしますか?"
+msgid "Install beep as:"
+msgstr ""
 
 #. Type: select
 #. Description
@@ -65,5 +65,8 @@ msgid ""
 msgstr ""
 "各プログラムを root に suid するのはセキュリティリスクになるので、デフォルト"
 "ではこの方法は採りません。しかしながら、このプログラムは非常に小さいので (150"
-"行程度のコードです)、私の判断を信じられない場合、あなた自身でコードの安全性を”"
-"確認するのはとても簡単です。"
+"行程度のコードです)、私の判断を信じられない場合、あなた自身でコードの安全性"
+"を”確認するのはとても簡単です。"
+
+#~ msgid "How do you want to handle suid root for the beep program?"
+#~ msgstr "beep プログラムへの suid root 設定をどうしますか?"

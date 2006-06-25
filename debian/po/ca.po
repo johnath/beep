@@ -1,4 +1,4 @@
-# translation of beep_1.2.2-12_templates.po to catalan
+# translation of ca.po to catalan
 #
 #    Translators, if you are not familiar with the PO format, gettext
 #    documentation is worth reading, especially sections dedicated to
@@ -9,20 +9,21 @@
 #            /usr/share/doc/po-debconf/README-trans
 #         or http://www.debian.org/intl/l10n/po-debconf/README-trans#
 #    Developers do not need to manually edit POT or PO files.
-# Jordi Fernández Mora <jordi.fernandezmo@campus.uab.es>, 2004.
-# Miguel Gea Milvaques <debian@miguelgea.com>, 2004.
 #
+# Jordi Fernández Mora <jordi.fernandezmo@campus.uab.es>, 2004.
+# Miguel Gea Milvaques <xerakko@debian.org>, 2004, 2006.
 msgid ""
 msgstr ""
 "Project-Id-Version: ca\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2005-06-14 00:09+0200\n"
-"PO-Revision-Date: 2005-10-10 15:34+0200\n"
-"Last-Translator: Miguel Gea Milvaques <debian@miguelgea.com>\n"
-"Language-Team: Catalan <debian-l10n-catalan@lists.debian.org>\n"
+"POT-Creation-Date: 2006-06-21 05:05-0500\n"
+"PO-Revision-Date: 2006-06-21 08:40-0500\n"
+"Last-Translator: Miguel Gea Milvaques <xerakko@debian.org>\n"
+"Language-Team: catalan <debian-l10n-catalan@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.2\n"
 
 #. Type: select
 #. Choices
@@ -30,14 +31,13 @@ msgstr ""
 msgid ""
 "suid root for all, suid root with only group audio executable, not suid at "
 "all"
-msgstr ""
-"suid root per a tothom, suid root només pel grup audio, suid per a ningú "
+msgstr "suid root per a tothom, suid root només pel grup audio, suid per a ningú "
 
 #. Type: select
 #. Description
 #: ../templates:5
-msgid "How do you want to handle suid root for the beep program?"
-msgstr "Com voleu gestionar l'atribut suid root pel programa beep?"
+msgid "Install beep as:"
+msgstr "Instal·lar beep com:"
 
 #. Type: select
 #. Description
@@ -66,3 +66,4 @@ msgstr ""
 "seguretat, no es fa per defecte. Tot i això el programa és petit (unes 150 "
 "línies) i és en justícia fàcil verificar la seguretat del codi vosaltres "
 "mateixos, si no confieu en el meu criteri."
+

@@ -1,22 +1,14 @@
-#
-#    Translators, if you are not familiar with the PO format, gettext
-#    documentation is worth reading, especially sections dedicated to
-#    this format, e.g. by running:
-#         info -n '(gettext)PO Files'
-#         info -n '(gettext)Header Entry'
-#
-#    Some information specific to po-debconf are available at
-#            /usr/share/doc/po-debconf/README-trans
-#         or http://www.debian.org/intl/l10n/po-debconf/README-trans
-#
-#    Developers do not need to manually edit POT or PO files.
+# debconf translation for the beep package.
+# Copyright (C) 2002-2006 Gerfried Fuchs <alfie@debian.org>
+# This file is distributed under the same license as the beep package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: beep 1.2.2-16\n"
+"Project-Id-Version: beep VERSION\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2005-06-14 00:09+0200\n"
+"POT-Creation-Date: 2006-06-21 05:05-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,7 +27,7 @@ msgstr ""
 #. Type: select
 #. Description
 #: ../templates:5
-msgid "How do you want to handle suid root for the beep program?"
+msgid "Install beep as:"
 msgstr ""
 
 #. Type: select

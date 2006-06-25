@@ -15,10 +15,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beep\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2005-06-14 00:09+0200\n"
-"PO-Revision-Date: 2005-10-10 12:34+0200\n"
+"POT-Creation-Date: 2006-06-21 05:05-0500\n"
+"PO-Revision-Date: 2006-06-21 14:23+0200\n"
 "Last-Translator: Miroslav Kure <kurem@debian.cz>\n"
-"Language-Team: Czech <debian-l10-czech@lists.debian.org>\n"
+"Language-Team: Czech <debian-l10n-czech@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -35,8 +35,8 @@ msgstr ""
 #. Type: select
 #. Description
 #: ../templates:5
-msgid "How do you want to handle suid root for the beep program?"
-msgstr "Jak chcete nastavit suid root bit pro program beep?"
+msgid "Install beep as:"
+msgstr "Instalovat beep jako:"
 
 #. Type: select
 #. Description
@@ -47,10 +47,10 @@ msgid ""
 "root (no suid bit at all), executable only by users of the group audio, or "
 "usable for all."
 msgstr ""
-"beep musí běžet pod uživatelem root, protože musí mít přístup ke zvukovému "
+"beep musí běžet pod uživatelem root, protože vyžaduje přístup ke zvukovému "
 "hardwaru. Existuje několik možností, jak toho dosáhnout: buď bude použitelný "
 "jen pro uživatele root (bez suid bitu), spustitelný uživateli skupiny audio, "
-"nebo bude spustitelný pro všechny."
+"nebo jej budou moci používat všichni."
 
 #. Type: select
 #. Description
@@ -62,6 +62,6 @@ msgid ""
 "my judgement."
 msgstr ""
 "Protože je každý suid root program bezpečnostním rizikem, je lepší suid bit "
-"nenastavovat. Tento program je však velmi malý (~150 řádků kódu),  "
-"takže pokud nevěříte autorovi, můžete si celkem jednoduše bezpečnost kódu "
+"nenastavovat. Tento program je však velmi malý (~150 řádků kódu),  takže "
+"pokud nevěříte autorovi, můžete si celkem jednoduše bezpečnost kódu "
 "prostudovat sami."

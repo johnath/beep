@@ -11,17 +11,24 @@
 #
 #    Developers do not need to manually edit POT or PO files.
 #
+# Previous translators:
+#      Andr√© Lu√≠s Lopes <andrelop@ig.com.br>, 2003
+#      Felipe Augusto van de Wiel (faw) <felipe@cathedrallabs.org>, 2006
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: beep-1.2.2-10\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2005-06-14 00:09+0200\n"
-"PO-Revision-Date: 2003-03-15 22:56-0300\n"
-"Last-Translator: AndrÈ LuÌs Lopes <andrelop@ig.com.br>\n"
-"Language-Team: Debian-BR Project <debian-l10n-portuguese@lists.debian.org>\n"
+"POT-Creation-Date: 2006-06-21 05:05-0500\n"
+"PO-Revision-Date: 2006-06-28 02:06-0500\n"
+"Last-Translator: Felipe Augusto van de Wiel (faw) <felipe@cathedrallabs."
+"org>\n"
+"Language-Team: l10n portuguese <debian-l10n-portuguese@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"pt_BR utf-8\n"
+"org>\n"
 
 #. Type: select
 #. Choices
@@ -30,15 +37,14 @@ msgid ""
 "suid root for all, suid root with only group audio executable, not suid at "
 "all"
 msgstr ""
-"suid root para todos, suid root com somente o grupo audio execut·vel, sem "
-"suid"
+"suid root para todos, suid root com propriedade de execu√ß√£o somente para o "
+"grupo audio, sem suid"
 
 #. Type: select
 #. Description
 #: ../templates:5
-#, fuzzy
-msgid "How do you want to handle suid root for the beep program?"
-msgstr "Como gerenciar suid root para o programa beep ?"
+msgid "Install beep as:"
+msgstr "Instalar beep como:"
 
 #. Type: select
 #. Description
@@ -51,21 +57,20 @@ msgid ""
 msgstr ""
 "O beep deve ser executado como root, uma vez que o mesmo precisa acessar o "
 "hardware do alto-falante. Existem diversas possibilidades para tornar o "
-"programa utiliz·vel : somente execut·vel pelo root (sem suid), execut·vel "
-"somente pelos usu·rios do grupo audio ou execut·vel para todos."
+"programa utiliz√°vel : somente execut√°vel pelo root (sem suid), execut√°vel "
+"somente pelos usu√°rios do grupo audio ou execut√°vel para todos."
 
 #. Type: select
 #. Description
 #: ../templates:5
-#, fuzzy
 msgid ""
 "Since each program set as suid root can be a security risk this is not done "
 "by default.  However, the program is quite small (~150 lines of code), so it "
 "is fairly easy to verify the safety of the code yourself, if you don't trust "
 "my judgement."
 msgstr ""
-"Devido a cada programa que È configurado para ser executado com suid root "
-"ser um risco de seguranÁa isto n„o È feito por padr„o. PorÈm, o programa È "
-"bastante pequeno (aproximadamente 150 linhas de cÛdigo) e È muito f·cil "
-"verificar a seguranÁa do cÛdigo caso vocÍ n„o confie em no julgamento no "
-"mantenedor deste pacote."
+"Devido a cada programa que √© configurado para ser executado com suid root "
+"ser um risco de seguran√ßa isto n√£o √© feito por padr√£o. Por√©m, o programa √© "
+"bastante pequeno (aproximadamente 150 linhas de c√≥digo) e √© muito f√°cil "
+"verificar a seguran√ßa do c√≥digo voc√™ mesmo, caso voc√™ n√£o confie no "
+"julgamento do mantenedor deste pacote."

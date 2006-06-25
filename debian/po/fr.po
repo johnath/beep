@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beep 1.2.2-10\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2005-06-14 00:09+0200\n"
-"PO-Revision-Date: 2003-03-13 22:18+0100\n"
+"POT-Creation-Date: 2006-06-21 05:05-0500\n"
+"PO-Revision-Date: 2006-06-28 02:06-0500\n"
 "Last-Translator: Daniel Déchelotte <maitre_yodan@club-internet.fr>\n"
 "Language-Team: Debian-l10n-french <debian-l10n-french@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -29,13 +29,15 @@ msgstr ""
 msgid ""
 "suid root for all, suid root with only group audio executable, not suid at "
 "all"
-msgstr "Exécution par tous en setuid root, Exécution par le seul groupe audio en setuid root, Pas de setuid root"
+msgstr ""
+"Exécution par tous en setuid root, Exécution par le seul groupe audio en "
+"setuid root, Pas de setuid root"
 
 #. Type: select
 #. Description
 #: ../templates:5
-msgid "How do you want to handle suid root for the beep program?"
-msgstr "Gestion des privilèges spéciaux du programme beep :"
+msgid "Install beep as:"
+msgstr "Installer beep en :"
 
 #. Type: select
 #. Description

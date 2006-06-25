@@ -276,9 +276,8 @@ void play_beep(beep_parms_t parms) {
   if(console_device)
     console_fd = open(console_device, O_WRONLY);
   else
-    if((console_fd = open("/dev/input/event0", O_WRONLY)) == -1)
-      if((console_fd = open("/dev/tty0", O_WRONLY)) == -1)
-	console_fd = open("/dev/vc/0", O_WRONLY);
+    if((console_fd = open("/dev/tty0", O_WRONLY)) == -1)
+      console_fd = open("/dev/vc/0", O_WRONLY);
       
   if(console_fd == -1) {
     fprintf(stderr, "Could not open %s for writing\n",

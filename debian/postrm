@@ -1,7 +1,7 @@
 #!/bin/sh -e
 # postrm for beep
 
-if [ "$1" = purge -a -e /usr/share/debconf/confmodule ]; then
+if [ "$1" = purge ] && [ -e /usr/share/debconf/confmodule ]; then
 	. /usr/share/debconf/confmodule
 	db_purge
 fi

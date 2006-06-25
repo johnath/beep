@@ -13,10 +13,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: beep 1.2.2-16\n"
+"Project-Id-Version: beep 1.2.2-18\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2005-06-14 00:09+0200\n"
-"PO-Revision-Date: 2005-06-14 08:54+0200\n"
+"POT-Creation-Date: 2006-06-21 05:05-0500\n"
+"PO-Revision-Date: 2006-06-21 05:07-0500\n"
 "Last-Translator: Gerfried Fuchs <alfie@debian.org>\n"
 "Language-Team: German <debian-l10n-german@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -36,8 +36,8 @@ msgstr ""
 #. Type: select
 #. Description
 #: ../templates:5
-msgid "How do you want to handle suid root for the beep program?"
-msgstr "Wie wollen Sie suid root für das beep-Programm behandeln?"
+msgid "Install beep as:"
+msgstr "beep installieren als:"
 
 #. Type: select
 #. Description

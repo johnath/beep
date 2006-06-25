@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beep 1.2.2-12\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2005-06-14 00:09+0200\n"
+"POT-Creation-Date: 2006-06-21 05:05-0500\n"
 "PO-Revision-Date: 2005-10-15 12:08+0100\n"
 "Last-Translator: Stefano Melchior <stefano.melchior@openlabs.it>\n"
 "Language-Team: Italian <debian-l10n-italian@lists.debian.org>\n"
@@ -17,14 +17,14 @@ msgid ""
 "suid root for all, suid root with only group audio executable, not suid at "
 "all"
 msgstr ""
-"suid root per tutti, suid root solamente con gli eseguibili del "
-"gruppo audio, nient'affatto suid"
+"suid root per tutti, suid root solamente con gli eseguibili del gruppo "
+"audio, nient'affatto suid"
 
 #. Type: select
 #. Description
 #: ../templates:5
-msgid "How do you want to handle suid root for the beep program?"
-msgstr "Come si vuole gestire suid root per il programma beep?"
+msgid "Install beep as:"
+msgstr ""
 
 #. Type: select
 #. Description
@@ -51,6 +51,9 @@ msgid ""
 msgstr ""
 "Dal momento che ogni programma che usa suid root è un rischio per la "
 "sicurezza, questo non viene abilitato come opzione predefinita. Comunque, il "
-"programma risulta abbastanza piccolo (circa 150 linee di codice) e semplice da "
-"permettere di verificare da soli la sicurezza del codice, qualora non ci si "
-"fidasse del giudizio dell'autore."
+"programma risulta abbastanza piccolo (circa 150 linee di codice) e semplice "
+"da permettere di verificare da soli la sicurezza del codice, qualora non ci "
+"si fidasse del giudizio dell'autore."
+
+#~ msgid "How do you want to handle suid root for the beep program?"
+#~ msgstr "Come si vuole gestire suid root per il programma beep?"

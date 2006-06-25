@@ -3,7 +3,7 @@ Section: sound
 Priority: optional
 Maintainer: Gerfried Fuchs <alfie@debian.org>
 Build-Depends: po-debconf, patch
-Standards-Version: 3.6.2
+Standards-Version: 3.7.2
 
 Package: beep
 Architecture: any
