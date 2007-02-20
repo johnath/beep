@@ -1,3 +1,11 @@
+beep (1.2.2-19) unstable; urgency=low
+
+  * Translation update: Japanese (Hideki Yamane, closes: #392171)
+  * Refixed manpage with respect to the event device handling
+    (closes: #397680)
+
+ -- Gerfried Fuchs <alfie@debian.org>  Tue, 20 Feb 2007 23:53:27 +0100
+
 beep (1.2.2-18) unstable; urgency=low
 
   * Use install instead of make install which just copies over the files...

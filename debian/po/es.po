@@ -28,8 +28,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: beep\n"
-"Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2006-06-21 05:05-0500\n"
+"Report-Msgid-Bugs-To: alfie@debian.org\n"
+"POT-Creation-Date: 2007-02-20 23:46+0100\n"
 "PO-Revision-Date: 2006-06-28 02:06-0500\n"
 "Last-Translator: David Martínez Moreno <ender@debian.org>\n"
 "Language-Team: Debian l10n Spanish <debian-l10n-spanish@lists.debian.org>\n"
@@ -42,7 +42,7 @@ msgstr ""
 
 #. Type: select
 #. Choices
-#: ../templates:3
+#: ../templates:1001
 msgid ""
 "suid root for all, suid root with only group audio executable, not suid at "
 "all"
@@ -52,13 +52,13 @@ msgstr ""
 
 #. Type: select
 #. Description
-#: ../templates:5
+#: ../templates:1002
 msgid "Install beep as:"
 msgstr "Instalar beep de la siguiente manera:"
 
 #. Type: select
 #. Description
-#: ../templates:5
+#: ../templates:1002
 msgid ""
 "beep must be run as root since it needs to access the speaker hardware. "
 "There are several posibilities to make the program usable:  Either only for "
@@ -72,15 +72,15 @@ msgstr ""
 
 #. Type: select
 #. Description
-#: ../templates:5
+#: ../templates:1002
 msgid ""
 "Since each program set as suid root can be a security risk this is not done "
 "by default.  However, the program is quite small (~150 lines of code), so it "
 "is fairly easy to verify the safety of the code yourself, if you don't trust "
 "my judgement."
 msgstr ""
-"Esta elección es necesaria debido a que cualquier programa con el «bit "
-"suid» puede suponer un riesgo de seguridad. Sin embargo, el programa es bastante "
+"Esta elección es necesaria debido a que cualquier programa con el «bit suid» "
+"puede suponer un riesgo de seguridad. Sin embargo, el programa es bastante "
 "pequeño (unas 150 líneas de código) y, por lo tanto, si no confía en nuestro "
 "juicio, usted mismo puede verificar con bastante facilidad la seguridad del "
 "código."

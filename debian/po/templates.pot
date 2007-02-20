@@ -1,14 +1,14 @@
-# debconf translation for the beep package.
-# Copyright (C) 2002-2006 Gerfried Fuchs <alfie@debian.org>
-# This file is distributed under the same license as the beep package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: beep VERSION\n"
-"Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2006-06-21 05:05-0500\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: alfie@debian.org\n"
+"POT-Creation-Date: 2007-02-20 23:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 
 #. Type: select
 #. Choices
-#: ../templates:3
+#: ../templates:1001
 msgid ""
 "suid root for all, suid root with only group audio executable, not suid at "
 "all"
@@ -26,13 +26,13 @@ msgstr ""
 
 #. Type: select
 #. Description
-#: ../templates:5
+#: ../templates:1002
 msgid "Install beep as:"
 msgstr ""
 
 #. Type: select
 #. Description
-#: ../templates:5
+#: ../templates:1002
 msgid ""
 "beep must be run as root since it needs to access the speaker hardware. "
 "There are several posibilities to make the program usable:  Either only for "
@@ -42,7 +42,7 @@ msgstr ""
 
 #. Type: select
 #. Description
-#: ../templates:5
+#: ../templates:1002
 msgid ""
 "Since each program set as suid root can be a security risk this is not done "
 "by default.  However, the program is quite small (~150 lines of code), so it "

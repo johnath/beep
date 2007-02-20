@@ -2,7 +2,7 @@
 +++ beep.1	2006-02-14 00:25:37.000000000 +0100
 @@ -1,9 +1,9 @@
 -.TH BEEP 1 "March 2002"
-+.TH BEEP 1 "February 2006"
++.TH BEEP 1 "November 2006"
  .SH NAME
  beep \- beep the pc speaker any number of ways
  .SH SYNOPSIS
@@ -23,7 +23,7 @@
 +[DEBUG] 5 times 200 ms beeps (100 delay between, 0 delay after) @ 1000.00 Hz
 +.TP
 +\fB\-e\fR device, \fB\-\-device\fR device
-+use device as event device. If the switch isn't used, /dev/input/event0, /dev/tty0 and /dev/vc/0 are tried in turn.
++use device as event device. If the switch isn't used, /dev/tty0 and /dev/vc/0 are tried in turn.
 +.TP
  \fB\-f\fR N
  beep at N Hz, where 0 < N < 20000.  As a general ballpark, the regular terminal beep is around 750Hz.  N is not, incidentally, restricted to whole numbers.

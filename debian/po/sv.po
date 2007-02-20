@@ -14,8 +14,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: beep\n"
-"Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2006-06-21 05:05-0500\n"
+"Report-Msgid-Bugs-To: alfie@debian.org\n"
+"POT-Creation-Date: 2007-02-20 23:46+0100\n"
 "PO-Revision-Date: 2006-06-21 12:49-0500\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -25,24 +25,42 @@ msgstr ""
 
 #. Type: select
 #. Choices
-#: ../templates:3
-msgid "suid root for all, suid root with only group audio executable, not suid at all"
-msgstr "suid root för alla, suid root endast för gruppen \"audio\", inte suid alls"
+#: ../templates:1001
+msgid ""
+"suid root for all, suid root with only group audio executable, not suid at "
+"all"
+msgstr ""
+"suid root för alla, suid root endast för gruppen \"audio\", inte suid alls"
 
 #. Type: select
 #. Description
-#: ../templates:5
+#: ../templates:1002
 msgid "Install beep as:"
 msgstr "Installera beep som:"
 
 #. Type: select
 #. Description
-#: ../templates:5
-msgid "beep must be run as root since it needs to access the speaker hardware. There are several posibilities to make the program usable:  Either only for root (no suid bit at all), executable only by users of the group audio, or usable for all."
-msgstr "beep måste köras som root eftersom den behöver åtkomst till högtalarhårdvaran. Det finns flera sätt att göra programmet användbart:  Antingen endast för root (ingen suid-bit alls), körbar endast för användare i gruppen \"audio\" eller användbar för alla."
+#: ../templates:1002
+msgid ""
+"beep must be run as root since it needs to access the speaker hardware. "
+"There are several posibilities to make the program usable:  Either only for "
+"root (no suid bit at all), executable only by users of the group audio, or "
+"usable for all."
+msgstr ""
+"beep måste köras som root eftersom den behöver åtkomst till "
+"högtalarhårdvaran. Det finns flera sätt att göra programmet användbart:  "
+"Antingen endast för root (ingen suid-bit alls), körbar endast för användare "
+"i gruppen \"audio\" eller användbar för alla."
 
 #. Type: select
 #. Description
-#: ../templates:5
-msgid "Since each program set as suid root can be a security risk this is not done by default.  However, the program is quite small (~150 lines of code), so it is fairly easy to verify the safety of the code yourself, if you don't trust my judgement."
-msgstr "Eftersom de program som är suid root kan vara en säkerhetsrisk kommer detta inte göras som standard.  Programmet är ganska litet (~150 rader kod) och är lätt att validera säkerheten i koden om du inte litar på mitt omdöme."
+#: ../templates:1002
+msgid ""
+"Since each program set as suid root can be a security risk this is not done "
+"by default.  However, the program is quite small (~150 lines of code), so it "
+"is fairly easy to verify the safety of the code yourself, if you don't trust "
+"my judgement."
+msgstr ""
+"Eftersom de program som är suid root kan vara en säkerhetsrisk kommer detta "
+"inte göras som standard.  Programmet är ganska litet (~150 rader kod) och är "
+"lätt att validera säkerheten i koden om du inte litar på mitt omdöme."

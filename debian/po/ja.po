@@ -14,59 +14,59 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: beep 1.2.2-12\n"
-"Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2006-06-21 05:05-0500\n"
-"PO-Revision-Date: 2005-10-17 12:32+0200\n"
-"Last-Translator: Hideki Yamane <henrich@debian.or.jp>\n"
+"Project-Id-Version: beep 1.2.2-18\n"
+"Report-Msgid-Bugs-To: alfie@debian.org\n"
+"POT-Creation-Date: 2007-02-20 23:46+0100\n"
+"PO-Revision-Date: 2006-10-11 00:08+0900\n"
+"Last-Translator: Hideki Yamane (Debian-JP) <henrich@debian.or.jp>\n"
 "Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=EUC-JP\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #. Type: select
 #. Choices
-#: ../templates:3
+#: ../templates:1001
 msgid ""
 "suid root for all, suid root with only group audio executable, not suid at "
 "all"
 msgstr ""
-"Á´¥æ¡¼¥¶¤¬»È¤¨¤ë¤è¤¦¤Ë root ¤Ë suid ¤¹¤ë, audio ¥°¥ë¡¼¥×¤À¤±¤¬¼Â¹Ô¤Ç¤­¤ë¤è¤¦"
-"¤Ë root ¤Ë suid ¤¹¤ë, suid ¤·¤Ê¤¤"
+"å…¨ãƒ¦ãƒ¼ã‚¶ãŒä½¿ãˆã‚‹ã‚ˆã†ã« root ã« suid ã™ã‚‹, audio ã‚°ãƒ«ãƒ¼ãƒ—ã ã‘ãŒå®Ÿè¡Œã§ãã‚‹ã‚ˆã†"
+"ã« root ã« suid ã™ã‚‹, suid ã—ãªã„"
 
 #. Type: select
 #. Description
-#: ../templates:5
+#: ../templates:1002
 msgid "Install beep as:"
-msgstr ""
+msgstr "beep ã®ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«æ™‚è¨­å®šã«ã¤ã„ã¦:"
 
 #. Type: select
 #. Description
-#: ../templates:5
+#: ../templates:1002
 msgid ""
 "beep must be run as root since it needs to access the speaker hardware. "
 "There are several posibilities to make the program usable:  Either only for "
 "root (no suid bit at all), executable only by users of the group audio, or "
 "usable for all."
 msgstr ""
-"¥¹¥Ô¡¼¥«¡¼¤Î¥Ï¡¼¥É¥¦¥§¥¢¤Ë¥¢¥¯¥»¥¹¤¹¤ëÉ¬Í×¤¬¤¢¤ë¤Î¤Ç beep ¤Ï root ¤È¤·¤Æ¼Â¹Ô"
-"¤·¤Ê¤±¤ì¤Ğ¤Ê¤ê¤Ş¤»¤ó¡£¥×¥í¥°¥é¥à¤ò»È¤¦¤¿¤á¤Ë¤ä¤êÊı¤¬¤¤¤¯¤Ä¤«¤¢¤ê¤Ş¤¹: root ¤Î"
-"¤ß¤Ë¤¹¤ë (suid ¤òÁ´¤¯»È¤ï¤Ê¤¤¤è¤¦¤Ë¤¹¤ë) ¡¢audio ¥°¥ë¡¼¥×½êÂ°¤Î¥æ¡¼¥¶¤À¤±¤¬»È"
-"¤¨¤ë¤è¤¦¤Ë¤¹¤ë¡¢Ã¯¤Ç¤â»È¤¨¤ë¤è¤¦¤Ë¤¹¤ë¡¢¤Î¤É¤ì¤«¤Ç¤¹¡£"
+"ã‚¹ãƒ”ãƒ¼ã‚«ãƒ¼ã®ãƒãƒ¼ãƒ‰ã‚¦ã‚§ã‚¢ã«ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ã®ã§ beep ã¯ root ã¨ã—ã¦å®Ÿè¡Œ"
+"ã—ãªã‘ã‚Œã°ãªã‚Šã¾ã›ã‚“ã€‚ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’ä½¿ã†ãŸã‚ã«ã‚„ã‚Šæ–¹ãŒã„ãã¤ã‹ã‚ã‚Šã¾ã™: root ã®"
+"ã¿ã«ã™ã‚‹ (suid ã‚’å…¨ãä½¿ã‚ãªã„ã‚ˆã†ã«ã™ã‚‹) ã€audio ã‚°ãƒ«ãƒ¼ãƒ—æ‰€å±ã®ãƒ¦ãƒ¼ã‚¶ã ã‘ãŒä½¿"
+"ãˆã‚‹ã‚ˆã†ã«ã™ã‚‹ã€èª°ã§ã‚‚ä½¿ãˆã‚‹ã‚ˆã†ã«ã™ã‚‹ã€ã®ã©ã‚Œã‹ã§ã™ã€‚"
 
 #. Type: select
 #. Description
-#: ../templates:5
+#: ../templates:1002
 msgid ""
 "Since each program set as suid root can be a security risk this is not done "
 "by default.  However, the program is quite small (~150 lines of code), so it "
 "is fairly easy to verify the safety of the code yourself, if you don't trust "
 "my judgement."
 msgstr ""
-"³Æ¥×¥í¥°¥é¥à¤ò root ¤Ë suid ¤¹¤ë¤Î¤Ï¥»¥­¥å¥ê¥Æ¥£¥ê¥¹¥¯¤Ë¤Ê¤ë¤Î¤Ç¡¢¥Ç¥Õ¥©¥ë¥È"
-"¤Ç¤Ï¤³¤ÎÊıË¡¤ÏºÎ¤ê¤Ş¤»¤ó¡£¤·¤«¤·¤Ê¤¬¤é¡¢¤³¤Î¥×¥í¥°¥é¥à¤ÏÈó¾ï¤Ë¾®¤µ¤¤¤Î¤Ç (150"
-"¹ÔÄøÅÙ¤Î¥³¡¼¥É¤Ç¤¹)¡¢»ä¤ÎÈ½ÃÇ¤ò¿®¤¸¤é¤ì¤Ê¤¤¾ì¹ç¡¢¤¢¤Ê¤¿¼«¿È¤Ç¥³¡¼¥É¤Î°ÂÁ´À­"
-"¤ò¡É³ÎÇ§¤¹¤ë¤Î¤Ï¤È¤Æ¤â´ÊÃ±¤Ç¤¹¡£"
+"å„ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’ root ã« suid ã™ã‚‹ã®ã¯ã‚»ã‚­ãƒ¥ãƒªãƒ†ã‚£ãƒªã‚¹ã‚¯ã«ãªã‚‹ã®ã§ã€ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ"
+"ã§ã¯ã“ã®æ–¹æ³•ã¯æ¡ã‚Šã¾ã›ã‚“ã€‚ã—ã‹ã—ãªãŒã‚‰ã€ã“ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã¯éå¸¸ã«å°ã•ã„ã®ã§ (150"
+"è¡Œç¨‹åº¦ã®ã‚³ãƒ¼ãƒ‰ã§ã™)ã€ç§ã®åˆ¤æ–­ã‚’ä¿¡ã˜ã‚‰ã‚Œãªã„å ´åˆã€ã‚ãªãŸè‡ªèº«ã§ã‚³ãƒ¼ãƒ‰ã®å®‰å…¨æ€§"
+"ã‚’â€ç¢ºèªã™ã‚‹ã®ã¯ã¨ã¦ã‚‚ç°¡å˜ã§ã™ã€‚"
 
 #~ msgid "How do you want to handle suid root for the beep program?"
-#~ msgstr "beep ¥×¥í¥°¥é¥à¤Ø¤Î suid root ÀßÄê¤ò¤É¤¦¤·¤Ş¤¹¤«?"
+#~ msgstr "beep ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã¸ã® suid root è¨­å®šã‚’ã©ã†ã—ã¾ã™ã‹?"
