@@ -1,5 +1,7 @@
 #!/usr/bin/make -f
 # debian/rules file for beep
+# copyright 2002++ by Gerfried Fuchs <rhonda@debian.at>
+# Licenced the same way as beep itself
 
 PKG1 = beep
 TMP1 = $(CURDIR)/debian/$(PKG1)
@@ -26,7 +28,9 @@ ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 endif
 
 
-clean:
+include /usr/share/quilt/quilt.make
+
+clean: unpatch
 	$(checkdir)
 	$(checkroot)
 	-rm -rf $(TMP1) $(TMP2) debian/substvars debian/files build-stamp
@@ -34,7 +38,7 @@ clean:
 
 
 build: build-stamp
-build-stamp:
+build-stamp: patch
 	$(checkdir)
 	$(MAKE) FLAGS="$(FLAGS)"
 	touch build-stamp

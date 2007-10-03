@@ -1,4 +1,4 @@
-This package was debianized by Gerfried Fuchs <alfie@debian.org> on
+This package was debianized by Gerfried Fuchs <rhonda@debian.at> on
 Thu, 18 Oct 2001 09:26:50 +0200.
 
 It was downloaded from http://www.johnath.com/beep/
@@ -9,14 +9,15 @@ Copyright:
 ==========
 This software is copyright (C) 2000 by Johnathan Nightingale.
 
-   This package is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; version 2 dated June, 1991.
+   This code may distributed only under the terms of the GNU Public
+   License which can be found at http://www.gnu.org/copyleft or in
+   the file COPYING supplied with this code.
 
-   This package is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   This code is not distributed with warranties of any kind, including
+   implied warranties of merchantability or fitness for a particular use
+   or ability to breed pandas in captivity, it just can't be done.
 
 On Debian GNU/Linux systems, the complete text of the GNU General
-Public License can be found in `/usr/share/common-licenses/GPL'.
+Public License version 2 can be found in `/usr/share/common-licenses/GPL-2'.
+Later versions which the GNU project publishes on the above mentioned URL can
+be found in the same directory.

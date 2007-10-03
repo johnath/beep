@@ -1,3 +1,18 @@
+beep (1.2.2-20) unstable; urgency=low
+
+  * Added Homepage: control field.
+  * Moved patches to quilt, split them into:
+    - makefile-fixup: don't try to remove something outside the build place
+    - verbose-option: enable --verbose/--debug for getting info on what's
+      getting done
+    - multiple-freq: produce a warning on multiple frequency parameters
+    - serial-console-fix: use /dev/tty0 instead of /dev/console
+    - devfs-fix: try /dev/vc/0 too
+    - event-option: enable --event switch for specifying a special device
+  * Updated copyright file with the actual header from the code.
+
+ -- Gerfried Fuchs <rhonda@debian.at>  Wed, 03 Oct 2007 19:46:07 +0200
+
 beep (1.2.2-19) unstable; urgency=low
 
   * Translation update: Japanese (Hideki Yamane, closes: #392171)

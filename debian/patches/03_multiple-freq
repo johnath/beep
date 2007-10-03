@@ -1,0 +1,44 @@
+Index: beep-1.2.2/beep.c
+===================================================================
+--- beep-1.2.2.orig/beep.c
++++ beep-1.2.2/beep.c
+@@ -159,6 +159,9 @@ void parse_command_line(int argc, char *
+ 	 (argfreq <= 0))
+ 	usage_bail(argv[0]);
+       else
++	if (result->freq != 0)
++	  fprintf(stderr, "WARNING: multiple -f values given, only last "
++	    "one is used.\n");
+ 	result->freq = argfreq;    
+       break;
+     case 'l' : /* length */
+@@ -201,8 +204,10 @@ void parse_command_line(int argc, char *
+       exit(0);
+       break;
+     case 'n' : /* also --new - create another beep */
++      if (result->freq == 0)
++	result->freq = DEFAULT_FREQ;
+       result->next = (beep_parms_t *)malloc(sizeof(beep_parms_t));
+-      result->next->freq       = DEFAULT_FREQ;
++      result->next->freq       = 0;
+       result->next->length     = DEFAULT_LENGTH;
+       result->next->reps       = DEFAULT_REPS;
+       result->next->delay      = DEFAULT_DELAY;
+@@ -220,6 +225,8 @@ void parse_command_line(int argc, char *
+       usage_bail(argv[0]);
+     }
+   }
++  if (result->freq == 0)
++    result->freq = DEFAULT_FREQ;
+ }  
+ 
+ void play_beep(beep_parms_t parms) {
+@@ -260,7 +267,7 @@ int main(int argc, char **argv) {
+   char sin[4096], *ptr;
+   
+   beep_parms_t *parms = (beep_parms_t *)malloc(sizeof(beep_parms_t));
+-  parms->freq       = DEFAULT_FREQ;
++  parms->freq       = 0;
+   parms->length     = DEFAULT_LENGTH;
+   parms->reps       = DEFAULT_REPS;
+   parms->delay      = DEFAULT_DELAY;

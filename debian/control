@@ -1,9 +1,10 @@
 Source: beep
 Section: sound
 Priority: optional
-Maintainer: Gerfried Fuchs <alfie@debian.org>
-Build-Depends: po-debconf, patch
+Maintainer: Gerfried Fuchs <rhonda@debian.at>
+Build-Depends: po-debconf, patch, quilt
 Standards-Version: 3.7.2
+Homepage: http://johnath.com/beep/
 
 Package: beep
 Architecture: any

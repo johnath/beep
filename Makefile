@@ -15,5 +15,5 @@ beep : beep.c
 
 install : 
 	cp ${EXEC_NAME} ${INSTALL_DIR}
-	# rm -f /usr/man/man1/beep.1.bz2
+	rm -f /usr/man/man1/beep.1.bz2
 	cp ${MAN_FILE} ${MAN_DIR}

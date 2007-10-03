@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: beep\n"
-"Report-Msgid-Bugs-To: alfie@debian.org\n"
+"Report-Msgid-Bugs-To: beep@packages.debian.org\n"
 "POT-Creation-Date: 2007-02-20 23:46+0100\n"
 "PO-Revision-Date: 2006-06-21 12:49-0500\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
