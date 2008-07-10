@@ -1,0 +1,59 @@
+# Galician translation of beep's debconf templates
+# This file is distributed under the same license as the beep package.
+# Jacobo Tarrio <jtarrio@debian.org>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: beep\n"
+"Report-Msgid-Bugs-To: beep@packages.debian.org\n"
+"POT-Creation-Date: 2007-02-20 23:46+0100\n"
+"PO-Revision-Date: 2008-05-18 12:37+0100\n"
+"Last-Translator: Jacobo Tarrio <jtarrio@debian.org>\n"
+"Language-Team: Galician <proxecto@trasno.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid ""
+"suid root for all, suid root with only group audio executable, not suid at "
+"all"
+msgstr ""
+"suid root para todos, suid root só executable para o grupo audio, non suid "
+"en absoluto"
+
+#. Type: select
+#. Description
+#: ../templates:1002
+msgid "Install beep as:"
+msgstr "Instalar beep coma:"
+
+#. Type: select
+#. Description
+#: ../templates:1002
+msgid ""
+"beep must be run as root since it needs to access the speaker hardware. "
+"There are several posibilities to make the program usable:  Either only for "
+"root (no suid bit at all), executable only by users of the group audio, or "
+"usable for all."
+msgstr ""
+"Débese executar \"beep\" coma administrador, xa que precisa de acceder ao "
+"hardware do altoparlante. Hai varias posibilidade para facer o programa "
+"utilizable: só para o administrador (sen bit suid en absoluto), executable "
+"só polos usuarios do grupo \"audio\", ou utilizable por todos."
+
+#. Type: select
+#. Description
+#: ../templates:1002
+msgid ""
+"Since each program set as suid root can be a security risk this is not done "
+"by default.  However, the program is quite small (~150 lines of code), so it "
+"is fairly easy to verify the safety of the code yourself, if you don't trust "
+"my judgement."
+msgstr ""
+"Xa que os programas \"suid root\" poden ser riscos de seguridade, isto non "
+"se fai por defecto. Nembargantes, o programa é bastante pequeno (unhas 150 "
+"liñas de código), así que é bastante doado verificar vostede mesmo a "
+"seguridade do código, se non confía no xuízo do mantedor do paquete."

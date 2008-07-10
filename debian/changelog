@@ -1,3 +1,13 @@
+beep (1.2.2-21) unstable; urgency=low
+
+  * Don't ignore make clean errors anymore.
+  * New debconf translation: Galician by Jacobo Tarrio (closes: #481751)
+  * Updated to Standards-Version to 3.8.0, add README.source file (referencing
+    quilt's).
+  * Also strip sections .comment and .note (closes: #490163)
+
+ -- Gerfried Fuchs <rhonda@debian.at>  Thu, 10 Jul 2008 15:14:18 +0200
+
 beep (1.2.2-20) unstable; urgency=low
 
   * Added Homepage: control field.

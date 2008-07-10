@@ -3,7 +3,7 @@ Section: sound
 Priority: optional
 Maintainer: Gerfried Fuchs <rhonda@debian.at>
 Build-Depends: po-debconf, patch, quilt
-Standards-Version: 3.7.2
+Standards-Version: 3.8.0
 Homepage: http://johnath.com/beep/
 
 Package: beep

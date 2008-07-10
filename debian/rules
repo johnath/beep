@@ -25,6 +25,7 @@ else
 endif
 ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 	INSTALL_PROGRAM += -s
+	STRIP = true
 endif
 
 
@@ -34,7 +35,7 @@ clean: unpatch
 	$(checkdir)
 	$(checkroot)
 	-rm -rf $(TMP1) $(TMP2) debian/substvars debian/files build-stamp
-	-$(MAKE) clean
+	[ ! -f beep ] || $(MAKE) clean
 
 
 build: build-stamp
@@ -63,6 +64,9 @@ install: build
 	cd $(TMP1)/usr/share/doc/$(PKG1) && gzip -9 changelog README
 	$(INSTALL_DIR) $(TMP2)/usr/bin
 	$(INSTALL_PROGRAM) beep $(TMP2)/usr/bin
+	test "$(STRIP)" != true || strip \
+		--remove-section=.comment --remove-section=.note \
+		$(TMP1)/usr/bin/beep $(TMP2)/usr/bin/beep
 
 
 # Build architecture-independent files here.
