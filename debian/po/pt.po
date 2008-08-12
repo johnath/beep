@@ -1,12 +1,12 @@
 # Portuguese translation for beep's debconf messages.
-# 2005-2006, Miguel Figueiredo <elmig@debianpt.org>
+# 2005-2008, Miguel Figueiredo <elmig@debianpt.org>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: beep 1.2.2-16\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2007-02-20 23:46+0100\n"
-"PO-Revision-Date: 2006-06-28 02:07-0500\n"
+"POT-Creation-Date: 2008-07-28 19:33+0200\n"
+"PO-Revision-Date: 2008-08-01 18:07+0100\n"
 "Last-Translator: Miguel Figueiredo <elmig@debianpt.org>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,11 +16,9 @@ msgstr ""
 #. Type: select
 #. Choices
 #: ../templates:1001
-msgid ""
-"suid root for all, suid root with only group audio executable, not suid at "
-"all"
+msgid "usable for all, usable for group audio, usable only for root"
 msgstr ""
-"suid root para todos, suid root apenas com o grupo audio executável, sem suid"
+"utilizável para todos, utilizável para o grupo audio, utilizável para o root"
 
 #. Type: select
 #. Description
@@ -33,7 +31,7 @@ msgstr "Instalar beep como:"
 #: ../templates:1002
 msgid ""
 "beep must be run as root since it needs to access the speaker hardware. "
-"There are several posibilities to make the program usable:  Either only for "
+"There are several possibilities to make the program usable:  Either only for "
 "root (no suid bit at all), executable only by users of the group audio, or "
 "usable for all."
 msgstr ""
@@ -49,9 +47,9 @@ msgid ""
 "Since each program set as suid root can be a security risk this is not done "
 "by default.  However, the program is quite small (~150 lines of code), so it "
 "is fairly easy to verify the safety of the code yourself, if you don't trust "
-"my judgement."
+"the package maintainer's judgement."
 msgstr ""
 "Já que cada programa como suid root pode ser um risco de segurança isto não "
 "é feito por omissão.  No entanto, o programa é bastante pequeno (~150 linhas "
-"de código), por isso é bastante fácil verificar por si mesmo a segurança do "
-"código, se não acreditar no meu julgamento."
+"de código), por isso é bastante fácil verificar por você mesmo a segurança "
+"do código, se não acreditar no julgamento do 'maintainer' do pacote."

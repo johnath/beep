@@ -1,0 +1,66 @@
+# translation of ro.po to debian-l10-romanian
+# Romanian translations for PACKAGE package
+# Traducerea în limba română pentru pachetul beep.
+# Copyright (C) 2003-2008 Gerfried Fuchs <rhonda@debian.at>
+# This file is distributed under the same license as the beep package.
+#
+#  <eddy.petrisor@gmail.com>, 2008.
+# Eddy Petrișor <eddy.petrisor@gmail.com>, 2008.
+msgid ""
+msgstr ""
+"Project-Id-Version: ro\n"
+"Report-Msgid-Bugs-To: beep@packages.debian.org\n"
+"POT-Creation-Date: 2008-07-28 19:33+0200\n"
+"PO-Revision-Date: 2008-08-02 04:46+0300\n"
+"Last-Translator: Eddy Petrișor <eddy.petrisor@gmail.com>\n"
+"Language-Team: debian-l10-romanian <debian-l10n-romanian@lists.debian.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms:  nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable for all, usable for group audio, usable only for root"
+msgstr ""
+"utilizabil pentru toți, utilizabil pentru grupul audio, utilizabil doar de "
+"root"
+
+#. Type: select
+#. Description
+#: ../templates:1002
+msgid "Install beep as:"
+msgstr "Se instalează beep astfel încât este:"
+
+#. Type: select
+#. Description
+#: ../templates:1002
+msgid ""
+"beep must be run as root since it needs to access the speaker hardware. "
+"There are several possibilities to make the program usable:  Either only for "
+"root (no suid bit at all), executable only by users of the group audio, or "
+"usable for all."
+msgstr ""
+"beep trebuie să ruleze ca root deoarece are nevoie să acceseze componentele "
+"legate de difuzor. Există mai multe posibilități pentru a face programul "
+"utilizabil: Fie doar pentru root (fără bitul suid), executabil doar de către "
+"utilizatorii grupului audio sau utilizabil pentru toți."
+
+#. Type: select
+#. Description
+#: ../templates:1002
+msgid ""
+"Since each program set as suid root can be a security risk this is not done "
+"by default.  However, the program is quite small (~150 lines of code), so it "
+"is fairly easy to verify the safety of the code yourself, if you don't trust "
+"the package maintainer's judgement."
+msgstr ""
+"Deoarece orice program instalat cu suid root poate reprezenta un risc din "
+"punct de vedere al securității, acest lucru nu se face în mod implicit. "
+"Totuși acest program este mic (aproximativ 150 de linii de cod), deci o "
+"verificare a  codului, din punctul de vedere al securității, este destul de "
+"ușor de realizat, dacă nu aveți încredere în judecata responsabilului "
+"pachetului."

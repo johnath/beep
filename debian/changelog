@@ -1,3 +1,31 @@
+beep (1.2.2-22) unstable; urgency=low
+
+  * Remove Homepage control field from udeb.
+  * s/my/the package maintainer's/ in debian/templates, users have no concept
+    of "my" when they see the debconf question (removing overrides file).
+  * Updated templates file with more suggestion sent in by Esko Arajärvi,
+    thanks.
+  * Update debian/beep.1.diff to escape hyphens where they actually do mean
+    the minus sign.
+  * debian/po/vi.po: Removed the Language-Team as it bounces (or moderates,
+    can't read Vietnamese).
+  * New translation:
+    - Finish by Esko Arajärvi (closes: #492724, #493220)
+    - Romanian by Eddy Petrișor (closes: #493764)
+    - Euskara by Piarres Beobide (closes: #493842)
+  * Updated translations:
+    - Galician by Jacobo Tarrio (closes: #492792, #493305)
+    - Japanese by Hideki Yamane (closes: #492969, #493535)
+    - French by Daniel Déchelotte (closes: #493072, #494490)
+    - Swedish by Martin Bagge (closes: #493344)
+    - Portuguese by Miguel Figueiredo (closes: #493264)
+    - Russian by Yuri Kozlov (closes: #493280)
+    - Czech by Miroslav Kure (closes: #493596)
+    - Dutch by Thijs Kinkhorst (closes: #494093)
+    - Brazilian Portuguese by Felipe Augusto van de Wiel
+
+ -- Gerfried Fuchs <rhonda@debian.at>  Tue, 12 Aug 2008 12:00:46 -0300
+
 beep (1.2.2-21) unstable; urgency=low
 
   * Don't ignore make clean errors anymore.

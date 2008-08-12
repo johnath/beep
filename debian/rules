@@ -77,8 +77,7 @@ binary-indep: build
 binary-arch: build install
 	$(checkdir)
 	$(checkroot)
-	$(INSTALL_DIR) $(TMP1)/DEBIAN $(TMP1)/usr/share/lintian/overrides \
-		$(TMP2)/DEBIAN
+	$(INSTALL_DIR) $(TMP1)/DEBIAN $(TMP2)/DEBIAN
 	$(INSTALL_FILE) debian/README.Debian debian/copyright \
 		$(TMP1)/usr/share/doc/$(PKG1)
 	$(INSTALL_FILE) debian/changelog \
@@ -86,8 +85,6 @@ binary-arch: build install
 	gzip -9 $(TMP1)/usr/share/doc/$(PKG1)/changelog.Debian
 	$(INSTALL_SCRIPT) debian/postinst debian/postrm debian/config \
 		$(TMP1)/DEBIAN
-	$(INSTALL_FILE) debian/overrides \
-		$(TMP1)/usr/share/lintian/overrides/$(PKG1)
 	po2debconf debian/templates > $(TMP1)/DEBIAN/templates
 	dpkg-shlibdeps -Tdebian/substvars -dDepends $(TMP1)/usr/bin/beep
 	dpkg-gencontrol -ldebian/changelog -isp -Tdebian/substvars -p$(PKG1) \
@@ -96,7 +93,7 @@ binary-arch: build install
 		xargs -r0 md5sum > DEBIAN/md5sums
 	dpkg --build $(TMP1) ..
 	dpkg-gencontrol -ldebian/changelog -isp -Tdebian/substvars -p$(PKG2) \
-		-P$(TMP2) -n$(PKG2)_$(VERSION)_$(ARCH).udeb
+		-P$(TMP2) -UHomepage -n$(PKG2)_$(VERSION)_$(ARCH).udeb
 	dpkg --build $(TMP2) ../$(PKG2)_$(VERSION)_$(ARCH).udeb
 
 

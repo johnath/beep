@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beep 1.2.2-12\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2007-02-20 23:46+0100\n"
+"POT-Creation-Date: 2008-07-28 19:33+0200\n"
 "PO-Revision-Date: 2007-10-03 19:01+0200\n"
 "Last-Translator: Stefano Melchior <stefano.melchior@openlabs.it>\n"
 "Language-Team: Italian <debian-l10n-italian@lists.debian.org>\n"
@@ -13,12 +13,8 @@ msgstr ""
 #. Type: select
 #. Choices
 #: ../templates:1001
-msgid ""
-"suid root for all, suid root with only group audio executable, not suid at "
-"all"
+msgid "usable for all, usable for group audio, usable only for root"
 msgstr ""
-"suid root per tutti, suid root solamente con gli eseguibili del gruppo "
-"audio, nient'affatto suid"
 
 #. Type: select
 #. Description
@@ -29,9 +25,15 @@ msgstr ""
 #. Type: select
 #. Description
 #: ../templates:1002
+#, fuzzy
+#| msgid ""
+#| "beep must be run as root since it needs to access the speaker hardware. "
+#| "There are several posibilities to make the program usable:  Either only "
+#| "for root (no suid bit at all), executable only by users of the group "
+#| "audio, or usable for all."
 msgid ""
 "beep must be run as root since it needs to access the speaker hardware. "
-"There are several posibilities to make the program usable:  Either only for "
+"There are several possibilities to make the program usable:  Either only for "
 "root (no suid bit at all), executable only by users of the group audio, or "
 "usable for all."
 msgstr ""
@@ -43,14 +45,27 @@ msgstr ""
 #. Type: select
 #. Description
 #: ../templates:1002
+#, fuzzy
+#| msgid ""
+#| "Since each program set as suid root can be a security risk this is not "
+#| "done by default.  However, the program is quite small (~150 lines of "
+#| "code), so it is fairly easy to verify the safety of the code yourself, if "
+#| "you don't trust my judgement."
 msgid ""
 "Since each program set as suid root can be a security risk this is not done "
 "by default.  However, the program is quite small (~150 lines of code), so it "
 "is fairly easy to verify the safety of the code yourself, if you don't trust "
-"my judgement."
+"the package maintainer's judgement."
 msgstr ""
 "Dal momento che ogni programma che usa suid root è un rischio per la "
 "sicurezza, questo non viene abilitato come opzione predefinita. Comunque, il "
 "programma risulta abbastanza piccolo (circa 150 linee di codice) e semplice "
 "da permettere di verificare da soli la sicurezza del codice, qualora non ci "
 "si fidasse del giudizio dell'autore."
+
+#~ msgid ""
+#~ "suid root for all, suid root with only group audio executable, not suid "
+#~ "at all"
+#~ msgstr ""
+#~ "suid root per tutti, suid root solamente con gli eseguibili del gruppo "
+#~ "audio, nient'affatto suid"

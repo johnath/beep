@@ -1,23 +1,23 @@
-#
+# 
 #    Translators, if you are not familiar with the PO format, gettext
 #    documentation is worth reading, especially sections dedicated to
 #    this format, e.g. by running:
 #         info -n '(gettext)PO Files'
 #         info -n '(gettext)Header Entry'
-#
+# 
 #    Some information specific to po-debconf are available at
 #            /usr/share/doc/po-debconf/README-trans
 #         or http://www.debian.org/intl/l10n/po-debconf/README-trans
-#
+# 
 #    Developers do not need to manually edit POT or PO files.
-#
-#
+# 
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: beep 1.2.2-18\n"
+"Project-Id-Version: beep 1.2.2-22\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2007-02-20 23:46+0100\n"
-"PO-Revision-Date: 2007-10-03 19:01+0200\n"
+"POT-Creation-Date: 2008-07-28 19:33+0200\n"
+"PO-Revision-Date: 2008-08-03 11:10+0900\n"
 "Last-Translator: Hideki Yamane (Debian-JP) <henrich@debian.or.jp>\n"
 "Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -27,12 +27,10 @@ msgstr ""
 #. Type: select
 #. Choices
 #: ../templates:1001
-msgid ""
-"suid root for all, suid root with only group audio executable, not suid at "
-"all"
+msgid "usable for all, usable for group audio, usable only for root"
 msgstr ""
-"全ユーザが使えるように root に suid する, audio グループだけが実行できるよう"
-"に root に suid する, suid しない"
+"全ユーザが使えるようにする, audio グループだけが実行できるようにする, root だ"
+"けが使えるようにする"
 
 #. Type: select
 #. Description
@@ -45,7 +43,7 @@ msgstr "beep のインストール時設定について:"
 #: ../templates:1002
 msgid ""
 "beep must be run as root since it needs to access the speaker hardware. "
-"There are several posibilities to make the program usable:  Either only for "
+"There are several possibilities to make the program usable:  Either only for "
 "root (no suid bit at all), executable only by users of the group audio, or "
 "usable for all."
 msgstr ""
@@ -61,9 +59,9 @@ msgid ""
 "Since each program set as suid root can be a security risk this is not done "
 "by default.  However, the program is quite small (~150 lines of code), so it "
 "is fairly easy to verify the safety of the code yourself, if you don't trust "
-"my judgement."
+"the package maintainer's judgement."
 msgstr ""
 "各プログラムを root に suid するのはセキュリティリスクになるので、デフォルト"
 "ではこの方法は採りません。しかしながら、このプログラムは非常に小さいので (150"
-"行程度のコードです)、私の判断を信じられない場合、あなた自身でコードの安全性"
-"を”確認するのはとても簡単です。"
+"行程度のコードです)、パッケージメンテナの判断を信用しない場合、あなた自身で"
+"コードの安全性を確認するのはとても簡単です。"

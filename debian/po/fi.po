@@ -1,0 +1,37 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: beep\n"
+"Report-Msgid-Bugs-To: beep@packages.debian.org\n"
+"POT-Creation-Date: 2008-07-28 19:33+0200\n"
+"PO-Revision-Date: 2008-08-01 15:06+0200\n"
+"Last-Translator: Esko Arajärvi <edu@iki.fi>\n"
+"Language-Team: Finnish <debian-l10n-finnish@lists.debian.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Country: FINLAND\n"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable for all, usable for group audio, usable only for root"
+msgstr "kaikkien käyttöön, ryhmän audio käyttöön, vain pääkäyttäjän käyttöön"
+
+#. Type: select
+#. Description
+#: ../templates:1002
+msgid "Install beep as:"
+msgstr "Asenna beep:"
+
+#. Type: select
+#. Description
+#: ../templates:1002
+msgid "beep must be run as root since it needs to access the speaker hardware. There are several possibilities to make the program usable:  Either only for root (no suid bit at all), executable only by users of the group audio, or usable for all."
+msgstr "Ohjelmaa beep täytyy ajaa pääkäyttäjänä, koska sen täytyy voida käyttää koneen kaiutinta. Ohjelma voidaan asentaa useammalla tavalla: kaikkien käyttöön (suid root), vain ryhmän audio käyttöön (suid root ryhmälle audio) tai vain pääkäyttäjän käyttöön."
+
+#. Type: select
+#. Description
+#: ../templates:1002
+msgid "Since each program set as suid root can be a security risk this is not done by default.  However, the program is quite small (~150 lines of code), so it is fairly easy to verify the safety of the code yourself, if you don't trust the package maintainer's judgement."
+msgstr "Koska mikä tahansa suid-bitin kanssa asennettu ohjelma voi olla tietoturvariski, sitä ei oletuksena aseteta. Koska ohjelma kuitenkin on melko pieni (noin 150 riviä koodia), sen turvallisuus on melko helppo tarkistaa tarvittaessa itse."
+

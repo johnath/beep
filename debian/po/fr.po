@@ -15,45 +15,41 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beep 1.2.2-10\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2007-02-20 23:46+0100\n"
-"PO-Revision-Date: 2006-06-28 02:06-0500\n"
-"Last-Translator: Daniel Déchelotte <maitre_yodan@club-internet.fr>\n"
+"POT-Creation-Date: 2008-07-28 19:33+0200\n"
+"PO-Revision-Date: 2008-08-09 19:54-0300\n"
+"Last-Translator: Daniel DÃ©chelotte <maitre_yodan@club-internet.fr>\n"
 "Language-Team: Debian-l10n-french <debian-l10n-french@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #. Type: select
 #. Choices
 #: ../templates:1001
-msgid ""
-"suid root for all, suid root with only group audio executable, not suid at "
-"all"
-msgstr ""
-"Exécution par tous en setuid root, Exécution par le seul groupe audio en "
-"setuid root, Pas de setuid root"
+msgid "usable for all, usable for group audio, usable only for root"
+msgstr "Utilisable par tous, Utilisable seulement par les membres du "
+"groupe Â«Â audioÂ Â», RÃ©servÃ© au superutilisateur"
 
 #. Type: select
 #. Description
 #: ../templates:1002
 msgid "Install beep as:"
-msgstr "Installer beep en :"
+msgstr "Installer beep de sorte qu'il soitÂ :"
 
 #. Type: select
 #. Description
 #: ../templates:1002
 msgid ""
 "beep must be run as root since it needs to access the speaker hardware. "
-"There are several posibilities to make the program usable:  Either only for "
+"There are several possibilities to make the program usable:  Either only for "
 "root (no suid bit at all), executable only by users of the group audio, or "
 "usable for all."
 msgstr ""
-"Le programme beep doit être lancé avec les privilèges du superutilisateur "
-"pour pouvoir accéder au haut-parleur. Cela est possible de plusieurs "
-"façons : soit le bit setuid est positionné et tout le monde peut exécuter ce "
-"programme, soit le bit setuid est positionné et seuls les membres du groupe "
-"audio peuvent exécuter le programme, soit le bit setuid n'est pas positionné "
-"et beep n'est alors exécutable que par le superutilisateur."
+"Le programme beep doit possÃ©der les privilÃ¨ges du superutilisateur "
+"pour pouvoir accÃ©der au haut-parleur. Cela est possible de plusieurs "
+"faÃ§onsÂ : soit permettre de le lancer avec les privilÃ¨ges du superutilisateur (Â«Â setuid rootÂ Â») "
+"par tous ou uniquement par les membres du groupe Â«Â audioÂ Â», "
+"soit rÃ©server l'exÃ©cution du programme au superutilisateur."
 
 #. Type: select
 #. Description
@@ -62,10 +58,10 @@ msgid ""
 "Since each program set as suid root can be a security risk this is not done "
 "by default.  However, the program is quite small (~150 lines of code), so it "
 "is fairly easy to verify the safety of the code yourself, if you don't trust "
-"my judgement."
+"the package maintainer's judgement."
 msgstr ""
-"Comme tout programme « setuid root » représente a priori un risque du point "
-"de vue de la sécurité, cela n'est pas fait par défaut. Toutefois, ce "
-"programme est vraiment petit (environ 150 lignes de code) et il est "
-"relativement facile de vérifier par vous-même que le code est sûr, en cas de "
+"Tout programme qui s'exÃ©cute avec les privilÃ¨ges du superutilisateur peut prÃ©senter un risque "
+"pour la sÃ©curitÃ© du systÃ¨me. Toutefois, ce "
+"programme est vraiment petit (environ 150Â lignes de code) et il est "
+"relativement facile de vÃ©rifier par vous-mÃªme que le code est sÃ»r, en cas de "
 "doute."

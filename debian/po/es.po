@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beep\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2007-02-20 23:46+0100\n"
+"POT-Creation-Date: 2008-07-28 19:33+0200\n"
 "PO-Revision-Date: 2006-06-28 02:06-0500\n"
 "Last-Translator: David Martínez Moreno <ender@debian.org>\n"
 "Language-Team: Debian l10n Spanish <debian-l10n-spanish@lists.debian.org>\n"
@@ -43,12 +43,8 @@ msgstr ""
 #. Type: select
 #. Choices
 #: ../templates:1001
-msgid ""
-"suid root for all, suid root with only group audio executable, not suid at "
-"all"
+msgid "usable for all, usable for group audio, usable only for root"
 msgstr ""
-"activar el bit «suid root» para todos, sólo para el grupo «audio», no "
-"activarlo en absoluto"
 
 #. Type: select
 #. Description
@@ -59,28 +55,47 @@ msgstr "Instalar beep de la siguiente manera:"
 #. Type: select
 #. Description
 #: ../templates:1002
+#, fuzzy
+#| msgid ""
+#| "beep must be run as root since it needs to access the speaker hardware. "
+#| "There are several posibilities to make the program usable:  Either only "
+#| "for root (no suid bit at all), executable only by users of the group "
+#| "audio, or usable for all."
 msgid ""
 "beep must be run as root since it needs to access the speaker hardware. "
-"There are several posibilities to make the program usable:  Either only for "
+"There are several possibilities to make the program usable:  Either only for "
 "root (no suid bit at all), executable only by users of the group audio, or "
 "usable for all."
 msgstr ""
 "El programa beep debe ejecutarse como root porque necesita acceder al "
 "hardware del altavoz. No obstante, existen varias posibilidades para usar el "
-"programa: que lo use sólo root (sin «bit suid»), los usuarios que "
-"pertenezcan al grupo «audio», o todos."
+"programa: que lo use sólo root (sin «bit suid»), los usuarios que pertenezcan "
+"al grupo «audio», o todos."
 
 #. Type: select
 #. Description
 #: ../templates:1002
+#, fuzzy
+#| msgid ""
+#| "Since each program set as suid root can be a security risk this is not "
+#| "done by default.  However, the program is quite small (~150 lines of "
+#| "code), so it is fairly easy to verify the safety of the code yourself, if "
+#| "you don't trust my judgement."
 msgid ""
 "Since each program set as suid root can be a security risk this is not done "
 "by default.  However, the program is quite small (~150 lines of code), so it "
 "is fairly easy to verify the safety of the code yourself, if you don't trust "
-"my judgement."
+"the package maintainer's judgement."
 msgstr ""
 "Esta elección es necesaria debido a que cualquier programa con el «bit suid» "
 "puede suponer un riesgo de seguridad. Sin embargo, el programa es bastante "
 "pequeño (unas 150 líneas de código) y, por lo tanto, si no confía en nuestro "
 "juicio, usted mismo puede verificar con bastante facilidad la seguridad del "
 "código."
+
+#~ msgid ""
+#~ "suid root for all, suid root with only group audio executable, not suid "
+#~ "at all"
+#~ msgstr ""
+#~ "activar el bit «suid root» para todos, sólo para el grupo «audio», no "
+#~ "activarlo en absoluto"
