@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beep\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2008-07-28 19:33+0200\n"
-"PO-Revision-Date: 2008-08-01 23:23+0100\n"
+"POT-Creation-Date: 2008-09-11 18:36+0200\n"
+"PO-Revision-Date: 2008-11-24 10:10+0100\n"
 "Last-Translator: Jacobo Tarrio <jtarrio@debian.org>\n"
 "Language-Team: Galician <proxecto@trasno.net>\n"
 "MIME-Version: 1.0\n"
@@ -17,10 +17,20 @@ msgstr ""
 #. Type: select
 #. Choices
 #: ../templates:1001
-msgid "usable for all, usable for group audio, usable only for root"
-msgstr ""
-"utilizable por todos, utilizable polo grupo audio, utilizable só polo "
-"administrador"
+msgid "usable for all"
+msgstr "utilizable por todos"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable for group audio"
+msgstr "utilizable polo grupo audio"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable only for root"
+msgstr "utilizable só polo administrador"
 
 #. Type: select
 #. Description

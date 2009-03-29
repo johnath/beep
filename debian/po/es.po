@@ -1,18 +1,20 @@
 # beep po-debconf translation to Spanish
-# Copyright (C) 2005 Software in the Public Interest
+# Copyright (C) 2005, 2006, 2008 Software in the Public Interest
 # This file is distributed under the same license as the beep package.
 #
 # Changes:
 #  - Initial translation
-#         César Gómez Martín <cesar.gomez@gmail.com>, 2005.
+#       César Gómez Martín <cesar.gomez@gmail.com>, 2005.
 #  - Updates:
-#         David Martínez Moreno <ender@debian.org>, 2006.
+#       David Martínez Moreno <ender@debian.org>, 2006.
+#       Francisco Javier Cuadrado <fcocuadrado@gmail.com>, 2008
 #
-#   Traductores, si no conoce el formato PO, merece la pena leer la
-#   documentación de gettext, especialmente las secciones dedicadas a este
-#   formato, por ejemplo ejecutando:
-#          info -n '(gettext)PO Files'
-#          info -n '(gettext)Header Entry'
+# Traductores, si no conoce el formato PO, merece la pena leer la
+# documentación de gettext, especialmente las secciones dedicadas a este
+# formato, por ejemplo ejecutando:
+#       info -n '(gettext)PO Files'
+#       info -n '(gettext)Header Entry'
+#
 # Equipo de traducción al español, por favor, lean antes de traducir
 # los siguientes documentos:
 #
@@ -27,75 +29,66 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: beep\n"
+"Project-Id-Version: beep 1.2.2-22\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2008-07-28 19:33+0200\n"
-"PO-Revision-Date: 2006-06-28 02:06-0500\n"
-"Last-Translator: David Martínez Moreno <ender@debian.org>\n"
+"POT-Creation-Date: 2008-09-11 18:36+0200\n"
+"PO-Revision-Date: 2008-11-24 10:09+0100\n"
+"Last-Translator: Francisco Javier Cuadrado <fcocuadrado@gmail.com>\n"
 "Language-Team: Debian l10n Spanish <debian-l10n-spanish@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: Spanish\n"
-"X-Poedit-Country: SPAIN\n"
-"X-Poedit-SourceCharset: utf-8\n"
 
 #. Type: select
 #. Choices
 #: ../templates:1001
-msgid "usable for all, usable for group audio, usable only for root"
-msgstr ""
+msgid "usable for all"
+msgstr "utilizable por todos"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable for group audio"
+msgstr "utilizable por el grupo «audio»"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable only for root"
+msgstr "utilizable por «root»"
 
 #. Type: select
 #. Description
 #: ../templates:1002
 msgid "Install beep as:"
-msgstr "Instalar beep de la siguiente manera:"
+msgstr "Instalar beep como:"
 
 #. Type: select
 #. Description
 #: ../templates:1002
-#, fuzzy
-#| msgid ""
-#| "beep must be run as root since it needs to access the speaker hardware. "
-#| "There are several posibilities to make the program usable:  Either only "
-#| "for root (no suid bit at all), executable only by users of the group "
-#| "audio, or usable for all."
 msgid ""
 "beep must be run as root since it needs to access the speaker hardware. "
 "There are several possibilities to make the program usable:  Either only for "
 "root (no suid bit at all), executable only by users of the group audio, or "
 "usable for all."
 msgstr ""
-"El programa beep debe ejecutarse como root porque necesita acceder al "
+"El programa beep debe ejecutarse como «root» porque necesita acceder al "
 "hardware del altavoz. No obstante, existen varias posibilidades para usar el "
-"programa: que lo use sólo root (sin «bit suid»), los usuarios que pertenezcan "
-"al grupo «audio», o todos."
+"programa: que lo use sólo «root» (sin «bit suid»), los usuarios que "
+"pertenezcan al grupo «audio», o todos."
 
 #. Type: select
 #. Description
 #: ../templates:1002
-#, fuzzy
-#| msgid ""
-#| "Since each program set as suid root can be a security risk this is not "
-#| "done by default.  However, the program is quite small (~150 lines of "
-#| "code), so it is fairly easy to verify the safety of the code yourself, if "
-#| "you don't trust my judgement."
 msgid ""
 "Since each program set as suid root can be a security risk this is not done "
 "by default.  However, the program is quite small (~150 lines of code), so it "
 "is fairly easy to verify the safety of the code yourself, if you don't trust "
 "the package maintainer's judgement."
 msgstr ""
-"Esta elección es necesaria debido a que cualquier programa con el «bit suid» "
-"puede suponer un riesgo de seguridad. Sin embargo, el programa es bastante "
-"pequeño (unas 150 líneas de código) y, por lo tanto, si no confía en nuestro "
-"juicio, usted mismo puede verificar con bastante facilidad la seguridad del "
-"código."
-
-#~ msgid ""
-#~ "suid root for all, suid root with only group audio executable, not suid "
-#~ "at all"
-#~ msgstr ""
-#~ "activar el bit «suid root» para todos, sólo para el grupo «audio», no "
-#~ "activarlo en absoluto"
+"Ya que cualquier programa con el «bit suid» puede suponer un riesgo de "
+"seguridad, esta elección no se realiza de manera predeterminada. Sin "
+"embargo, el programa es bastante pequeño (aproximadamente unas 150 líneas de "
+"código) y, por lo tanto, si no confía en el juicio del responsable del "
+"paquete, usted mismo podría verificar con bastante facilidad la seguridad "
+"del código."

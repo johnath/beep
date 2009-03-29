@@ -1,3 +1,6 @@
+Author: Alessandro Zummo	vim:ft=diff:
+Description: evdev and general device node support (BTS #350214)
+
 Index: beep-1.2.2/beep.c
 ===================================================================
 --- beep-1.2.2.orig/beep.c

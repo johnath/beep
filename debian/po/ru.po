@@ -18,21 +18,34 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2008-07-28 19:33+0200\n"
-"PO-Revision-Date: 2008-08-01 19:22+0400\n"
+"POT-Creation-Date: 2008-09-11 18:36+0200\n"
+"PO-Revision-Date: 2008-11-24 10:11+0100\n"
 "Last-Translator: Yuri Kozlov <kozlov.y@gmail.com>\n"
 "Language-Team: Russian <debian-l10n-russian@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
-"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. Type: select
 #. Choices
 #: ../templates:1001
-msgid "usable for all, usable for group audio, usable only for root"
-msgstr "использовать всем, использовать группе audio, использовать только суперпользователю"
+msgid "usable for all"
+msgstr "использовать всем"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable for group audio"
+msgstr "использовать группе audio"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable only for root"
+msgstr "использовать только суперпользователю"
 
 #. Type: select
 #. Description
@@ -50,9 +63,10 @@ msgid ""
 "usable for all."
 msgstr ""
 "Для работы программе beep нужно иметь права суперпользователя, так как ей "
-"нужен доступ к динамику. Поэтому есть несколько вариантов установки, при которых: "
-"её будет использовать только суперпользователь (не устанавливать бит suid), "
-"её будут использовать все из группы audio, или её сможет использовать любой."
+"нужен доступ к динамику. Поэтому есть несколько вариантов установки, при "
+"которых: её будет использовать только суперпользователь (не устанавливать "
+"бит suid), её будут использовать все из группы audio, или её сможет "
+"использовать любой."
 
 #. Type: select
 #. Description
@@ -67,4 +81,3 @@ msgstr ""
 "поэтому suid-бит по умолчанию не устанавливается. Однако, программа "
 "исключительно мала (~150 строк кода), и безопасность её кода очень легко "
 "проверить самостоятельно, если не вы доверяете сопровождающему."
-

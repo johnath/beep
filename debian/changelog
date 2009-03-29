@@ -1,3 +1,20 @@
+beep (1.2.2-23) unstable; urgency=low
+
+  * Updated translation:
+    - Vietnamese by Clytie Siddall (closes: #498496)
+    - Spanish by Francisco Javier Cuadrado (closes: #506415)
+    - Catalan by Matt Bonner (closes: #521470)
+    - Italian by davide gliozzi
+  * Split _Choices field in debian/templates into __Choices without unfuzzying
+    translations.
+  * Bumped Standards-Version to 3.8.1.
+  * Remove update cruft in maintainer scripts from ancient releases.
+  * Fixed two typos in manpage noticed by A. Costra, thanks (closes: #497890)
+  * Add "minimal package" to the synopsis of beep-udeb.
+  * Add author + description informations to patches.
+
+ -- Gerfried Fuchs <rhonda@debian.at>  Sun, 29 Mar 2009 11:19:30 +0200
+
 beep (1.2.2-22) unstable; urgency=low
 
   * Remove Homepage control field from udeb.

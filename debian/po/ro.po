@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ro\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2008-07-28 19:33+0200\n"
-"PO-Revision-Date: 2008-08-02 04:46+0300\n"
+"POT-Creation-Date: 2008-09-11 18:36+0200\n"
+"PO-Revision-Date: 2008-11-24 10:11+0100\n"
 "Last-Translator: Eddy Petrișor <eddy.petrisor@gmail.com>\n"
 "Language-Team: debian-l10-romanian <debian-l10n-romanian@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -24,10 +24,20 @@ msgstr ""
 #. Type: select
 #. Choices
 #: ../templates:1001
-msgid "usable for all, usable for group audio, usable only for root"
-msgstr ""
-"utilizabil pentru toți, utilizabil pentru grupul audio, utilizabil doar de "
-"root"
+msgid "usable for all"
+msgstr "utilizabil pentru toți"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable for group audio"
+msgstr "utilizabil pentru grupul audio"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable only for root"
+msgstr "utilizabil doar de root"
 
 #. Type: select
 #. Description

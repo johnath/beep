@@ -3,7 +3,7 @@ Section: sound
 Priority: optional
 Maintainer: Gerfried Fuchs <rhonda@debian.at>
 Build-Depends: po-debconf, patch, quilt
-Standards-Version: 3.8.0
+Standards-Version: 3.8.1
 Homepage: http://johnath.com/beep/
 
 Package: beep
@@ -21,7 +21,7 @@ Package: beep-udeb
 Architecture: any
 Section: debian-installer
 Depends: ${shlibs:Depends}
-Description: advanced pc-speaker beeper
+Description: advanced pc-speaker beeper - minimal package
  beep does what you'd expect: it beeps. However, it offers various
  additional features, such as the ability to control pitch, duration,
  and repetitions.

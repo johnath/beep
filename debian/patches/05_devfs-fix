@@ -1,3 +1,6 @@
+Author: Goswin Brederlow <goswin.brederlow@student.uni-tuebingen.de>	vim:ft=diff:
+Description: Also try /dev/vc/0, devfs support (BTS #148884)
+
 Index: beep-1.2.2/beep.c
 ===================================================================
 --- beep-1.2.2.orig/beep.c

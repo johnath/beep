@@ -1,3 +1,6 @@
+Author: Gerfried Fuchs <rhonda@debian.at>	vim:ft=diff:
+Description: Add support for --verbose/--debug option (BTS #297791, #335027)
+
 Index: beep-1.2.2/beep.c
 ===================================================================
 --- beep-1.2.2.orig/beep.c

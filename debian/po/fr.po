@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beep 1.2.2-10\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2008-07-28 19:33+0200\n"
-"PO-Revision-Date: 2008-08-09 19:54-0300\n"
+"POT-Creation-Date: 2008-09-11 18:36+0200\n"
+"PO-Revision-Date: 2008-11-24 10:10+0100\n"
 "Last-Translator: Daniel Déchelotte <maitre_yodan@club-internet.fr>\n"
 "Language-Team: Debian-l10n-french <debian-l10n-french@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -26,9 +26,20 @@ msgstr ""
 #. Type: select
 #. Choices
 #: ../templates:1001
-msgid "usable for all, usable for group audio, usable only for root"
-msgstr "Utilisable par tous, Utilisable seulement par les membres du "
-"groupe « audio », Réservé au superutilisateur"
+msgid "usable for all"
+msgstr "Utilisable par tous"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable for group audio"
+msgstr "Utilisable seulement par les membres du groupe « audio »"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable only for root"
+msgstr "Réservé au superutilisateur"
 
 #. Type: select
 #. Description
@@ -45,11 +56,11 @@ msgid ""
 "root (no suid bit at all), executable only by users of the group audio, or "
 "usable for all."
 msgstr ""
-"Le programme beep doit posséder les privilèges du superutilisateur "
-"pour pouvoir accéder au haut-parleur. Cela est possible de plusieurs "
-"façons : soit permettre de le lancer avec les privilèges du superutilisateur (« setuid root ») "
-"par tous ou uniquement par les membres du groupe « audio », "
-"soit réserver l'exécution du programme au superutilisateur."
+"Le programme beep doit posséder les privilèges du superutilisateur pour "
+"pouvoir accéder au haut-parleur. Cela est possible de plusieurs façons : "
+"soit permettre de le lancer avec les privilèges du superutilisateur (« setuid "
+"root ») par tous ou uniquement par les membres du groupe « audio », soit "
+"réserver l'exécution du programme au superutilisateur."
 
 #. Type: select
 #. Description
@@ -60,8 +71,7 @@ msgid ""
 "is fairly easy to verify the safety of the code yourself, if you don't trust "
 "the package maintainer's judgement."
 msgstr ""
-"Tout programme qui s'exécute avec les privilèges du superutilisateur peut présenter un risque "
-"pour la sécurité du système. Toutefois, ce "
-"programme est vraiment petit (environ 150 lignes de code) et il est "
-"relativement facile de vérifier par vous-même que le code est sûr, en cas de "
-"doute."
+"Tout programme qui s'exécute avec les privilèges du superutilisateur peut "
+"présenter un risque pour la sécurité du système. Toutefois, ce programme est "
+"vraiment petit (environ 150 lignes de code) et il est relativement facile de "
+"vérifier par vous-même que le code est sûr, en cas de doute."

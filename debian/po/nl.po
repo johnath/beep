@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beep 1.2.2-11\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2008-07-28 19:33+0200\n"
-"PO-Revision-Date: 2007-08-01 10:42+0200\n"
+"POT-Creation-Date: 2008-09-11 18:36+0200\n"
+"PO-Revision-Date: 2008-11-24 10:11+0100\n"
 "Last-Translator: Thijs Kinkhorst <thijs@debian.org>\n"
 "Language-Team: dutch <debian-l10n-dutch@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -26,8 +26,20 @@ msgstr ""
 #. Type: select
 #. Choices
 #: ../templates:1001
-msgid "usable for all, usable for group audio, usable only for root"
-msgstr "te gebruiken door iedereen, te gebruiken door groep audio, alleen te gebruiken door root"
+msgid "usable for all"
+msgstr "te gebruiken door iedereen"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable for group audio"
+msgstr "te gebruiken door groep audio"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable only for root"
+msgstr "alleen te gebruiken door root"
 
 #. Type: select
 #. Description
@@ -45,9 +57,9 @@ msgid ""
 "usable for all."
 msgstr ""
 "beep dient als root te draaien omdat het toegang nodig heeft tot de "
-"luidsprekerhardware. Er zijn verschillende mogelijkheden om het "
-"programma bruikbaar te maken: ofwel enkel voor root (geen suid bit), enkel "
-"uitvoerbaar door gebruikers in de groep audio, of bruikbaar voor iedereen."
+"luidsprekerhardware. Er zijn verschillende mogelijkheden om het programma "
+"bruikbaar te maken: ofwel enkel voor root (geen suid bit), enkel uitvoerbaar "
+"door gebruikers in de groep audio, of bruikbaar voor iedereen."
 
 #. Type: select
 #. Description
@@ -62,4 +74,3 @@ msgstr ""
 "standaard gedaan. Het programma is vrij klein (~150 regels code), dus kan "
 "redelijk makkelijk om zelf geverifieerd worden, indien u het oordeel van de "
 "pakketbeheerder niet vertrouwt."
-

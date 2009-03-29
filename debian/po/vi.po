@@ -1,75 +1,69 @@
 # Vietnamese translation for Beep.
-# Copyright © 2006 Free Software Foundation, Inc.
-# Clytie Siddall <clytie@riverland.net.au>, 2005-2006.
+# Copyright © 2008 Free Software Foundation, Inc.
+# Clytie Siddall <clytie@riverland.net.au>, 2005-2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: beep 1.2.2-18\n"
+"Project-Id-Version: beep 1.2.2-22\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2008-07-28 19:33+0200\n"
-"PO-Revision-Date: 2006-06-23 03:49-0500\n"
+"POT-Creation-Date: 2008-09-11 18:36+0200\n"
+"PO-Revision-Date: 2008-11-24 10:11+0100\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: LocFactoryEditor 1.7b3\n"
 
 #. Type: select
 #. Choices
 #: ../templates:1001
-msgid "usable for all, usable for group audio, usable only for root"
-msgstr ""
+msgid "usable for all"
+msgstr "sử dụng được cho tất cả"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable for group audio"
+msgstr "sử dụng được cho nhóm audio"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable only for root"
+msgstr "sử dụng được chỉ cho root"
 
 #. Type: select
 #. Description
 #: ../templates:1002
 msgid "Install beep as:"
-msgstr "Cài đặt beep dạng:"
+msgstr "Cài đặt beep là:"
 
 #. Type: select
 #. Description
 #: ../templates:1002
-#, fuzzy
-#| msgid ""
-#| "beep must be run as root since it needs to access the speaker hardware. "
-#| "There are several posibilities to make the program usable:  Either only "
-#| "for root (no suid bit at all), executable only by users of the group "
-#| "audio, or usable for all."
 msgid ""
 "beep must be run as root since it needs to access the speaker hardware. "
 "There are several possibilities to make the program usable:  Either only for "
 "root (no suid bit at all), executable only by users of the group audio, or "
 "usable for all."
 msgstr ""
-"Trình beep phải chạy với tư cách người chủ (root) vì nó cần phải truy cập "
-"phần cứng loa. Vì vậy, bạn hãy chọn mức độ truy cập thích hợp:\n"
-"• chỉ cho phép người chủ truy cập trình này (không có bit suid nào cả)\n"
-"• chỉ cho phép người dùng trong nhóm « audio » (âm thanh) chạy trình này\n"
-"• cho phép mọi người truy cập trình này."
+"beep phải chạy là người chủ (root) vì nó cần phải truy cập đến phần cứng "
+"loa. Có vài tùy chọn đặt quyển truy cập:\n"
+" • chỉ cho người chủ sử dụng (không có bit suid)\n"
+" • chỉ cho các người dùng của nhóm audio sử dụng\n"
+" • cho mọi người sử dụng."
 
 #. Type: select
 #. Description
 #: ../templates:1002
-#, fuzzy
-#| msgid ""
-#| "Since each program set as suid root can be a security risk this is not "
-#| "done by default.  However, the program is quite small (~150 lines of "
-#| "code), so it is fairly easy to verify the safety of the code yourself, if "
-#| "you don't trust my judgement."
 msgid ""
 "Since each program set as suid root can be a security risk this is not done "
 "by default.  However, the program is quite small (~150 lines of code), so it "
 "is fairly easy to verify the safety of the code yourself, if you don't trust "
 "the package maintainer's judgement."
 msgstr ""
-"Vì mỗi chương trình được đặt là « suid root » thì có thể rủi ro bảo mật, tùy "
-"chọn này không phải được bật theo mặc định. Tuy nhiên, trình beep hơi nhỏ "
-"(~150 dòng mã) thì hơi dễ dàng để tự kiểm lại mức độ an toàn của mã này, nếu "
-"bạn muốn cẩn thận."
-
-#~ msgid ""
-#~ "suid root for all, suid root with only group audio executable, not suid "
-#~ "at all"
-#~ msgstr ""
-#~ "« suid root » cho tất cả, « suid root » chỉ với tập tin cho phép âm thanh "
-#~ "nhóm chạy, không có « suid root » nào cả"
+"Vì mỗi chương trình đặt là suid root thì có thể rủi ro bảo mật, việc này "
+"không phải được làm theo mặc định. Tuy nhiên, chương trình hơi nhỏ (~150 "
+"dòng mã) cũng hơi dễ kiểm tra mã an toàn hay không, nếu bạn không tùy theo ý "
+"kiến của nhà duy trì gói phần mềm."

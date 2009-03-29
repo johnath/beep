@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beep-eu\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2008-07-28 19:33+0200\n"
-"PO-Revision-Date: 2008-08-05 11:48+0200\n"
+"POT-Creation-Date: 2008-09-11 18:36+0200\n"
+"PO-Revision-Date: 2008-11-24 10:10+0100\n"
 "Last-Translator: Piarres Beobide <pi@beobide.net>\n"
 "Language-Team: Euskara <debian-l10n-basque@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -19,8 +19,20 @@ msgstr ""
 #. Type: select
 #. Choices
 #: ../templates:1001
-msgid "usable for all, usable for group audio, usable only for root"
-msgstr "denentzat erabilgarri, audio taldearentzat erabilgarri, root-entzat bakarrik erabilgarri"
+msgid "usable for all"
+msgstr "denentzat erabilgarri"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable for group audio"
+msgstr "audio taldearentzat erabilgarri"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable only for root"
+msgstr "root-entzat bakarrik erabilgarri"
 
 #. Type: select
 #. Description
@@ -38,9 +50,9 @@ msgid ""
 "usable for all."
 msgstr ""
 "bepp root gisa exekutatu behar da bozgorailu hardwarea atzitu behar bait du. "
-"Aukera ezberdinak dauden programa erabilgarri egiteko:  Edo root-entzat bakarrik "
-"(suid bit gabe), audio taldeko erabiltzaileentzat bakarrik erabilgarri edo denentzat "
-"erabilgarri."
+"Aukera ezberdinak dauden programa erabilgarri egiteko:  Edo root-entzat "
+"bakarrik (suid bit gabe), audio taldeko erabiltzaileentzat bakarrik "
+"erabilgarri edo denentzat erabilgarri."
 
 #. Type: select
 #. Description
@@ -54,5 +66,5 @@ msgstr ""
 "Suid bit-a ezarririk duen edozein programa segurtasun ahulune bat izan "
 "daitekeenez ez da lehenespen bezala egingo.  Hala ere programa nahiko txikia "
 "denez (150 kode lerro inguru), beraz nahiko erraza da kodearen segurtasuna "
-"zure kabuz egiaztatzea ez bazara pakete mantentzelariaren erabakietaz fidatzen."
-
+"zure kabuz egiaztatzea ez bazara pakete mantentzelariaren erabakietaz "
+"fidatzen."

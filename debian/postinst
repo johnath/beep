@@ -1,5 +1,7 @@
 #!/bin/sh -e
 # postinst for beep
+# copyright 2002-2009 by Gerfried Fuchs <rhonda@debian.at>
+# Licenced under BSD style
 
 # Source debconf library.
 if [ -e /usr/share/debconf/confmodule ]; then
@@ -14,12 +16,6 @@ suid=false
 if [ -e /usr/share/debconf/confmodule ]; then
 	db_get beep/suid_option
 	suid="$RET"
-fi
-
-# repair typo in option (see #135866)
-if [ "$suid" = "suid root with only group audio executeable" ] ; then
-	db_set beep/suid_option "suid root with only group audio executable"
-	suid="suid root with only group audio executable"
 fi
 
 # option changes as suggested by #492724

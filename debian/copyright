@@ -17,6 +17,10 @@ This software is copyright (C) 2000 by Johnathan Nightingale.
    implied warranties of merchantability or fitness for a particular use
    or ability to breed pandas in captivity, it just can't be done.
 
+The Debian packaging is Copyright 2002-2009 by
+Gerfried Fuchs <rhonda@debian.at> and is licensed under the BSD license.
+See /usr/share/common-licenses/BSD for the full text of it.
+
 On Debian GNU/Linux systems, the complete text of the GNU General
 Public License version 2 can be found in `/usr/share/common-licenses/GPL-2'.
 Later versions which the GNU project publishes on the above mentioned URL can

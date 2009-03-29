@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: beep 1.2.2-12\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
-"POT-Creation-Date: 2008-07-28 19:33+0200\n"
+"POT-Creation-Date: 2008-09-11 18:36+0200\n"
 "PO-Revision-Date: 2007-10-03 19:01+0200\n"
-"Last-Translator: Stefano Melchior <stefano.melchior@openlabs.it>\n"
+"Last-Translator: davide gliozzi <zetazerozeta@yahoo.it>\n"
 "Language-Team: Italian <debian-l10n-italian@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -13,14 +13,26 @@ msgstr ""
 #. Type: select
 #. Choices
 #: ../templates:1001
-msgid "usable for all, usable for group audio, usable only for root"
-msgstr ""
+msgid "usable for all"
+msgstr "utilizzabile da tutti"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable for group audio"
+msgstr "utilizzabile dal gruppo audio"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable only for root"
+msgstr "utillizzabile solamente da root"
 
 #. Type: select
 #. Description
 #: ../templates:1002
 msgid "Install beep as:"
-msgstr ""
+msgstr "Installa beep come:"
 
 #. Type: select
 #. Description

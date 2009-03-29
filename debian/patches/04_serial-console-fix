@@ -1,3 +1,6 @@
+Author: Benjamin Gilbert <bgilbert@backtick.net>	vim:ft=diff:
+Description: Open tty0 instead of console (BTS #134015)
+
 Index: beep-1.2.2/beep.c
 ===================================================================
 --- beep-1.2.2.orig/beep.c
