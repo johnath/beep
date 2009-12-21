@@ -1,3 +1,11 @@
+beep (1.2.2-24) unstable; urgency=low
+
+  * Apply patch from Frans Pop for making beep-udeb depend on libc6-udeb
+    instead of libc6 (closes: #562001)
+  * Bump Standards-Version to 3.8.3.
+
+ -- Gerfried Fuchs <rhonda@debian.at>  Mon, 21 Dec 2009 23:20:38 +0100
+
 beep (1.2.2-23) unstable; urgency=low
 
   * Updated translation:

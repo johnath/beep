@@ -34,7 +34,7 @@ include /usr/share/quilt/quilt.make
 clean: unpatch
 	$(checkdir)
 	$(checkroot)
-	-rm -rf $(TMP1) $(TMP2) debian/substvars debian/files build-stamp
+	-rm -rf $(TMP1) $(TMP2) debian/$(PKG1).substvars debian/$(PKG2).substvars debian/files build-stamp
 	[ ! -f beep ] || $(MAKE) clean
 
 
@@ -48,7 +48,7 @@ build-stamp: patch
 install: build
 	$(checkdir)
 	$(checkroot)
-	-rm -rf $(TMP1) $(TMP2) debian/substvars
+	-rm -rf $(TMP1) $(TMP2) debian/$(PKG1).substvars debian/$(PKG2).substvars
 	$(INSTALL_DIR) $(TMP1)
 	cd $(TMP1) && $(INSTALL_DIR) usr/bin usr/share/man/man1 \
 		usr/share/doc/$(PKG1)
@@ -86,13 +86,15 @@ binary-arch: build install
 	$(INSTALL_SCRIPT) debian/postinst debian/postrm debian/config \
 		$(TMP1)/DEBIAN
 	po2debconf debian/templates > $(TMP1)/DEBIAN/templates
-	dpkg-shlibdeps -Tdebian/substvars -dDepends $(TMP1)/usr/bin/beep
-	dpkg-gencontrol -ldebian/changelog -isp -Tdebian/substvars -p$(PKG1) \
+	dpkg-shlibdeps -Tdebian/$(PKG1).substvars -dDepends $(TMP1)/usr/bin/beep
+	dpkg-gencontrol -ldebian/changelog -isp -Tdebian/$(PKG1).substvars -p$(PKG1) \
 		-P$(TMP1)
 	cd $(TMP1) && find * -type f ! -regex '^DEBIAN/.*' -print0 | \
 		xargs -r0 md5sum > DEBIAN/md5sums
 	dpkg --build $(TMP1) ..
-	dpkg-gencontrol -ldebian/changelog -isp -Tdebian/substvars -p$(PKG2) \
+	dpkg-shlibdeps -Tdebian/$(PKG2).substvars -dDepends -tudeb \
+		$(TMP2)/usr/bin/beep
+	dpkg-gencontrol -ldebian/changelog -isp -Tdebian/$(PKG2).substvars -p$(PKG2) \
 		-P$(TMP2) -UHomepage -n$(PKG2)_$(VERSION)_$(ARCH).udeb
 	dpkg --build $(TMP2) ../$(PKG2)_$(VERSION)_$(ARCH).udeb
 
