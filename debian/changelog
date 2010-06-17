@@ -1,6 +1,7 @@
 beep (1.2.2-25) unstable; urgency=low
 
   * Bump Standards-Version to 3.8.4.
+  * Add Vcs-* fields to control file.
 
  -- 
 
