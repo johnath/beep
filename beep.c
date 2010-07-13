@@ -238,8 +238,8 @@ void play_beep(beep_parms_t parms) {
 	parms.reps, parms.length, parms.delay, parms.end_delay, parms.freq);
 
   /* try to snag the console */
-  if((console_fd = open("/dev/console", O_WRONLY)) == -1) {
-    fprintf(stderr, "Could not open /dev/console for writing.\n");
+  if((console_fd = open("/dev/tty0", O_WRONLY)) == -1) {
+    fprintf(stderr, "Could not open /dev/tty0 for writing.\n");
     printf("\a");  /* Output the only beep we can, in an effort to fall back on usefulness */
     perror("open");
     exit(1);
