@@ -1,0 +1,33 @@
+I (Johnathan Nightingale) handled the original coding, distribution, 
+maintenance, etc.
+
+Peter Tirsek (peter at tirsek dot com) filled me in on where the magical
+fairy number comes from (see beep.c).  He also tracked down the relevant
+kernel code that causes the ioctl()s to die under certain conditions
+(see the README or man page sections on ioctl).  He is truly a wonderful
+person.
+
+Andreas Hochsteger (e9625392 at student dot tuwien dot ac dot at) contributed
+several useful little patches, and was my inspiration for the -d/-D 
+distinction.  He's also thrown pointers my way about code packaging, which
+are appreciated.
+
+Rick Franchuk (rickf at transpect dot net) came up with the idea of the -s and
+-c stdin hooks.  Since most people will be using beep to tell them when a new 
+line pops up in log, or mail, or what-have-you, this was quite clever of him
+and though I really did mean to do it anyhow, he sent me the patch before I had
+bothered to write it, so he gets the credit.  :)
+
+Serge Winitzki (winitzki at erebus.phys.cwru.edu) suggested having beep take
+floats for frequency, instead of int's. 
+
+The guys at freshmeat.net really deserve a big ol whack of credit too, for
+running a very cool site in general, and for running one so successfully that
+my little 4k program generated literally hundreds of emails in reply.  It gives
+one a great sense of community to see such an overwhelming response.
+
+In particular, fryguy[at]freshmeat (Ryan Weaver) rocks supremely, for packaging
+beep in RPM format, and maintaining said package until he decides not to.  I 
+really did mean to make a spec for it myself, but hey, when freshmeat offers to
+maintain your packages, you'd have to have a *real* good reason to say no.
+

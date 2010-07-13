@@ -1,0 +1,62 @@
+1.2.2
+-----
+- Man pages now gzip -9 for better compression
+- Table of frequencies added to man page
+- Fix for platforms with unsigned chars
+- On ioctl() errors, beep will now do a printf("\a") so that, at very least, youget a beep.  :)
+
+
+1.2.1
+-----
+- fixed segfault when handling long options
+
+1.2.0
+-----
+- added -n/--new support - so beep FINALLY handles multiple beeps on a single
+ command line.
+- -f now takes decimal frequencies, not just whole numbers.
+
+1.0.2
+-----
+- Added more common -V option, as companion to -v and --version
+- README now addresses the question of multiple beeps, and composing music with
+  beep.
+
+1.0.1
+-----
+- Fixed some outdated comments in the source, and a typo in the man page.
+
+1.0.0
+-----
+- added a SIGINT handler, so Ctrl-C no longer leaves the speaker wailing 
+  forever
+- added -v/--version and -h/--help support
+- updated man page
+- this release is changed from 0.8 to 1.0.0, it's worthy of it.  Feature
+  complete and no outstanding bugs that I know of.
+
+0.6.1
+-----
+- changed man page to gzip format (instead of bzip2)
+- updated man page and README to explain ioctl problems
+
+
+0.6
+---
+- added -D option.  Both -d and -D set inter-repetition delay, but -D instructs
+  beep to delay even after the last beep, where -d delays only between beeps, 
+  and terminates immediately after last beep.
+- incorporated Rick Franchuk's idea of stdin hooks - dear god -c is annoying.
+- added a man page
+
+
+0.5
+---
+- changed over from manually parsing command line parms to getopt()
+- changed atoi() calls into sscanf() calls, to get more meaningful error 
+  handling
+
+0.4
+---
+- first useable
+- initial options supported: -f, -l, -d, -r

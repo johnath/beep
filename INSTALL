@@ -1,0 +1,10 @@
+Couldn't be easier:
+
+make
+make install
+
+By default, it'll put the executable ("beep") in /usr/bin.  If you don't like 
+this, change the makefile as appropriate.
+
+This will get things off and running, but you'll probably want to check the man
+page section "IOCTL_WACKINESS" to see if you will need to fix any permissions.
