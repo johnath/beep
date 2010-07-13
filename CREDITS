@@ -31,3 +31,8 @@ beep in RPM format, and maintaining said package until he decides not to.  I
 really did mean to make a spec for it myself, but hey, when freshmeat offers to
 maintain your packages, you'd have to have a *real* good reason to say no.
 
+Most of all - and I write this fully 10 years later, so I have the benefit of
+history on my side here - I would like to thank Gerfried Fuchs, who has tirelessly
+maintained beep in debian, along with a stack of patches, years after I stopped
+hacking on it in earnest. He is amazingly dedicated, and has a new son whom we
+would all be fortunate to have follow in his father's footsteps.
