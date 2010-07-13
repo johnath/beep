@@ -83,6 +83,7 @@ typedef struct beep_parms_t {
 		     so that beep can be tucked appropriately into a text-
 		     processing pipe.
 		  */
+  int verbose;    /* verbose output?          */
   struct beep_parms_t *next;  /* in case -n/--new is used. */
 } beep_parms_t;
 
@@ -110,7 +111,7 @@ void handle_signal(int signum) {
 /* print usage and exit */
 void usage_bail(const char *executable_name) {
   printf("Usage:\n%s [-f freq] [-l length] [-r reps] [-d delay] "
-	 "[-D delay] [-s] [-c]\n",
+	 "[-D delay] [-s] [-c] [--verbose | --debug]\n",
 	 executable_name);
   printf("%s [Options...] [-n] [--new] [Options...] ... \n", executable_name);
   printf("%s [-h] [--help]\n", executable_name);
@@ -131,6 +132,7 @@ void usage_bail(const char *executable_name) {
  *  "-D <delay in ms>" (similar to -d, but delay after last repetition as well)
  *  "-s" (beep after each line of input from stdin, echo line to stdout)
  *  "-c" (beep after each char of input from stdin, echo char to stdout)
+ *  "--verbose/--debug"
  *  "-h/--help"
  *  "-v/-V/--version"
  *  "-n/--new"
@@ -141,9 +143,11 @@ void usage_bail(const char *executable_name) {
 void parse_command_line(int argc, char **argv, beep_parms_t *result) {
   int c;
 
-  struct option opt_list[4] = {{"help", 0, NULL, 'h'},
+  struct option opt_list[6] = {{"help", 0, NULL, 'h'},
 			       {"version", 0, NULL, 'V'},
 			       {"new", 0, NULL, 'n'},
+			       {"verbose", 0, NULL, 'X'},
+			       {"debug", 0, NULL, 'X'},
 			       {0,0,0,0}};
   while((c = getopt_long(argc, argv, "f:l:r:d:D:schvVn", opt_list, NULL))
 	!= EOF) {
@@ -204,8 +208,12 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
       result->next->delay      = DEFAULT_DELAY;
       result->next->end_delay  = DEFAULT_END_DELAY;
       result->next->stdin_beep = DEFAULT_STDIN_BEEP;
+      result->next->verbose    = result->verbose;
       result->next->next       = NULL;
       result = result->next; /* yes, I meant to do that. */
+      break;
+    case 'X' : /* --debug / --verbose */
+      result->verbose = 1;
       break;
     case 'h' : /* notice that this is also --help */
     default :
@@ -216,6 +224,11 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
 
 void play_beep(beep_parms_t parms) {
   int i; /* loop counter */
+
+  if(parms.verbose == 1)
+      fprintf(stderr, "[DEBUG] %d times %d ms beeps (%d delay between, "
+	"%d delay after) @ %.2f Hz\n",
+	parms.reps, parms.length, parms.delay, parms.end_delay, parms.freq);
 
   /* try to snag the console */
   if((console_fd = open("/dev/console", O_WRONLY)) == -1) {
@@ -253,6 +266,7 @@ int main(int argc, char **argv) {
   parms->delay      = DEFAULT_DELAY;
   parms->end_delay  = DEFAULT_END_DELAY;
   parms->stdin_beep = DEFAULT_STDIN_BEEP;
+  parms->verbose    = 0;
   parms->next       = NULL;
 
   signal(SIGINT, handle_signal);
