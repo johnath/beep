@@ -1,7 +1,7 @@
 #!/bin/sh -e
 # postrm for beep
 # copyright 2002-2009 by Gerfried Fuchs <rhonda@debian.at>
-# Licenced under BSD style
+# Licenced under WTFPLv2
 
 if [ "$1" = purge ] && [ -e /usr/share/debconf/confmodule ]; then
 	. /usr/share/debconf/confmodule

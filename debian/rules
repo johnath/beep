@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 # debian/rules file for beep
 # copyright 2002-2009 by Gerfried Fuchs <rhonda@debian.at>
-# Licenced under BSD style
+# Licenced under WTFPLv2
 
 PKG1 = beep
 TMP1 = $(CURDIR)/debian/$(PKG1)

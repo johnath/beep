@@ -17,11 +17,24 @@ This software is copyright (C) 2000 by Johnathan Nightingale.
    implied warranties of merchantability or fitness for a particular use
    or ability to breed pandas in captivity, it just can't be done.
 
-The Debian packaging is Copyright 2002-2009 by
-Gerfried Fuchs <rhonda@debian.at> and is licensed under the BSD license.
-See /usr/share/common-licenses/BSD for the full text of it.
-
 On Debian GNU/Linux systems, the complete text of the GNU General
 Public License version 2 can be found in `/usr/share/common-licenses/GPL-2'.
 Later versions which the GNU project publishes on the above mentioned URL can
 be found in the same directory.
+
+
+The debianization of the package is licensed under the WTFPLv2:
+
+               DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+                       Version 2, December 2004
+
+    Copyright (C) 2002-2009 Gerfried Fuchs
+
+    Everyone is permitted to copy and distribute verbatim or modified
+    copies of this license document, and changing it is allowed as long
+    as the name is changed.
+
+               DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+      TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+     0. You just DO WHAT THE FUCK YOU WANT TO.
