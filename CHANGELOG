@@ -1,3 +1,13 @@
+1.3
+---
+- 8 years have passed!
+- Integrated a bunch of Gerfried Fuchs' changes maintained for the debian version for years
+and years
+- Added him to the CREDITS, too.
+- Support for devfs, and alternate console devices.
+- Warnings about multiply-specified frequency
+- Debug mode
+
 1.2.2
 -----
 - Man pages now gzip -9 for better compression

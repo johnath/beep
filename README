@@ -20,16 +20,7 @@ For installation instructions, see INSTALL.
 For copying and (non-)warranty information, see COPYING.
 For usage information, check the man page.
 
-fryguy (Ryan Weaver) at freshmeat.net has packaged beep in RPM format and has 
-promised to try to get new rpms out with each new source release.  RPMs can be
-found, among other places, at:
-
-ftp://ftp.falsehope.com/pub/beep/
-
-or
-
-ftp://ftp.freshmeat.net/pub/rpms/beep/
-
+There is a github repository of this code at: git://github.com/johnath/beep.git
 
 A note about ioctl
 ------------------
