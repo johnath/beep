@@ -48,7 +48,7 @@
 #define CLOCK_TICK_RATE 1193180
 #endif
 
-#define VERSION_STRING "beep-1.2.2"
+#define VERSION_STRING "beep-1.3"
 char *copyright = 
 "Copyright (C) Johnathan Nightingale, 2002.  "
 "Use and Distribution subject to GPL.  "
