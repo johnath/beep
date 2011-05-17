@@ -1,6 +1,6 @@
 beep (1.2.2-25) unstable; urgency=low
 
-  * Bump Standards-Version to 3.9.0.
+  * Bump Standards-Version to 3.9.2.
   * Add Vcs-* fields to control file.
   * Relicensed Debian packaging under WTFPLv2.
   * Explicitly call set -e instead of -e on the hashbang line.

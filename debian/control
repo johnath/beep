@@ -1,9 +1,9 @@
 Source: beep
 Section: sound
 Priority: optional
-Maintainer: Gerfried Fuchs <rhonda@debian.at>
+Maintainer: Gerfried Fuchs <rhonda@debian.org>
 Build-Depends: po-debconf, patch, quilt
-Standards-Version: 3.9.0
+Standards-Version: 3.9.2
 Homepage: http://johnath.com/beep/
 Vcs-Browser: http://git.deb.at/w/pkg/beep.git
 Vcs-Git: git://git.deb.at/pkg/beep.git
