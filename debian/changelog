@@ -1,5 +1,6 @@
-beep (1.2.2-25) unstable; urgency=low
+beep (1.3-1) unstable; urgency=low
 
+  * New Upstream release importing all our changes  \o/
   * Bump Standards-Version to 3.9.2.
   * Add Vcs-* fields to control file.
   * Relicensed Debian packaging under WTFPLv2.
