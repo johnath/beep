@@ -6,7 +6,7 @@ beep (1.3-1) unstable; urgency=low
   * Relicensed Debian packaging under WTFPLv2.
   * Explicitly call set -e instead of -e on the hashbang line.
 
- -- 
+ -- Gerfried Fuchs <rhonda@debian.org>  Tue, 31 May 2011 20:49:17 +0200
 
 beep (1.2.2-24) unstable; urgency=low
 
