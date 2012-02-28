@@ -1,3 +1,11 @@
+beep (1.3-2) unstable; urgency=low
+
+  * The "l10n R us" release.
+  * Added debconf translations:
+    - Danish by Joe Hansen (closes: #633380)
+
+ -- 
+
 beep (1.3-1) unstable; urgency=low
 
   * New Upstream release importing all our changes  \o/
