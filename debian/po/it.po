@@ -1,15 +1,22 @@
+# Italian translation of beep debconf messages.
+# Copyright (C) 2002-2009 Gerfried Fuchs <rhonda@debian.org>
+# This file is distributed under the same license as the beep package.
+# davide gliozzi <zetazerozeta@yahoo.it>, 2007
+# Beatrice Torracca <beatricet@libero.it>, 2012.
 msgid ""
 msgstr ""
-"Project-Id-Version: beep 1.2.2-12\n"
+"Project-Id-Version: beep\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
 "POT-Creation-Date: 2008-09-11 18:36+0200\n"
-"PO-Revision-Date: 2007-10-03 19:01+0200\n"
-"Last-Translator: davide gliozzi <zetazerozeta@yahoo.it>\n"
+"PO-Revision-Date: 2012-02-17 15:54+0200\n"
+"Last-Translator: Beatrice Torracca <beatricet@libero.it>\n"
 "Language-Team: Italian <debian-l10n-italian@lists.debian.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Virtaal 0.7.1\n"
 
 #. Type: select
 #. Choices
@@ -33,48 +40,36 @@ msgstr "utillizzabile solamente da root"
 #. Description
 #: ../templates:1002
 msgid "Install beep as:"
-msgstr "Installa beep come:"
+msgstr "Installare beep come:"
 
 #. Type: select
 #. Description
 #: ../templates:1002
-#, fuzzy
-#| msgid ""
-#| "beep must be run as root since it needs to access the speaker hardware. "
-#| "There are several posibilities to make the program usable:  Either only "
-#| "for root (no suid bit at all), executable only by users of the group "
-#| "audio, or usable for all."
 msgid ""
 "beep must be run as root since it needs to access the speaker hardware. "
 "There are several possibilities to make the program usable:  Either only for "
 "root (no suid bit at all), executable only by users of the group audio, or "
 "usable for all."
 msgstr ""
-"beep deve essere lanciato come root dato che ha l'esigenza di accedere "
-"fisicamente agli autoparlanti. Ci sono diverse possibilità di rendere il "
+"beep deve essere eseguito come root dato che ha l'esigenza di accedere "
+"all'hardware degli altoparlanti. Ci sono diverse possibilità per rendere il "
 "programma fruibile: o solamente a root (non si usa affatto il bit suid), o "
 "solamente agli utenti del gruppo audio, oppure a tutti."
 
 #. Type: select
 #. Description
 #: ../templates:1002
-#, fuzzy
-#| msgid ""
-#| "Since each program set as suid root can be a security risk this is not "
-#| "done by default.  However, the program is quite small (~150 lines of "
-#| "code), so it is fairly easy to verify the safety of the code yourself, if "
-#| "you don't trust my judgement."
 msgid ""
 "Since each program set as suid root can be a security risk this is not done "
 "by default.  However, the program is quite small (~150 lines of code), so it "
 "is fairly easy to verify the safety of the code yourself, if you don't trust "
 "the package maintainer's judgement."
 msgstr ""
-"Dal momento che ogni programma che usa suid root è un rischio per la "
-"sicurezza, questo non viene abilitato come opzione predefinita. Comunque, il "
-"programma risulta abbastanza piccolo (circa 150 linee di codice) e semplice "
-"da permettere di verificare da soli la sicurezza del codice, qualora non ci "
-"si fidasse del giudizio dell'autore."
+"Dal momento che ogni programma con suid root può essere un rischio per la "
+"sicurezza, questo non viene abilitato in modo predefinito. Comunque, il "
+"programma è abbastanza piccolo (circa 150 righe di codice) perciò è "
+"abbastanza facile verificare da soli la sicurezza del codice, qualora non ci "
+"si fidasse del giudizio del manutentore del pacchetto."
 
 #~ msgid ""
 #~ "suid root for all, suid root with only group audio executable, not suid "
