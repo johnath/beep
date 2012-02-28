@@ -1,0 +1,73 @@
+# Translation of beep debconf templates to Polish.
+# Copyright (C) 2008
+# This file is distributed under the same license as the beep package.
+#
+# Michał Kułach <michal.kulach@gmail.com>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: beep@packages.debian.org\n"
+"POT-Creation-Date: 2008-09-11 18:36+0200\n"
+"PO-Revision-Date: 2012-02-10 14:27+0100\n"
+"Last-Translator: Michał Kułach <michal.kulach@gmail.com>\n"
+"Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.2\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable for all"
+msgstr "dla wszystkich"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable for group audio"
+msgstr "dla grupy audio"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "usable only for root"
+msgstr "tylko dla roota"
+
+#. Type: select
+#. Description
+#: ../templates:1002
+msgid "Install beep as:"
+msgstr "Zainstaluj beep:"
+
+#. Type: select
+#. Description
+#: ../templates:1002
+msgid ""
+"beep must be run as root since it needs to access the speaker hardware. "
+"There are several possibilities to make the program usable:  Either only for "
+"root (no suid bit at all), executable only by users of the group audio, or "
+"usable for all."
+msgstr ""
+"Program beep musi działać jako root, ponieważ wymaga dostępu do fizycznego "
+"brzęczyka. Jest kilka możliwości działania programu: albo tylko dla roota "
+"(bez atrybutu suid), albo dla użytkowników należących do grupy audio, albo "
+"dla wszystkich."
+
+#. Type: select
+#. Description
+#: ../templates:1002
+msgid ""
+"Since each program set as suid root can be a security risk this is not done "
+"by default.  However, the program is quite small (~150 lines of code), so it "
+"is fairly easy to verify the safety of the code yourself, if you don't trust "
+"the package maintainer's judgement."
+msgstr ""
+"Każdy program działający z suid root może stanowić zagrożenie "
+"bezpieczeństwa, dlatego ta opcja wymaga dokonania wyboru przez użytkownika. "
+"Jednak ponieważ program jest niewielki (ok. 150 wierszy kodu), można łatwo "
+"zweryfikować bezpieczeństwo kodu samodzielnie, jeśli użytkownik ma "
+"wątpliwości co do osądu opiekuna pakietu."
