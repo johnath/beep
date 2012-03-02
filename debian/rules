@@ -38,7 +38,9 @@ clean: unpatch
 	[ ! -f beep ] || $(MAKE) clean
 
 
-build: build-stamp
+build: build-arch
+build-arch: build-stamp
+build-indep:
 build-stamp: patch
 	$(checkdir)
 	$(MAKE) FLAGS="$(FLAGS)"
