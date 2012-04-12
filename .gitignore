@@ -1,0 +1,4 @@
+# Files that should not be tracked by Git
+
+# The compiled executable
+/beep

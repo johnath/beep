@@ -98,11 +98,11 @@ char *console_device = NULL;
 
 
 void do_beep(int freq) {
-  if (console_type == BEEP_TYPE_CONSOLE) {
-    if(ioctl(console_fd, KIOCSOUND, freq != 0
-      ? (int)(CLOCK_TICK_RATE/freq)
-      : freq) < 0) {
-      printf("\a");  /* Output the only beep we can, in an effort to fall back on usefulness */
+  int period = (freq != 0 ? (int)(CLOCK_TICK_RATE/freq) : freq);
+
+  if(console_type == BEEP_TYPE_CONSOLE) {
+    if(ioctl(console_fd, KIOCSOUND, period) < 0) {
+      putchar('\a');  /* Output the only beep we can, in an effort to fall back on usefulness */
       perror("ioctl");
     }
   } else {
@@ -113,7 +113,10 @@ void do_beep(int freq) {
      e.code = SND_TONE;
      e.value = freq;
 
-     write(console_fd, &e, sizeof(struct input_event));
+     if(write(console_fd, &e, sizeof(struct input_event)) < 0) {
+       putchar('\a'); /* See above */
+       perror("write");
+     }
   }
 }
 
