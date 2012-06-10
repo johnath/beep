@@ -1,0 +1,23 @@
+Author: Jérôme <jerome@jolimont.fr>
+Description: also catch SIGTERM for stopping the beep
+
+Index: VCS/beep.c
+===================================================================
+--- VCS.orig/beep.c	2012-06-10 10:03:39.000000000 +0200
++++ VCS/beep.c	2012-06-10 10:03:59.000000000 +0200
+@@ -127,6 +127,7 @@
+ 
+   switch(signum) {
+   case SIGINT:
++  case SIGTERM:
+     if(console_fd >= 0) {
+       /* Kill the sound, quit gracefully */
+       do_beep(0);
+@@ -321,6 +322,7 @@
+   parms->next       = NULL;
+ 
+   signal(SIGINT, handle_signal);
++  signal(SIGTERM, handle_signal);
+   parse_command_line(argc, argv, parms);
+ 
+   /* this outermost while loop handles the possibility that -n/--new has been
