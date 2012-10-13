@@ -66,6 +66,9 @@ char *copyright =
 #define NO_END_DELAY    0
 #define YES_END_DELAY   1
 
+#define NO_INFINITE		0
+#define YES_INFINITE	1
+
 #define NO_STDIN_BEEP   0
 #define LINE_STDIN_BEEP 1
 #define CHAR_STDIN_BEEP 2
@@ -166,6 +169,7 @@ void usage_bail(const char *executable_name) {
  *  "-D <delay in ms>" (similar to -d, but delay after last repetition as well)
  *  "-s" (beep after each line of input from stdin, echo line to stdout)
  *  "-c" (beep after each char of input from stdin, echo char to stdout)
+ *  "-i/--infinite" <repeat the beep pattern until SIGINT
  *  "--verbose/--debug"
  *  "-h/--help"
  *  "-v/-V/--version"
@@ -174,17 +178,19 @@ void usage_bail(const char *executable_name) {
  * March 29, 2002 - Daniel Eisenbud points out that c should be int, not char,
  * for correctness on platforms with unsigned chars.
  */
-void parse_command_line(int argc, char **argv, beep_parms_t *result) {
+void parse_command_line(int argc, char **argv, beep_parms_t *result, int* infinite) {
   int c;
+  beep_parms_t* first_parm = result;
 
-  struct option opt_list[7] = {{"help", 0, NULL, 'h'},
+  struct option opt_list[8] = {{"help", 0, NULL, 'h'},
 			       {"version", 0, NULL, 'V'},
 			       {"new", 0, NULL, 'n'},
 			       {"verbose", 0, NULL, 'X'},
 			       {"debug", 0, NULL, 'X'},
 			       {"device", 1, NULL, 'e'},
+				   {"infinite", 0, NULL, 'i'},
 			       {0,0,0,0}};
-  while((c = getopt_long(argc, argv, "f:l:r:d:D:schvVne:", opt_list, NULL))
+  while((c = getopt_long(argc, argv, "f:l:r:d:D:schivVne:", opt_list, NULL))
 	!= EOF) {
     int argval = -1;    /* handle parsed numbers for various arguments */
     float argfreq = -1; 
@@ -258,11 +264,16 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
     case 'e' : /* also --device */
       console_device = strdup(optarg);
       break;
+    case 'i':
+	  *infinite = YES_INFINITE;
+	  break;
     case 'h' : /* notice that this is also --help */
     default :
       usage_bail(argv[0]);
     }
   }
+  if (*infinite)
+	  result->next = first_parm;
   if (result->freq == 0)
     result->freq = DEFAULT_FREQ;
 }  
@@ -312,6 +323,8 @@ void play_beep(beep_parms_t parms) {
 
 int main(int argc, char **argv) {
   char sin[4096], *ptr;
+  int infinite = NO_INFINITE;
+  int save_reps = 0;
   
   beep_parms_t *parms = (beep_parms_t *)malloc(sizeof(beep_parms_t));
   parms->freq       = 0;
@@ -324,13 +337,16 @@ int main(int argc, char **argv) {
   parms->next       = NULL;
 
   signal(SIGINT, handle_signal);
-  parse_command_line(argc, argv, parms);
+  parse_command_line(argc, argv, parms, &infinite);
 
   /* this outermost while loop handles the possibility that -n/--new has been
      used, i.e. that we have multiple beeps specified. Each iteration will
      play, then free() one parms instance. */
   while(parms) {
     beep_parms_t *next = parms->next;
+
+	if (infinite)
+		save_reps = parms->reps;
 
     if(parms->stdin_beep) {
       /* in this case, beep is probably part of a pipe, in which case POSIX 
@@ -359,7 +375,10 @@ int main(int argc, char **argv) {
     }
 
     /* Junk each parms struct after playing it */
-    free(parms);
+	if (infinite)
+		parms->reps = save_reps;
+	else
+		free(parms);
     parms = next;
   }
 
@@ -368,3 +387,4 @@ int main(int argc, char **argv) {
 
   return EXIT_SUCCESS;
 }
+
