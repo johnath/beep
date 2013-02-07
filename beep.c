@@ -130,6 +130,7 @@ void handle_signal(int signum) {
 
   switch(signum) {
   case SIGINT:
+  case SIGTERM:
     if(console_fd >= 0) {
       /* Kill the sound, quit gracefully */
       do_beep(0);
@@ -324,6 +325,7 @@ int main(int argc, char **argv) {
   parms->next       = NULL;
 
   signal(SIGINT, handle_signal);
+  signal(SIGTERM, handle_signal);
   parse_command_line(argc, argv, parms);
 
   /* this outermost while loop handles the possibility that -n/--new has been
