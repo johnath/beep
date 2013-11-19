@@ -27,10 +27,10 @@ $(EXEC_NAME): beep.c
 	$(CC) $(FLAGS) $(CFLAGS) -o $(EXEC_NAME) beep.c
 
 install: all
-	$(INSTALL) -m 0755 -d           $(DESTDIR)$(bindir)
-	$(INSTALL) -m 0755 $(EXEC_NAME) $(DESTDIR)$(bindir)/
-	$(INSTALL) -m 0755 -d           $(DESTDIR)$(man1dir)
-	$(INSTALL) -m 0644 $(MAN_FILE)  $(DESTDIR)$(man1dir)/
+	$(INSTALL) -m 0755 -d              $(DESTDIR)$(bindir)
+	$(INSTALL) -m 0755 -p $(EXEC_NAME) $(DESTDIR)$(bindir)/
+	$(INSTALL) -m 0755 -d              $(DESTDIR)$(man1dir)
+	$(INSTALL) -m 0644 -p $(MAN_FILE)  $(DESTDIR)$(man1dir)/
 
 uninstall:
 	rm -f $(DESTDIR)$(bindir)/$(EXEC_NAME)
