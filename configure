@@ -8,7 +8,7 @@ LIBS=
 if [[ -f /usr/include/wiringPi.h ]]; then
 	echo "Compiling with wiringPi support"
 	FLAGS+=" -DHAVE_WIRINGPI"
-	LIBS+="-lwiringPi"
+	LIBS+=" -lwiringPi"
 fi
 
 sed -e "s|@LIBS@|${LIBS}|" \
