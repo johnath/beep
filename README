@@ -74,6 +74,14 @@ complex fix would be something like:
 
 and then add only beep-worthy users to the 'beep' group.
 
+Raspberry Pi
+------------
+
+beep can be used on a Raspberry Pi by attaching an old BIOS speaker or piezo
+buzzer to the PWM GPIO pin (BCM_GPIO 18). When not running as root, beep needs
+use a workaround that is significantly slower. Read the above section on how
+to run beep as suid root.
+
 Playing Songs
 -------------
 
