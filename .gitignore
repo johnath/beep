@@ -2,3 +2,6 @@
 
 # The compiled executable
 /beep
+
+# The Makefile created by ./configure
+Makefile
