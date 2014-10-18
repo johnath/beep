@@ -1,0 +1,18 @@
+#!/bin/bash
+
+CC=gcc
+PREFIX=/usr
+FLAGS="-Wall -O2"
+LIBS=
+
+if [[ -f /usr/include/wiringPi.h ]]; then
+	echo "Compiling with wiringPi support"
+	FLAGS+=" -DHAVE_WIRINGPI"
+	LIBS+="-lwiringPi"
+fi
+
+sed -e "s|@LIBS@|${LIBS}|" \
+	-e "s|@FLAGS@|${FLAGS}|" \
+	-e "s|@PREFIX@|${PREFIX}|" \
+	-e "s|@CC@|${CC}|" \
+	Makefile.in > Makefile

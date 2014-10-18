@@ -28,6 +28,10 @@
 #include <linux/kd.h>
 #include <linux/input.h>
 
+#ifdef HAVE_WIRINGPI
+#include <wiringPi.h>
+#endif
+
 /* I don't know where this number comes from, I admit that freely.  A 
    wonderful human named Raine M. Ekman used it in a program that played
    a tune at the console, and apparently, it's how the kernel likes its
@@ -88,14 +92,38 @@ typedef struct beep_parms_t {
   struct beep_parms_t *next;  /* in case -n/--new is used. */
 } beep_parms_t;
 
-enum { BEEP_TYPE_CONSOLE, BEEP_TYPE_EVDEV };
+enum { BEEP_TYPE_CONSOLE, BEEP_TYPE_EVDEV, BEEP_TYPE_WIRINGPI };
 
 /* Momma taught me never to use globals, but we need something the signal 
    handlers can get at.*/
 int console_fd = -1;
 int console_type = BEEP_TYPE_CONSOLE;
 char *console_device = NULL;
+#ifdef HAVE_WIRINGPI
+int gpio_pin = -1;
 
+int setup_gpio()
+{
+  if(gpio_pin == -1)
+  {
+    int err = -1;
+
+    if(!geteuid())
+      err = wiringPiSetupGpio();
+    else if(!(err = system("gpio -v")))
+      err = wiringPiSetupSys();
+
+    if(err) {
+      fprintf(stderr, "GPIO setup failed!\n");
+      return 1;
+    }
+
+    gpio_pin = wpiPinToGpio(1);
+  }
+
+  return 0;
+}
+#endif
 
 void do_beep(int freq) {
   int period = (freq != 0 ? (int)(CLOCK_TICK_RATE/freq) : freq);
@@ -105,7 +133,7 @@ void do_beep(int freq) {
       putchar('\a');  /* Output the only beep we can, in an effort to fall back on usefulness */
       perror("ioctl");
     }
-  } else {
+  } else if(console_type == BEEP_TYPE_EVDEV) {
      /* BEEP_TYPE_EVDEV */
      struct input_event e;
 
@@ -118,6 +146,42 @@ void do_beep(int freq) {
        perror("write");
      }
   }
+#ifdef HAVE_WIRINGPI
+  else if(console_type == BEEP_TYPE_WIRINGPI) {
+    if(freq) {
+      int period = 600000/freq;
+
+      if(!geteuid()) {
+        pinMode(gpio_pin, PWM_OUTPUT);
+        pwmSetRange(period);
+        pwmWrite(gpio_pin, period / 2);
+        pwmSetMode(PWM_MODE_MS);
+      } else {
+        char buffer[64];
+
+        snprintf(buffer, 64, "gpio -g mode %d pwm", gpio_pin);
+        system(buffer);
+
+        snprintf(buffer, 64, "gpio pwmr %d", period);
+        system(buffer);
+
+        snprintf(buffer, 64, "gpio -g pwm %d %d", gpio_pin, period / 2);
+        system(buffer);
+
+        system("gpio pwm-ms");
+      }
+    } else {
+	  if(!geteuid()) {
+	    pinMode(gpio_pin, INPUT);
+	  } else {
+	    char buffer[64];
+
+	    snprintf(buffer, 64, "gpio -g mode %d in", gpio_pin);
+	    system(buffer);
+	  }
+    }
+  }
+#endif
 }
 
 
@@ -131,10 +195,15 @@ void handle_signal(int signum) {
   switch(signum) {
   case SIGINT:
   case SIGTERM:
-    if(console_fd >= 0) {
+    if(console_fd >= 0
+#ifdef HAVE_WIRINGPI		   
+      || gpio_pin >= 0
+#endif
+	 ) {
       /* Kill the sound, quit gracefully */
       do_beep(0);
-      close(console_fd);
+      if(console_fd >= 0)
+        close(console_fd);
       exit(signum);
     } else {
       /* Just quit gracefully */
@@ -279,22 +348,31 @@ void play_beep(beep_parms_t parms) {
   /* try to snag the console */
   if(console_device)
     console_fd = open(console_device, O_WRONLY);
+#ifdef HAVE_WIRINGPI
+  else if(setup_gpio() == 0)
+    console_type = BEEP_TYPE_WIRINGPI;
+#endif
   else
     if((console_fd = open("/dev/tty0", O_WRONLY)) == -1)
       console_fd = open("/dev/vc/0", O_WRONLY);
 
   if(console_fd == -1) {
-    fprintf(stderr, "Could not open %s for writing\n",
+	if(console_type != BEEP_TYPE_WIRINGPI) {
+      fprintf(stderr, "Could not open %s for writing\n",
       console_device != NULL ? console_device : "/dev/tty0 or /dev/vc/0");
-    printf("\a");  /* Output the only beep we can, in an effort to fall back on usefulness */
-    perror("open");
-    exit(1);
+      printf("\a");  /* Output the only beep we can, in an effort to fall back on usefulness */
+      perror("open");
+      exit(1);
+	}
+  } else {
+	  if (ioctl(console_fd, EVIOCGSND(0)) != -1)
+		console_type = BEEP_TYPE_EVDEV;
+	  else
+		console_type = BEEP_TYPE_CONSOLE;
   }
 
-  if (ioctl(console_fd, EVIOCGSND(0)) != -1)
-    console_type = BEEP_TYPE_EVDEV;
-  else
-    console_type = BEEP_TYPE_CONSOLE;
+  if(parms.verbose)
+	  fprintf(stderr, "[DEBUG] console_type=%d\n", console_type);
   
   /* Beep */
   for (i = 0; i < parms.reps; i++) {                    /* start beep */

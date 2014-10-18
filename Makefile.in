@@ -1,9 +1,10 @@
-CC=gcc
-FLAGS=-Wall -O2
+CC=@CC@
+FLAGS=@FLAGS@
+LIBS=@LIBS@
 EXEC_NAME=beep
-INSTALL_DIR=/usr/bin
+INSTALL_DIR=@PREFIX@/bin
 MAN_FILE=beep.1.gz
-MAN_DIR=/usr/share/man/man1
+MAN_DIR=@PREFIX@/share/man/man1
 
 default : beep
 
@@ -11,7 +12,7 @@ clean :
 	rm ${EXEC_NAME}
 
 beep : beep.c
-	${CC} ${FLAGS} -o ${EXEC_NAME} beep.c
+	${CC} ${FLAGS} -o ${EXEC_NAME} beep.c ${LIBS}
 
 install :
 	cp ${EXEC_NAME} ${INSTALL_DIR}
