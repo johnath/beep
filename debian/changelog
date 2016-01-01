@@ -1,6 +1,7 @@
 beep (1.3-4) unstable; urgency=low
 
   * Update my name.
+  * Switch to source format 3.0 (quilt).
 
  -- 
 
