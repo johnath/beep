@@ -1,5 +1,5 @@
 # Italian translation of beep debconf messages.
-# Copyright (C) 2002-2009 Gerfried Fuchs <rhonda@debian.org>
+# Copyright (C) 2002-2009 Rhonda D'Vine <rhonda@debian.org>
 # This file is distributed under the same license as the beep package.
 # davide gliozzi <zetazerozeta@yahoo.it>, 2007
 # Beatrice Torracca <beatricet@libero.it>, 2012.
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: beep\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
 "POT-Creation-Date: 2008-09-11 18:36+0200\n"
-"PO-Revision-Date: 2012-02-17 15:54+0200\n"
+"PO-Revision-Date: 2016-01-01 13:02+0100\n"
 "Last-Translator: Beatrice Torracca <beatricet@libero.it>\n"
 "Language-Team: Italian <debian-l10n-italian@lists.debian.org>\n"
 "Language: it\n"

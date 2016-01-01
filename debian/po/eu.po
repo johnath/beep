@@ -1,5 +1,5 @@
 # translation of beep-eu.po to Euskara
-# Copyright (C) 2003-2008 Gerfried Fuchs <rhonda@debian.at>
+# Copyright (C) 2003-2008 Rhonda D'Vine <rhonda@debian.org>
 # This file is distributed under the same license as the beep package.
 #
 # Piarres Beobide <pi@beobide.net>, 2008.
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: beep-eu\n"
 "Report-Msgid-Bugs-To: beep@packages.debian.org\n"
 "POT-Creation-Date: 2008-09-11 18:36+0200\n"
-"PO-Revision-Date: 2008-11-24 10:10+0100\n"
+"PO-Revision-Date: 2016-01-01 13:02+0100\n"
 "Last-Translator: Piarres Beobide <pi@beobide.net>\n"
 "Language-Team: Euskara <debian-l10n-basque@lists.debian.org>\n"
 "Language: \n"

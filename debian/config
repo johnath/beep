@@ -1,6 +1,6 @@
 #!/bin/sh
 # debian/config file for beep
-# copyright 2002-2011 by Gerfried Fuchs <rhonda@debian.org>
+# copyright 2002-2011 by Rhonda D'Vine <rhonda@debian.org>
 # Licenced under WTFPLv2
 
 set -e

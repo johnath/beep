@@ -6,4 +6,4 @@ I therefore think that "suid root with only group audio executeable" is an
 acceptable default - you are of course able to change it anytime with
 dpkg-reconfigure beep
 
- -- Gerfried Fuchs <alfie@debian.org>, Wed, 27 Feb 2002 12:48:26 +0100
+ -- Rhonda D'Vine <rhonda@debian.org>, Wed, 27 Feb 2002 12:48:26 +0100
