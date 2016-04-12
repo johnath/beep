@@ -1,114 +1,17 @@
 #!/usr/bin/make -f
-# debian/rules file for beep
-# copyright 2002-2011 by Rhonda D'Vine <rhonda@debian.org>
-# Licenced under WTFPLv2
+#DH_VERBOSE = 1
 
-PKG1 = beep
-TMP1 = $(CURDIR)/debian/$(PKG1)
-PKG2 = beep-udeb
-TMP2 = $(CURDIR)/debian/$(PKG2)
+%:
+	dh $@
 
-VERSION = $(shell dpkg-parsechangelog | grep "^Version:" | cut -d" " -f 2)
-ARCH = $(shell dpkg-architecture -qDEB_HOST_ARCH)
+override_dh_auto_build:
+	dh_auto_build -- FLAGS="$(shell dpkg-buildflags --get CFLAGS)"
 
-FLAGS = -g -Wall
-INSTALL = install
-INSTALL_FILE    = $(INSTALL) -p    -oroot -groot -m644
-INSTALL_PROGRAM = $(INSTALL) -p    -oroot -groot -m755
-INSTALL_SCRIPT  = $(INSTALL) -p    -oroot -groot -m755
-INSTALL_DIR     = $(INSTALL) -p -d -oroot -groot -m755
-
-ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-	FLAGS += -O0
-else
-	FLAGS += -O2
-endif
-ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
-	INSTALL_PROGRAM += -s
-	STRIP = true
-endif
-
-
-include /usr/share/quilt/quilt.make
-
-clean: unpatch
-	$(checkdir)
-	$(checkroot)
-	-rm -rf $(TMP1) $(TMP2) debian/$(PKG1).substvars debian/$(PKG2).substvars debian/files build-stamp
-	[ ! -f beep ] || $(MAKE) clean
-
-
-build: build-arch
-build-arch: build-stamp
-build-indep:
-build-stamp: patch
-	$(checkdir)
-	$(MAKE) FLAGS="$(FLAGS)"
-	touch build-stamp
-
-
-install: build
-	$(checkdir)
-	$(checkroot)
-	-rm -rf $(TMP1) $(TMP2) debian/$(PKG1).substvars debian/$(PKG2).substvars
-	$(INSTALL_DIR) $(TMP1)
-	cd $(TMP1) && $(INSTALL_DIR) usr/bin usr/share/man/man1 \
-		usr/share/doc/$(PKG1)
-	$(INSTALL_PROGRAM) beep $(TMP1)/usr/bin
-	$(INSTALL_FILE) beep.1.gz $(TMP1)/usr/share/man/man1
-	gunzip $(TMP1)/usr/share/man/man1/beep.1.gz
-	cd $(TMP1)/usr/share/man/man1 && patch beep.1 $(TMP1)/../beep.1.diff
-	-rm -f $(TMP1)/usr/share/man/man1/beep.1.orig
-	gzip --best $(TMP1)/usr/share/man/man1/beep.1
-	chown root:audio $(TMP1)/usr/bin/beep 
-	$(INSTALL_FILE) CREDITS README $(TMP1)/usr/share/doc/$(PKG1)
-	$(INSTALL_FILE) CHANGELOG $(TMP1)/usr/share/doc/$(PKG1)/changelog
-	cd $(TMP1)/usr/share/doc/$(PKG1) && gzip -9 changelog README
-	$(INSTALL_DIR) $(TMP2)/usr/bin
-	$(INSTALL_PROGRAM) beep $(TMP2)/usr/bin
-	test "$(STRIP)" != true || strip \
-		--remove-section=.comment --remove-section=.note \
-		$(TMP1)/usr/bin/beep $(TMP2)/usr/bin/beep
-
-
-# Build architecture-independent files here.
-binary-indep: build
-# We have nothing to do by default.
-
-
-binary-arch: build install
-	$(checkdir)
-	$(checkroot)
-	$(INSTALL_DIR) $(TMP1)/DEBIAN $(TMP2)/DEBIAN
-	$(INSTALL_FILE) debian/README.Debian debian/copyright \
-		$(TMP1)/usr/share/doc/$(PKG1)
-	$(INSTALL_FILE) debian/changelog \
-		$(TMP1)/usr/share/doc/$(PKG1)/changelog.Debian
-	gzip -9 $(TMP1)/usr/share/doc/$(PKG1)/changelog.Debian
-	$(INSTALL_SCRIPT) debian/postinst debian/postrm debian/config \
-		$(TMP1)/DEBIAN
-	po2debconf debian/templates > $(TMP1)/DEBIAN/templates
-	dpkg-shlibdeps -Tdebian/$(PKG1).substvars -dDepends $(TMP1)/usr/bin/beep
-	dpkg-gencontrol -ldebian/changelog -isp -Tdebian/$(PKG1).substvars -p$(PKG1) \
-		-P$(TMP1)
-	cd $(TMP1) && find * -type f ! -regex '^DEBIAN/.*' -print0 | \
-		xargs -r0 md5sum > DEBIAN/md5sums
-	dpkg --build $(TMP1) ..
-	dpkg-shlibdeps -Tdebian/$(PKG2).substvars -dDepends -tudeb \
-		$(TMP2)/usr/bin/beep
-	dpkg-gencontrol -ldebian/changelog -isp -Tdebian/$(PKG2).substvars -p$(PKG2) \
-		-P$(TMP2) -UHomepage -n$(PKG2)_$(VERSION)_$(ARCH).udeb
-	dpkg --build $(TMP2) ../$(PKG2)_$(VERSION)_$(ARCH).udeb
-
-
-binary: binary-arch
-
-define checkdir
-	test -f debian/rules
-endef
-
-define checkroot
-	test root = "`whoami`"
-endef
-
-.PHONY: clean build install binary-arch binary
+override_dh_auto_install:
+	cp beep debian/beep/usr/bin
+	cp beep debian/beep-udeb/usr/bin
+	cp beep.1.gz debian/beep/usr/share/man/man1
+	gunzip debian/beep/usr/share/man/man1/beep.1.gz
+	cd debian/beep/usr/share/man/man1 && patch beep.1 ../../../../../beep.1.diff
+	-rm -f debian/beep/usr/share/man/man1/beep.1.orig
+	chown root:audio debian/beep/usr/bin/beep 

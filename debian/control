@@ -2,7 +2,7 @@ Source: beep
 Section: sound
 Priority: optional
 Maintainer: Rhonda D'Vine <rhonda@debian.org>
-Build-Depends: po-debconf, patch, quilt
+Build-Depends: debhelper (>= 9~), po-debconf, patch
 Standards-Version: 3.9.6
 Homepage: http://johnath.com/beep/
 Vcs-Browser: http://git.deb.at/w/pkg/beep.git
@@ -10,7 +10,7 @@ Vcs-Git: git://git.deb.at/pkg/beep.git
 
 Package: beep
 Architecture: any
-Depends: ${shlibs:Depends}, debconf (>= 0.5) | debconf-2.0
+Depends: ${shlibs:Depends}, ${misc:Depends}, debconf (>= 0.5) | debconf-2.0
 Description: advanced pc-speaker beeper
  beep does what you'd expect: it beeps. But unlike printf "\a" beep allows
  you to control pitch, duration, and repetitions. Its job is to live inside
@@ -20,9 +20,10 @@ Description: advanced pc-speaker beeper
  gets hacked into) much more informative.
 
 Package: beep-udeb
+Package-Type: udeb
 Architecture: any
 Section: debian-installer
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: advanced pc-speaker beeper - minimal package
  beep does what you'd expect: it beeps. However, it offers various
  additional features, such as the ability to control pitch, duration,
