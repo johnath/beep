@@ -1,0 +1,16 @@
+Author: Rhonda D'Vine <rhonda@debian.org>
+Description: make the make clean not fail if the binary isn't there
+
+Index: VCS/Makefile
+===================================================================
+--- VCS.orig/Makefile	2016-01-04 13:32:23.518723192 +0100
++++ VCS/Makefile	2016-01-17 12:50:49.026997125 +0100
+@@ -8,7 +8,7 @@
+ default : beep
+ 
+ clean : 
+-	rm ${EXEC_NAME}
++	-rm ${EXEC_NAME}
+ 
+ beep : beep.c
+ 	${CC} ${FLAGS} -o ${EXEC_NAME} beep.c
