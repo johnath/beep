@@ -54,3 +54,5 @@ else
 		chmod 0755 /usr/bin/beep
 	fi
 fi
+
+#DEBHELPER#

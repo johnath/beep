@@ -3,6 +3,7 @@ beep (1.3-4) unstable; urgency=low
   * Update my name.
   * Bump Standards-Version to 3.9.6.
   * Switch to source format 3.0 (quilt).
+  * Add #DEBHELPER# to post{inst,rm} files.
 
  -- 
 
