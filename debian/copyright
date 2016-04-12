@@ -1,40 +1,45 @@
-This package was debianized by Rhonda D'Vine <rhonda@debian.org> on
-Thu, 18 Oct 2001 09:26:50 +0200.
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: beep
+Upstream-Contact: Johnathan Nightingale <johnath@johnath.com>
+Source: http://www.johnath.com/beep/
 
-It was downloaded from http://www.johnath.com/beep/
+Files: *
+Copyright: 2000 Jonathan Nightingale
+License: GPL-1+
 
-Upstream Author: Johnathan Nightingale <johnath@johnath.com>
+Files: debian/*
+Copyright: 2001-2016 Rhonda D'Vine <rhonda@debian.org>
+License: MIT
 
-Copyright:
-==========
-This software is copyright (C) 2000 by Johnathan Nightingale.
+License: GPL-1+
+    This code may distributed only under the terms of the GNU General
+    Public License which can be found at http://www.gnu.org/copyleft or in
+    the file COPYING supplied with this code.
+    .
+    This code is not distributed with warranties of any kind, including
+    implied warranties of merchantability or fitness for a particular use
+    or ability to breed pandas in captivity, it just can't be done.
+    .
+    On Debian GNU/Linux systems, the complete text of the GNU General
+    Public License version 2 can be found in `/usr/share/common-licenses/GPL-2'.
+    Later versions which the GNU project publishes on the above mentioned URL can
+    be found in the same directory.
 
-   This code may distributed only under the terms of the GNU General
-   Public License which can be found at http://www.gnu.org/copyleft or in
-   the file COPYING supplied with this code.
-
-   This code is not distributed with warranties of any kind, including
-   implied warranties of merchantability or fitness for a particular use
-   or ability to breed pandas in captivity, it just can't be done.
-
-On Debian GNU/Linux systems, the complete text of the GNU General
-Public License version 2 can be found in `/usr/share/common-licenses/GPL-2'.
-Later versions which the GNU project publishes on the above mentioned URL can
-be found in the same directory.
-
-
-The debianization of the package is licensed under the WTFPLv2:
-
-               DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-                       Version 2, December 2004
-
-    Copyright (C) 2002-2009 Rhonda D'Vine
-
-    Everyone is permitted to copy and distribute verbatim or modified
-    copies of this license document, and changing it is allowed as long
-    as the name is changed.
-
-               DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-      TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-
-     0. You just DO WHAT THE FUCK YOU WANT TO.
+License: MIT
+    Permission is hereby granted, free of charge, to any person obtaining a
+    copy of this software and associated documentation files (the "Software"),
+    to deal in the Software without restriction, including without limitation
+    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following conditions:
+    .
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+    .
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
