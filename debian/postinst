@@ -1,9 +1,22 @@
 #!/bin/sh
 # postinst for beep
-# copyright 2002-2011 by Rhonda D'Vine <rhonda@debian.org>
+# copyright 2002-2016 by Rhonda D'Vine <rhonda@debian.org>
 # Licenced under WTFPLv2
 
 set -e
+
+pathfind() {
+    OLDIFS="$IFS"
+    IFS=:
+    for p in $PATH; do
+        if [ -x "$p/$*" ]; then
+            IFS="$OLDIFS"
+            return 0
+        fi
+    done
+    IFS="$OLDIFS"
+    return 1
+}
 
 # Source debconf library.
 if [ -e /usr/share/debconf/confmodule ]; then
@@ -35,7 +48,7 @@ if [ "$suid" = "not suid at all" ] ; then
 fi
 
 
-if [ -x /usr/sbin/dpkg-statoverride ] ; then
+if pathfind dpkg-statoverride ; then
 	if ! dpkg-statoverride --list /usr/bin/beep >/dev/null ; then
 		if [ "$suid" = "usable for all" ] ; then
 			chmod 4755 /usr/bin/beep
