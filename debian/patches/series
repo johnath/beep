@@ -1,2 +1,3 @@
 catch-sig-term
 fix-makefile
+CVE-2018-0492.patch
