@@ -9,7 +9,7 @@ Vcs-Browser: http://git.deb.at/w/pkg/beep.git
 Vcs-Git: git://git.deb.at/pkg/beep.git
 
 Package: beep
-Architecture: any
+Architecture: linux-any
 Depends: ${shlibs:Depends}, ${misc:Depends}, debconf (>= 0.5) | debconf-2.0
 Description: advanced pc-speaker beeper
  beep does what you'd expect: it beeps. But unlike printf "\a" beep allows

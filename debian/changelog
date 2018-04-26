@@ -5,6 +5,7 @@ beep (1.3-5) unstable; urgency=high
   * CVE-2018-0492: Fix a local privilege escalation vulnerability.
     (closes: #894667)
   * Bump Standards-Version to 4.1.4.
+  * Switch Architecture to linux-any (closes: 745163)
 
  -- Rhonda D'Vine <rhonda@debian.org>  Thu, 26 Apr 2018 18:08:11 +0200
 
