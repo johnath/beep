@@ -14,4 +14,7 @@ override_dh_auto_install:
 	gunzip debian/beep/usr/share/man/man1/beep.1.gz
 	cd debian/beep/usr/share/man/man1 && patch beep.1 ../../../../../beep.1.diff
 	-rm -f debian/beep/usr/share/man/man1/beep.1.orig
+
+override_dh_fixperms:
+	dh_fixperms
 	chown root:audio debian/beep/usr/bin/beep 
