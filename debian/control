@@ -11,8 +11,8 @@ Vcs-Git: git://git.deb.at/pkg/beep.git
 Package: beep
 Architecture: linux-any
 Depends: ${shlibs:Depends}, ${misc:Depends}, debconf (>= 0.5) | debconf-2.0
-Description: advanced pc-speaker beeper
- beep does what you'd expect: it beeps. But unlike printf "\a" beep allows
+Description: advanced PC-speaker beeper
+ beep does what you'd expect: it beeps. But unlike printf "\a", beep allows
  you to control pitch, duration, and repetitions. Its job is to live inside
  shell/perl scripts and allow more granularity than one has otherwise. It is
  controlled completely through command line options. It's not supposed to be
@@ -24,7 +24,7 @@ Package-Type: udeb
 Architecture: any
 Section: debian-installer
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: advanced pc-speaker beeper - minimal package
+Description: advanced PC-speaker beeper - minimal package
  beep does what you'd expect: it beeps. However, it offers various
  additional features, such as the ability to control pitch, duration,
  and repetitions.
