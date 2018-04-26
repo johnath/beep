@@ -3,7 +3,7 @@ Section: sound
 Priority: optional
 Maintainer: Rhonda D'Vine <rhonda@debian.org>
 Build-Depends: debhelper (>= 9~), po-debconf, patch
-Standards-Version: 3.9.6
+Standards-Version: 4.1.4
 Homepage: http://johnath.com/beep/
 Vcs-Browser: http://git.deb.at/w/pkg/beep.git
 Vcs-Git: git://git.deb.at/pkg/beep.git
