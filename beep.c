@@ -5,9 +5,9 @@
  *
  * This code is copyright (C) Johnathan Nightingale, 2000.
  *
- * This code may distributed only under the terms of the GNU Public License 
- * which can be found at http://www.gnu.org/copyleft or in the file COPYING 
- * supplied with this code.
+ * This code may distributed only under the terms of the GNU General Public
+ * License which can be found at http://www.gnu.org/copyleft or in the file
+ * COPYING supplied with this code.
  *
  * This code is not distributed with warranties of any kind, including implied
  * warranties of merchantability or fitness for a particular use or ability to 
