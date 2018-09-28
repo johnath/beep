@@ -16,6 +16,7 @@
  * Bug me, I like it:  http://johnath.com/  or johnath@johnath.com
  */
 
+#include <stdbool.h>
 #include <fcntl.h>
 #include <getopt.h>
 #include <signal.h>
@@ -92,12 +93,9 @@ enum { BEEP_TYPE_CONSOLE, BEEP_TYPE_EVDEV };
 
 /* Momma taught me never to use globals, but we need something the signal 
    handlers can get at.*/
-int console_fd = -1;
-int console_type = BEEP_TYPE_CONSOLE;
-char *console_device = NULL;
+volatile sig_atomic_t stop = false;
 
-
-void do_beep(int freq) {
+void do_beep(int freq, int console_fd, int console_type) {
   if (console_type == BEEP_TYPE_CONSOLE) {
     if(ioctl(console_fd, KIOCSOUND, freq != 0
       ? (int)(CLOCK_TICK_RATE/freq)
@@ -121,22 +119,7 @@ void do_beep(int freq) {
 /* If we get interrupted, it would be nice to not leave the speaker beeping in
    perpetuity. */
 void handle_signal(int signum) {
-
-  if(console_device)
-    free(console_device);
-
-  switch(signum) {
-  case SIGINT:
-    if(console_fd >= 0) {
-      /* Kill the sound, quit gracefully */
-      do_beep(0);
-      close(console_fd);
-      exit(signum);
-    } else {
-      /* Just quit gracefully */
-      exit(signum);
-    }
-  }
+  stop = true;
 }
 
 /* print usage and exit */
@@ -171,7 +154,7 @@ void usage_bail(const char *executable_name) {
  * March 29, 2002 - Daniel Eisenbud points out that c should be int, not char,
  * for correctness on platforms with unsigned chars.
  */
-void parse_command_line(int argc, char **argv, beep_parms_t *result) {
+void parse_command_line(int argc, char **argv, beep_parms_t *result, char *console_device) {
   int c;
 
   struct option opt_list[7] = {{"help", 0, NULL, 'h'},
@@ -264,9 +247,14 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
     result->freq = DEFAULT_FREQ;
 }  
 
-void play_beep(beep_parms_t parms) {
+void play_beep(beep_parms_t parms, char *console_device) {
   int i; /* loop counter */
+  int console_fd = -1;
+  int console_type = BEEP_TYPE_CONSOLE;
 
+  if (stop) {
+    return; 
+  }
   if(parms.verbose == 1)
       fprintf(stderr, "[DEBUG] %d times %d ms beeps (%d delay between, "
 	"%d delay after) @ %.2f Hz\n",
@@ -293,13 +281,14 @@ void play_beep(beep_parms_t parms) {
     console_type = BEEP_TYPE_CONSOLE;
   
   /* Beep */
-  for (i = 0; i < parms.reps; i++) {                    /* start beep */
-    do_beep(parms.freq);
+  for (i = 0; i < parms.reps && !stop; i++) {                    /* start beep */
+    do_beep(parms.freq, console_fd, console_type);
     /* Look ma, I'm not ansi C compatible! */
     usleep(1000*parms.length);                          /* wait...    */
-    do_beep(0);                                         /* stop beep  */
-    if(parms.end_delay || (i+1 < parms.reps))
-       usleep(1000*parms.delay);                        /* wait...    */
+    do_beep(0, console_fd, console_type);                                         /* stop beep  */
+    if(parms.end_delay || (i+1 < parms.reps)) {
+      usleep(1000*parms.delay);                        /* wait...    */
+    }
   }                                                     /* repeat.    */
 
   close(console_fd);
@@ -321,12 +310,14 @@ int main(int argc, char **argv) {
   parms->next       = NULL;
 
   signal(SIGINT, handle_signal);
-  parse_command_line(argc, argv, parms);
+  char *console_device = NULL;
+  parse_command_line(argc, argv, parms, console_device);
+
 
   /* this outermost while loop handles the possibility that -n/--new has been
      used, i.e. that we have multiple beeps specified. Each iteration will
      play, then free() one parms instance. */
-  while(parms) {
+  while(parms && !stop) {
     beep_parms_t *next = parms->next;
 
     if(parms->stdin_beep) {
@@ -339,20 +330,20 @@ int main(int argc, char **argv) {
 	 not much to  be done about that. */
       setvbuf(stdin, NULL, _IONBF, 0);
       setvbuf(stdout, NULL, _IONBF, 0);
-      while(fgets(sin, 4096, stdin)) {
+      while(fgets(sin, 4096, stdin) && !stop) {
 	if(parms->stdin_beep==CHAR_STDIN_BEEP) {
-	  for(ptr=sin;*ptr;ptr++) {
+	  for(ptr=sin;*ptr && !stop;ptr++) {
 	    putchar(*ptr);
 	    fflush(stdout);
-	    play_beep(*parms);
+	    play_beep(*parms, console_device);
 	  }
 	} else {
 	  fputs(sin, stdout);
-	  play_beep(*parms);
+	  play_beep(*parms, console_device);
 	}
       }
     } else {
-      play_beep(*parms);
+      play_beep(*parms, console_device);
     }
 
     /* Junk each parms struct after playing it */
