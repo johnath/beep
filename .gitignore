@@ -2,3 +2,6 @@
 
 # The compiled executable
 /beep
+
+# The compressed man page
+/beep.1.gz

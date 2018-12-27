@@ -1,6 +1,7 @@
 CC=gcc
 FLAGS=-Wall -O2
 
+GZIP = gzip
 INSTALL=install
 
 EXEC_NAME=beep
@@ -17,14 +18,22 @@ mandir=$(datarootdir)/man
 man1dir=$(mandir)/man1
 
 .PHONY: all
-all: $(EXEC_NAME)
+all: all-local
+
+
+TARGETS += $(EXEC_NAME)
+$(EXEC_NAME): beep.c
+	$(CC) $(FLAGS) $(CFLAGS) -o $(EXEC_NAME) beep.c
+
+TARGETS += $(MAN_FILE)
+$(MAN_FILE): beep.1
+	$(GZIP) --best -c < $< > $@
+
+all-local: $(TARGETS)
 
 .PHONY: clean
 clean:
-	rm -f $(EXEC_NAME)
-
-$(EXEC_NAME): beep.c
-	$(CC) $(FLAGS) $(CFLAGS) -o $(EXEC_NAME) beep.c
+	rm -f $(TARGETS)
 
 install: all
 	$(INSTALL) -m 0755 -d              $(DESTDIR)$(bindir)

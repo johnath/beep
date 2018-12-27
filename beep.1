@@ -1,0 +1,139 @@
+.TH BEEP 1 "March 2002"
+.SH NAME
+beep \- beep the pc speaker any number of ways
+.SH SYNOPSIS
+.B beep
+[\-f N] [\-l N] [\-r N] [\-d N] [\-D N] [\-s] [\-c]
+.HP
+.B beep
+[ OPTIONS ] [-n] [--new] [ OPTIONS ]
+.HP
+.B beep
+[\-h] [\-\-help]
+.HP
+.B beep
+[\-v] [\-V] [\-\-version]
+.SH DESCRIPTION
+.PP
+\fBbeep\fR allows the user to control the pc-speaker with precision, allowing different sounds to indicate different events.  While it can be run quite happily on the command line, it's intended place of residence is within shell/perl scripts, notifying the user when something interesting occurs.  Of course, it has no notion of what's interesting, but it's real good at that notifying part.
+.PP
+All options have default values, meaning that just typing '\fBbeep\fR' will work.  If an option is specified more than once on the command line, subsequent options override their predecessors.  So '\fBbeep\fR \-f 200 \-f 300' will beep at 300Hz.
+.SH OPTIONS
+.TP
+\fB\-f\fR N
+beep at N Hz, where 0 < N < 20000.  As a general ballpark, the regular terminal beep is around 750Hz.  N is not, incidentally, restricted to whole numbers.
+.TP
+\fB\-l\fR N
+beep for N milliseconds.
+.TP
+\fB\-r\fR N
+specify the number of repetitions (defaults to 1).
+.TP
+\fB\-d\fR N, \fB\-D\fR N
+specify a delay of N milliseconds between repetitions.  Use of \-d specifies that this delay should only occur \fIbetween\fR beeps, that is, it should not occur after the last repetition.  \-D indicates that the delay should occur after every repetition, including the last.  Normally, \-d is what you want, but if, for example, you are stringing several \fBbeep\fR commands together to play the star wars anthem, you may want control over every delay.
+.TP
+\fB\-n\fR, \fB\-\-new\fR
+this option allows you to break the command line up into specifying multiple beeps.  Each time this option is used, beep starts treating all further arguments as though they were for a new beep.  So for example:
+
+\fBbeep\fR -f 1000 -n -f 2000 -n -f 1500
+
+would produce a sequence of three beeps, the first with a frequency of 1000Hz (and otherwise default values), then a second beep with a frequency of 2000Hz (again, with things like delay and reps being set to their defaults), then a third beep, at 1500Hz.  This is different from specifying a -r value, since -r repeats the same beep multiple times, whereas -n allows you to specify different beeps.  After a -n, the new beep is created with all the default values, and any of these can be specified without altering values for preceeding (or later) beeps.  See the \fBEXAMPLES\fR section if this managed to confuse you.
+.TP
+\fB\-s\fR, \fB\-c\fR
+these options put \fBbeep\fR into input-processing mode.  -s tells \fBbeep\fR to read from stdin, and beep after each newline, and -c tells it to do so after every character.  In both cases, the program will also echo the input back out to stdout, which makes it easy to slip \fBbeep\fR into a text-processing pipeline, see the \fBEXAMPLES\fR section.
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+display usage info and exit
+.TP
+\fB\-v\fR, \fB\-V\fR, \fB\-\-version\fR
+display version information and exit
+.SH EXAMPLES
+.TP
+At its simplest (yet still effective)
+
+\fBbeep\fR
+.TP
+A more interesting standalone setup
+
+\fBbeep\fR -f 300.7 -r 2 -d 100 -l 400
+.TP
+As part of a log-watching pipeline
+
+tail -f /var/log/xferlog | grep 'passwd' | \fBbeep\fR -f 1000 -r 5 -s
+.TP
+When using -c mode, I recommend using a short -D, and a shorter -l, so that the beeps don't blur together.  Something like this will get you a cheesy 1970's style beep-as-you-type-each-letter effect
+
+cat file | \fBbeep\fR -c -f 400 -D 50 -l 10
+
+.TP
+A highly contrived example of -n/--new usage
+
+\fBbeep\fR -f 1000 -r 2 -n -r 5 -l 10 --new 
+
+will produce first two 1000Hz beeps, then 5 beeps at the default tone, but only 10ms long each, followed by a third beep using all the default settings (since none are specified).
+.PP See also the \fBFREQUENCY TABLE\fR below.
+
+.SH IOCTL WACKINESS
+.PP
+Some users will encounter a situation where beep dies with a complaint from ioctl().  The reason for this, as Peter Tirsek was nice enough to point out to me, stems from how the kernel handles beep's attempt to poke at (for non-programmers: ioctl is a sort of catch-all function that lets you poke at things that have no other predefined poking-at mechanism) the tty, which is how it beeps.  The short story is, the kernel checks that either:
+.PP
+- you are the superuser
+.PP
+- you own the current tty
+.PP
+What this means is that root can always make beep work (to the best of my knowledge!), and that any local user can make beep work, BUT a non-root remote user cannot use beep in it's natural state.  What's worse, an xterm, or other x-session counts, as far as the kernel is concerned, as 'remote', so beep won't work from a non-priviledged xterm either.  I had originally chalked this up to a bug, but there's actually nothing I can do about it, and it really is a Good Thing that the kernel does things this way.  There is also a solution.
+.PP
+By default beep is not installed with the suid bit set, because that would just be zany.  On the other hand, if you do make it suid root, all your problems with beep bailing on ioctl calls will magically vanish, which is pleasant, and the only reason not to is that any suid program is a potential security hole.  Conveniently, beep is very short, so auditing it is pretty straightforward.
+.PP
+Decide for yourself, of course, but it looks safe to me - there's only one buffer and fgets doesn't let it overflow, there's only one file opening, and while there is a potential race condition there, it's with /dev/console.  If someone can exploit this race by replacing /dev/console, you've got bigger problems.  :)
+.PP
+So the quick, only, and likely safe solution if beep is not beeping when you want it to is (as root):
+.PP
+# chmod 4755 /usr/bin/beep
+.PP
+(or wherever you put it)
+.PP
+The one snag is that this will give any little nitwit the ability to run beep successfully - make sure this is what you want.  If it isn't, a slightly more complex fix would be something like:
+.PP
+# chgrp beep /usr/bin/beep
+
+# chmod 4750 /usr/bin/beep
+
+.PP
+and then add only beep-worthy users to the 'beep' group.
+.SH FREQUENCY TABLE
+.PP
+Several people have asked for some basic help translating music notes to frequencies.  There are a lot of music notes, and several tables online will give you translations, but here are \fIapproximate\fR numbers for the octave of middle C, to get you started.
+.PP
+Note		Frequency
+.ft CW
+.nf
+C		261.6
+C#		277.2
+D		293.7
+D#		311.1
+E		329.6
+F		349.2
+F#		370.0
+G		392.0
+G#		415.3
+A		440.0
+A#		466.2
+B		493.9
+C		523.2
+.ft R
+.SH BUGS
+.PP
+None that I'm aware of, though see the \fBIOCTL WACKINESS\fR section.
+.SH REPORTING BUGS
+Report bugs to <johnath@johnath.com>
+.SH AUTHOR
+.PP
+This program was written by Johnathan Nightingale (johnath@johnath.com) and is distributed under the GNU General Public License.  For more contributing information, check the source, and past contributors can be found in CREDITS.
+
+
+
+
+
+
+
