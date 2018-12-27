@@ -3,5 +3,10 @@
 # The compiled executable
 /beep
 
+# Build intermediates
+*.o
+*.i
+*.s
+
 # The compressed man page
 /beep.1.gz
