@@ -16,6 +16,7 @@
  * Bug me, I like it:  http://johnath.com/  or johnath@johnath.com
  */
 
+#include <errno.h>
 #include <fcntl.h>
 #include <getopt.h>
 #include <math.h>
@@ -26,6 +27,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <linux/kd.h>
 #include <linux/input.h>
@@ -90,36 +92,45 @@ typedef struct beep_parms_t {
   struct beep_parms_t *next;  /* in case -n/--new is used. */
 } beep_parms_t;
 
-enum { BEEP_TYPE_CONSOLE, BEEP_TYPE_EVDEV };
+/* Use an enum and switch statements to have compiler warn us about
+ * unhandled cases. */
+typedef enum {
+	      /* When the beep_type has not been set yet, do nothing */
+	      BEEP_TYPE_UNSET   = 0,
+	      /* Use the console API */
+	      BEEP_TYPE_CONSOLE = 1,
+	      /* Use the evdev API */
+	      BEEP_TYPE_EVDEV   = 2,
+} beep_type_E;
 
-/* Momma taught me never to use globals, but we need something the signal 
+/* Momma taught me never to use globals, but we need something the signal
    handlers can get at.*/
 int console_fd = -1;
-int console_type = BEEP_TYPE_CONSOLE;
+beep_type_E console_type = BEEP_TYPE_UNSET;
 char *console_device = NULL;
 
 
 void do_beep(unsigned int freq) {
-  const uintptr_t argp = (freq != 0 ? (CLOCK_TICK_RATE/freq) : freq) & 0xffff;
-
-  if(console_type == BEEP_TYPE_CONSOLE) {
-    if(ioctl(console_fd, KIOCSOUND, argp) < 0) {
-      putchar('\a');  /* Output the only beep we can, in an effort to fall back on usefulness */
-      perror("ioctl");
+  switch (console_type) {
+  case BEEP_TYPE_CONSOLE: if (1) {
+      const uintptr_t argp = ((freq != 0) ? (CLOCK_TICK_RATE/freq) : freq) & 0xffff;
+      (void) ioctl(console_fd, KIOCSOUND, argp);
     }
-  } else {
-     /* BEEP_TYPE_EVDEV */
-     struct input_event e;
+    break;
+  case BEEP_TYPE_EVDEV: if (1) {
+      struct input_event e;
 
-     memset(&e, 0, sizeof(e));
-     e.type = EV_SND;
-     e.code = SND_TONE;
-     e.value = freq;
+      memset(&e, 0, sizeof(e));
+      e.type = EV_SND;
+      e.code = SND_TONE;
+      e.value = freq;
 
-     if(write(console_fd, &e, sizeof(struct input_event)) < 0) {
-       putchar('\a'); /* See above */
-       perror("write");
-     }
+      (void) write(console_fd, &e, sizeof(struct input_event));
+    }
+    break;
+  case BEEP_TYPE_UNSET:
+    /* Do nothing, if this case should ever happen which it should not. */
+    break;
   }
 }
 
@@ -258,7 +269,19 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
       result->verbose = 1;
       break;
     case 'e' : /* also --device */
-      console_device = optarg;
+      if (strncmp("/dev/input/", optarg, strlen("/dev/input/")) == 0) {
+	/* If device name starts with /dev/input/, we can assume evdev
+	 * input device beeping is wished for and the corresponding
+	 * device is somewhere in /dev/input/. Otherwise, the default
+	 * console beeper will be used with its default name(s). */
+	console_device = optarg;
+      } else {
+	fprintf(stderr, "%s: "
+		"Not opening device '%s'. If you do need this device, please "
+		"report that fact to <https://github.com/ndim/beep/issues>.\n",
+		argv[0], optarg);
+	exit(EXIT_FAILURE);
+      }
       break;
     case 'h' : /* notice that this is also --help */
     default :
@@ -290,11 +313,42 @@ void play_beep(beep_parms_t parms) {
 }
 
 
+/* Open only character device special file (with race condition).
+ *
+ * We check whether this is a character device special file before
+ * opening as for some devices, opening has an effect and we can avoid
+ * this effect for those devices here.
+ *
+ * We still need to make sure that the file we have actually opened
+ * actually is a character device special file after we have actually
+ * opened it.
+ */
+int open_chr(const char *const argv0, const char *filename, int flags)
+{
+  struct stat sb;
+  if (-1 == stat(filename, &sb)) {
+    return -1;
+  }
+  if (S_ISCHR(sb.st_mode)) {
+    return open(filename, flags);
+  } else {
+    fprintf(stderr, "%s: "
+	    "console file '%s' is not a character device special file\n",
+	    argv0, filename);
+    exit(1);
+  }
+}
+
 
 int main(int argc, char **argv) {
   char sin[4096], *ptr;
-  
+
+  /* Parse command line */
   beep_parms_t *parms = (beep_parms_t *)malloc(sizeof(beep_parms_t));
+  if (NULL == parms) {
+    perror("malloc");
+    exit(1);
+  }
   parms->freq       = 0;
   parms->length     = DEFAULT_LENGTH;
   parms->reps       = DEFAULT_REPS;
@@ -304,29 +358,90 @@ int main(int argc, char **argv) {
   parms->verbose    = 0;
   parms->next       = NULL;
 
-  signal(SIGINT, handle_signal);
-  signal(SIGTERM, handle_signal);
   parse_command_line(argc, argv, parms);
 
-  /* try to snag the console */
-  if(console_device)
-    console_fd = open(console_device, O_WRONLY);
-  else
-    if((console_fd = open("/dev/tty0", O_WRONLY)) == -1)
-      console_fd = open("/dev/vc/0", O_WRONLY);
+  /* Try opening a console device */
+  if (console_device) {
+    console_fd = open_chr(argv[0], console_device, O_WRONLY);
+  } else {
+    static char *console_device_list[] =
+      { "/dev/tty0",
+	"/dev/vc/0",
+	"/dev/input/by-path/platform-pcspkr-event-spkr",
+      };
+    for (size_t i=0; i<(sizeof(console_device_list)/sizeof(console_device_list[0])); ++i) {
+      if ((console_fd = open_chr(argv[0], console_device_list[i], O_WRONLY)) != -1) {
+	console_device = console_device_list[i];
+	break;
+      }
+    }
+  }
 
-  if(console_fd == -1) {
-    fprintf(stderr, "Could not open %s for writing\n",
-      console_device != NULL ? console_device : "/dev/tty0 or /dev/vc/0");
-    printf("\a");  /* Output the only beep we can, in an effort to fall back on usefulness */
-    perror("open");
+  if (console_fd == -1) {
+    const int saved_errno = errno;
+    fprintf(stderr, "%s: Could not open %s for writing: %s\n",
+	    argv[0],
+	    ((console_device != NULL) ? console_device :
+	     "console device"),
+	    strerror(saved_errno));
+    /* Output the only beep we can, in an effort to fall back on usefulness */
+    printf("\a");
     exit(1);
   }
 
-  if (ioctl(console_fd, EVIOCGSND(0)) != -1)
+  /* Verify that console_fd is actually a character device special file */
+  if (1) {
+    struct stat sb;
+    if (-1 == fstat(console_fd, &sb)) {
+      perror("fstat");
+      exit(1);
+    }
+    if (S_ISCHR(sb.st_mode)) {
+      /* GOOD: console_fd is a character device special file. Use it. */
+    } else {
+      /* BAD: console_fd is not a character device special file. Do
+       * not use it any further, and certainly DO NOT WRITE to it.
+       */
+      fprintf(stderr,
+	      "%s: opened console '%s' is not a character special device\n",
+	      argv[0], console_device);
+      exit(1);
+    }
+  }
+
+  /* Determine the API supported by the opened console device */
+  if (ioctl(console_fd, EVIOCGSND(0)) != -1) {
+    if (parms->verbose) {
+      printf("Using BEEP_TYPE_EVDEV\n");
+    }
     console_type = BEEP_TYPE_EVDEV;
-  else
+  } else if (ioctl(console_fd, KIOCSOUND, 0) >= 0) {
+    /* turning off the beeps should be a safe way to check for API support */
+    if (parms->verbose) {
+      printf("Using BEEP_TYPE_CONSOLE\n");
+    }
     console_type = BEEP_TYPE_CONSOLE;
+  } else {
+    fprintf(stderr,
+	    "%s: console device '%s' does not support either API\n",
+	    argv[0], console_device);
+    /* Output the only beep we can, in an effort to fall back on usefulness */
+    printf("\a");
+    exit(1);
+  }
+
+  /* At this time, we know what API to use on which device, and we do
+   * not have to fall back onto printing '\a' any more.
+   */
+
+  /* After all the initialization has happened and the global
+   * variables used to communicate with the signal handlers have
+   * actually been set up properly, we can finally install the signal
+   * handlers. As we do not start making any noises, there is no need
+   * to install the signal handlers any earlier.
+   */
+  signal(SIGINT,  handle_signal);
+  signal(SIGTERM, handle_signal);
 
   /* this outermost while loop handles the possibility that -n/--new has been
      used, i.e. that we have multiple beeps specified. Each iteration will
