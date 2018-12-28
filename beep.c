@@ -373,9 +373,9 @@ int main(int argc, char **argv) {
     console_fd = open_chr(argv[0], console_device, O_WRONLY);
   } else {
     static char *console_device_list[] =
-      { "/dev/tty0",
+      { "/dev/input/by-path/platform-pcspkr-event-spkr",
+	"/dev/tty0",
 	"/dev/vc/0",
-	"/dev/input/by-path/platform-pcspkr-event-spkr",
       };
     for (size_t i=0; i<(sizeof(console_device_list)/sizeof(console_device_list[0])); ++i) {
       if ((console_fd = open_chr(argv[0], console_device_list[i], O_WRONLY)) != -1) {
