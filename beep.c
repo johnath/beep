@@ -368,6 +368,14 @@ int open_chr(const char *const argv0, const char *filename, int flags)
 int main(int argc, char **argv) {
   char sin[4096], *ptr;
 
+  /* bail out if running setuid or setgid */
+  if ((getuid() != geteuid()) || (getgid() != getegid())) {
+    fprintf(stderr, "%s: "
+	    "running setuid or setgid, which is not supported for security reasons",
+	    argv[0]);
+    exit(1);
+  }
+
   /* Parse command line */
   beep_parms_t *parms = (beep_parms_t *)malloc(sizeof(beep_parms_t));
   if (NULL == parms) {
