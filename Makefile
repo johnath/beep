@@ -23,7 +23,7 @@ all: all-local
 
 TARGETS += $(EXEC_NAME)
 $(EXEC_NAME): beep.c
-	$(CC) $(FLAGS) $(CFLAGS) -o $(EXEC_NAME) beep.c
+	$(CC) $(FLAGS) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(EXEC_NAME) -lm $(LIBADD) beep.c
 
 TARGETS += $(MAN_FILE)
 $(MAN_FILE): beep.1

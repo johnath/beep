@@ -18,7 +18,9 @@
 
 #include <fcntl.h>
 #include <getopt.h>
+#include <math.h>
 #include <signal.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -45,7 +47,7 @@
    result of this is a tone at approximately the desired frequency. :)
 */
 #ifndef CLOCK_TICK_RATE
-#define CLOCK_TICK_RATE 1193180
+#define CLOCK_TICK_RATE 1193180U
 #endif
 
 #define VERSION_STRING "beep-1.3"
@@ -71,7 +73,7 @@ char *copyright =
 #define CHAR_STDIN_BEEP 2
 
 typedef struct beep_parms_t {
-  float freq;     /* tone frequency (Hz)      */
+  unsigned int freq; /* tone frequency (Hz)      */
   int length;     /* tone length    (ms)      */
   int reps;       /* # of repetitions         */
   int delay;      /* delay between reps  (ms) */
@@ -97,11 +99,11 @@ int console_type = BEEP_TYPE_CONSOLE;
 char *console_device = NULL;
 
 
-void do_beep(int freq) {
-  int period = (freq != 0 ? (int)(CLOCK_TICK_RATE/freq) : freq);
+void do_beep(unsigned int freq) {
+  const uintptr_t argp = (freq != 0 ? (CLOCK_TICK_RATE/freq) : freq) & 0xffff;
 
   if(console_type == BEEP_TYPE_CONSOLE) {
-    if(ioctl(console_fd, KIOCSOUND, period) < 0) {
+    if(ioctl(console_fd, KIOCSOUND, argp) < 0) {
       putchar('\a');  /* Output the only beep we can, in an effort to fall back on usefulness */
       perror("ioctl");
     }
@@ -188,14 +190,15 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
     float argfreq = -1; 
     switch(c) {      
     case 'f':  /* freq */
-      if(!sscanf(optarg, "%f", &argfreq) || (argfreq >= 20000 /* ack! */) || 
-	 (argfreq <= 0))
+      if(!sscanf(optarg, "%f", &argfreq) || (argfreq >= 20000.0f /* ack! */) ||
+	 (argfreq <= 0.0f)) {
 	usage_bail(argv[0]);
-      else {
-	if (result->freq != 0)
+      } else {
+	if (result->freq != 0) {
 	  fprintf(stderr, "WARNING: multiple -f values given, only last "
 	    "one is used.\n");
-	result->freq = argfreq;    
+	}
+	result->freq = ((unsigned int)rintf(argfreq));
       }
       break;
     case 'l' : /* length */
@@ -271,7 +274,7 @@ void play_beep(beep_parms_t parms) {
 
   if(parms.verbose == 1)
       fprintf(stderr, "[DEBUG] %d times %d ms beeps (%d delay between, "
-	"%d delay after) @ %.2f Hz\n",
+	"%d delay after) @ %d Hz\n",
 	parms.reps, parms.length, parms.delay, parms.end_delay, parms.freq);
 
   /* Beep */
