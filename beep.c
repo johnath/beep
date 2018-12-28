@@ -74,10 +74,10 @@ char *copyright =
 
 typedef struct beep_parms_t {
   unsigned int freq; /* tone frequency (Hz)      */
-  int length;     /* tone length    (ms)      */
-  int reps;       /* # of repetitions         */
-  int delay;      /* delay between reps  (ms) */
-  int end_delay;  /* do we delay after last rep? */
+  unsigned int length;     /* tone length    (ms)      */
+  unsigned int reps;       /* # of repetitions         */
+  unsigned int delay;      /* delay between reps  (ms) */
+  unsigned int end_delay;  /* do we delay after last rep? */
   int stdin_beep; /* are we using stdin triggers?  We have three options:
 		     - just beep and terminate (default)
 		     - beep after a line of input
@@ -202,19 +202,19 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
       }
       break;
     case 'l' : /* length */
-      if(!sscanf(optarg, "%d", &argval) || (argval < 0))
+      if(!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000))
 	usage_bail(argv[0]);
       else
 	result->length = argval;
       break;
     case 'r' : /* repetitions */
-      if(!sscanf(optarg, "%d", &argval) || (argval < 0))
+      if(!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000))
 	usage_bail(argv[0]);
       else
 	result->reps = argval;
       break;
     case 'd' : /* delay between reps - WITHOUT delay after last beep*/
-      if(!sscanf(optarg, "%d", &argval) || (argval < 0))
+      if(!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000))
 	usage_bail(argv[0]);
       else {
 	result->delay = argval;
@@ -222,7 +222,7 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
       }
       break;
     case 'D' : /* delay between reps - WITH delay after last beep */
-      if(!sscanf(optarg, "%d", &argval) || (argval < 0))
+      if(!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000))
 	usage_bail(argv[0]);
       else {
 	result->delay = argval;
@@ -270,7 +270,7 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
 }  
 
 void play_beep(beep_parms_t parms) {
-  int i; /* loop counter */
+  unsigned int i; /* loop counter */
 
   if(parms.verbose == 1)
       fprintf(stderr, "[DEBUG] %d times %d ms beeps (%d delay between, "
@@ -281,10 +281,11 @@ void play_beep(beep_parms_t parms) {
   for (i = 0; i < parms.reps; i++) {                    /* start beep */
     do_beep(parms.freq);
     /* Look ma, I'm not ansi C compatible! */
-    usleep(1000*parms.length);                          /* wait...    */
+    usleep(1000U*parms.length);                          /* wait...    */
     do_beep(0);                                         /* stop beep  */
-    if(parms.end_delay || (i+1 < parms.reps))
-       usleep(1000*parms.delay);                        /* wait...    */
+    if (parms.end_delay || ((i+1) < parms.reps)) {
+       usleep(1000U*parms.delay);                        /* wait...    */
+    }
   }                                                     /* repeat.    */
 }
 
