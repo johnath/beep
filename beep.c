@@ -114,7 +114,11 @@ void do_beep(unsigned int freq) {
   switch (console_type) {
   case BEEP_TYPE_CONSOLE: if (1) {
       const uintptr_t argp = ((freq != 0) ? (CLOCK_TICK_RATE/freq) : freq) & 0xffff;
-      (void) ioctl(console_fd, KIOCSOUND, argp);
+      if (-1 == ioctl(console_fd, KIOCSOUND, argp)) {
+	/* If we cannot use the sound API, we cannot silence the sound either */
+	perror("ioctl KIOCSOUND");
+	exit(1);
+      }
     }
     break;
   case BEEP_TYPE_EVDEV: if (1) {
@@ -125,7 +129,11 @@ void do_beep(unsigned int freq) {
       e.code = SND_TONE;
       e.value = freq;
 
-      (void) write(console_fd, &e, sizeof(struct input_event));
+      if (sizeof(e) != write(console_fd, &e, sizeof(e))) {
+	/* If we cannot use the sound API, we cannot silence the sound either */
+	perror("write EV_SND");
+	exit(1);
+      }
     }
     break;
   case BEEP_TYPE_UNSET:
