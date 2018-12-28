@@ -1,0 +1,113 @@
+#!/bin/bash
+
+CMP=cmp
+DIFF=diff
+SED=sed
+SHELL=sh
+
+# TODO: If we have more tone generating tests, find a well-known
+#       melody without repeating notes and play that melody so that a
+#       human can hear when the melody has holes.
+FREQS=(440 494 554 587 659 740 831 880 988 1109 1175 1319 1480 1661 1760)
+
+: set -e
+
+test_dir="$1"
+shift
+
+pass=0
+fail=0
+
+if test -t 1; then
+    hilite="$(tput setaf 3)"
+    normal="$(tput sgr0)"
+    green="$(tput setaf 2)"
+    red="$(tput setaf 1)$(tput bold)"
+else
+    hilite=""
+    normal=""
+    green=""
+    red=""
+fi
+passmsg="${green}PASS${normal}"
+failmsg="${red}FAIL${normal}"
+
+canonicalize_output() {
+    ${SED} -e "s|${BEEP}|BEEP_EXECUTABLE|g" -e "s|^${BEEP##*/}:|BEEP_EXECUTABLE:|g"
+}
+
+success_beeps() {
+    if test -e "beep"; then
+	./beep -f 220 -l 100 -n -f 275  -l 100 -n -f 330 -l 100  -n -f 440  -l 100 -n -f 550  -l 100 -n -f 660  -l 100 -n -f 880
+    fi
+}
+
+: set -x
+
+for executable; do
+    export BEEP="$PWD/$executable"
+    freq_idx=0
+    for test in tests/*.sh; do
+	export FREQ="${FREQS[${freq_idx}]}"
+	base="$(basename "$test" .sh)"
+	dir="$(dirname "$test")"
+	actual="${dir}/${executable}--${base}.output.actual"
+	printf "${hilite}%-13s${normal} ${hilite}%-32s${normal} " "${executable}" "${base}"
+	if ${SHELL} "${test}" > "${actual}.new" 2>&1; then
+	    canonicalize_output < "${actual}.new" > "${actual}"
+	    expects_output=false
+	    for file in "${dir}/${base}.output.expected".[0-9]; do
+		if test -f "$file"; then
+		    expects_output=true
+		    break
+		fi
+	    done
+	    if "${expects_output}"; then
+		expect_fail="true"
+		for expected in "${dir}/${base}.output.expected".[0-9]; do
+		    if ${CMP} --quiet "${expected}" "${actual}"; then
+			pass="$(expr "${pass}" + 1)"
+			echo "${passmsg}${expected/#*output.expected}"
+			expect_fail="false"
+			break
+		    fi
+		done
+		if "$expect_fail"; then
+		    fail="$(expr "${fail}" + 1)"
+		    echo "${failmsg}"
+		    for expected in "${dir}/${base}.output.expected".[0-9]; do
+			${DIFF} -u "${expected}" "${actual}"
+		    done
+		fi
+	    else
+		if test -s "${actual}"; then
+		    fail="$(expr "${fail}" + 1)"
+		    echo "${failmsg}"
+		    cat "${actual}"
+		else
+		    pass="$(expr "${pass}" + 1)"
+		    echo "${passmsg}"
+		fi
+	    fi
+	else
+	    canonicalize_output < "${actual}.new" > "${actual}"
+	    fail="$(expr "${fail}" + 1)"
+	    echo "${failmsg}"
+	    cat "${actual}"
+	fi
+	freq_idx="$(expr "$freq_idx" + 1)"
+	if test "$freq_idx" -ge "${#FREQS[@]}"; then
+	    freq_idx=0
+	fi
+	sleep 0.35 || sleep 1
+    done
+done
+
+echo "${pass} passed, ${fail} failed, $(expr "${pass}" + "${fail}") total."
+
+if test "${fail}" -gt 0; then \
+    exit 1
+else
+    success_beeps
+    exit 0
+fi
