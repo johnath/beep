@@ -1,3 +1,14 @@
+# Use GNU makefile conventions for directory names with one notable
+# exception: prefix is not /usr/local in order to keep the default
+# installation location for beep.
+DESTDIR=
+prefix=/usr
+exec_prefix=$(prefix)
+bindir=$(exec_prefix)/bin
+datarootdir=$(prefix)/share
+mandir=$(datarootdir)/man
+man1dir=$(mandir)/man1
+
 CC=gcc
 FLAGS=-Wall -O2
 
@@ -7,19 +18,8 @@ INSTALL=install
 EXEC_NAME=beep
 MAN_FILE=beep.1.gz
 
-# Use GNU makefile conventions for directory names with one notable
-# exception: prefix is not /usr/local in order to keep the default
-# installation location for beep.
-prefix=/usr
-exec_prefix=$(prefix)
-bindir=$(exec_prefix)/bin
-datarootdir=$(prefix)/share
-mandir=$(datarootdir)/man
-man1dir=$(mandir)/man1
-
 .PHONY: all
 all: all-local
-
 
 TARGETS += $(EXEC_NAME)
 $(EXEC_NAME): beep.c
