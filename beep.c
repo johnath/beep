@@ -465,13 +465,13 @@ int main(int argc, char **argv) {
   /* Determine the API supported by the opened console device */
   if (ioctl(console_fd, EVIOCGSND(0)) != -1) {
     if (parms->verbose) {
-      printf("Using BEEP_TYPE_EVDEV\n");
+      printf("Using BEEP_TYPE_EVDEV on '%s'\n", console_device);
     }
     console_type = BEEP_TYPE_EVDEV;
   } else if (ioctl(console_fd, KIOCSOUND, 0) >= 0) {
     /* turning off the beeps should be a safe way to check for API support */
     if (parms->verbose) {
-      printf("Using BEEP_TYPE_CONSOLE\n");
+      printf("Using BEEP_TYPE_CONSOLE on '%s'\n", console_device);
     }
     console_type = BEEP_TYPE_CONSOLE;
   } else {
