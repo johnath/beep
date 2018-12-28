@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <getopt.h>
+#include <limits.h>
 #include <math.h>
 #include <signal.h>
 #include <stdint.h>
@@ -277,18 +278,34 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
       result->verbose = 1;
       break;
     case 'e' : /* also --device */
-      if (strncmp("/dev/input/", optarg, strlen("/dev/input/")) == 0) {
-	/* If device name starts with /dev/input/, we can assume evdev
-	 * input device beeping is wished for and the corresponding
-	 * device is somewhere in /dev/input/. Otherwise, the default
-	 * console beeper will be used with its default name(s). */
-	console_device = optarg;
-      } else {
-	fprintf(stderr, "%s: "
-		"Not opening device '%s'. If you do need this device, please "
-		"report that fact to <https://github.com/ndim/beep/issues>.\n",
-		argv[0], optarg);
-	exit(EXIT_FAILURE);
+      if (1) {
+	static char realpath_optarg[PATH_MAX+1];
+	if (realpath(optarg, realpath_optarg) == NULL) {
+	  const int saved_errno = errno;
+	  fprintf(stderr, "%s: "
+		  "could not run realpath(3) on '%s': %s\n",
+		  argv[0], optarg, strerror(saved_errno));
+	  exit(EXIT_FAILURE);
+	}
+	if (strncmp("/dev/input/", realpath_optarg, strlen("/dev/input/")) == 0) {
+	  /* If device name starts with /dev/input/, we can assume evdev
+	   * input device beeping is wished for and the corresponding
+	   * device is somewhere in /dev/input/. Otherwise, the default
+	   * console beeper will be used with its default name(s). */
+	  console_device = realpath_optarg;
+	} else if (strcmp("/dev/console", realpath_optarg) == 0) {
+	  console_device = realpath_optarg;
+	} else if (strcmp("/dev/tty0", realpath_optarg) == 0) {
+	  console_device = realpath_optarg;
+	} else if (strcmp("/dev/vc/0", realpath_optarg) == 0) {
+	  console_device = realpath_optarg;
+	} else {
+	  fprintf(stderr, "%s: "
+		  "Not using device '%s'. If you do need this device, please "
+		  "report that fact to <https://github.com/ndim/beep/issues>.\n",
+		  argv[0], optarg);
+	  exit(EXIT_FAILURE);
+	}
       }
       break;
     case 'h' : /* notice that this is also --help */
