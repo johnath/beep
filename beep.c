@@ -52,7 +52,7 @@ char *copyright =
 "For information: http://www.gnu.org/copyleft/.";
 
 /* Meaningful Defaults */
-#define DEFAULT_FREQ       440.0 /* Middle A */
+#define DEFAULT_FREQ       440   /* Middle A */
 #define DEFAULT_LENGTH     200   /* milliseconds */
 #define DEFAULT_REPS       1
 #define DEFAULT_DELAY      100   /* milliseconds */
