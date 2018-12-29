@@ -559,3 +559,10 @@ int main(int argc, char **argv) {
 
   return EXIT_SUCCESS;
 }
+
+/*
+ * Local Variables:
+ * c-basic-offset: 4
+ * indent-tabs-mode: nil
+ * End:
+ */
