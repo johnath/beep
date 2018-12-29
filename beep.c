@@ -368,10 +368,21 @@ int open_chr(const char *const argv0, const char *filename, int flags)
 int main(int argc, char **argv) {
   char sin[4096], *ptr;
 
-  /* bail out if running setuid or setgid */
+  /* Bail out if running setuid or setgid.
+   *
+   * It is near impossible to make beep setuid-safe:
+   *
+   *   * We open files for writing, and may even write to them.
+   *
+   *   * Checking the device file with realpath leaks information.
+   *
+   * So we refuse running setuid or setgid.
+   */
   if ((getuid() != geteuid()) || (getgid() != getegid())) {
+    fprintf(stderr, "%s: uid=%d euid=%d gid=%d egid=%d\n",
+	    argv[0], getuid(), geteuid(), getgid(), getegid());
     fprintf(stderr, "%s: "
-	    "running setuid or setgid, which is not supported for security reasons",
+	    "running setuid or setgid, which is not supported for security reasons\n",
 	    argv[0]);
     exit(1);
   }
