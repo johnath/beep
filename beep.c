@@ -33,24 +33,10 @@
 #include <linux/kd.h>
 #include <linux/input.h>
 
-/* I don't know where this number comes from, I admit that freely.  A 
-   wonderful human named Raine M. Ekman used it in a program that played
-   a tune at the console, and apparently, it's how the kernel likes its
-   sound requests to be phrased.  If you see Raine, thank him for me.  
-   
-   June 28, email from Peter Tirsek (peter at tirsek dot com):
-   
-   This number represents the fixed frequency of the original PC XT's
-   timer chip (the 8254 AFAIR), which is approximately 1.193 MHz. This
-   number is divided with the desired frequency to obtain a counter value,
-   that is subsequently fed into the timer chip, tied to the PC speaker.
-   The chip decreases this counter at every tick (1.193 MHz) and when it
-   reaches zero, it toggles the state of the speaker (on/off, or in/out),
-   resets the counter to the original value, and starts over. The end
-   result of this is a tone at approximately the desired frequency. :)
-*/
+
+/* Use PIT_TICK_RATE value from the kernel. */
 #ifndef CLOCK_TICK_RATE
-#define CLOCK_TICK_RATE 1193180U
+#define CLOCK_TICK_RATE 1193182UL
 #endif
 
 #define VERSION_STRING "beep-1.3"
