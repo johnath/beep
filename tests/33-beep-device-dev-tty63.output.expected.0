@@ -1,2 +1,2 @@
-BEEP_EXECUTABLE: Could not open /dev/tty63 for writing: Permission denied
+beep: Could not open /dev/tty63 for writing: Permission denied
 Error

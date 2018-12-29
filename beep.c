@@ -39,6 +39,12 @@
 #define CLOCK_TICK_RATE 1193182UL
 #endif
 
+/* The name to use as the name of this program in user messages. */
+#define PROG_NAME "beep"
+
+/* Prefix for error messages */
+#define PROG_PREFIX PROG_NAME ": "
+
 #define VERSION_STRING "beep-1.3"
 char *copyright = 
 "Copyright (C) Johnathan Nightingale, 2002.  "
@@ -150,14 +156,17 @@ void handle_signal(int signum) {
   }
 }
 
+
 /* print usage and exit */
-void usage_bail(const char *executable_name) {
-  printf("Usage:\n%s [-f freq] [-l length] [-r reps] [-d delay] "
-	 "[-D delay] [-s] [-c] [--verbose | --debug] [-e device]\n",
-	 executable_name);
-  printf("%s [Options...] [-n] [--new] [Options...] ... \n", executable_name);
-  printf("%s [-h] [--help]\n", executable_name);
-  printf("%s [-v] [-V] [--version]\n", executable_name);
+void usage_bail(void) {
+  printf("Usage:\n"
+
+         "  " PROG_NAME " [-f freq] [-l length] [-r reps] [-d delay] "
+         "[-D delay] [-s] [-c] [--verbose | --debug] [-e device]\n"
+
+         "  " PROG_NAME " [Options...] [-n] [--new] [Options...] ... \n"
+         "  " PROG_NAME " [-h] [--help]\n"
+         "  " PROG_NAME " [-v] [-V] [--version]\n");
   exit(1);
 }
 
@@ -244,7 +253,7 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
     case 'f':  /* freq */
       if(!sscanf(optarg, "%f", &argfreq) || (argfreq >= 20000.0f /* ack! */) ||
 	 (argfreq <= 0.0f)) {
-	usage_bail(argv[0]);
+        usage_bail();
       } else {
 	if (result->freq != 0) {
 	  fprintf(stderr, "WARNING: multiple -f values given, only last "
@@ -255,19 +264,19 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
       break;
     case 'l' : /* length */
       if(!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000))
-	usage_bail(argv[0]);
+        usage_bail();
       else
 	result->length = argval;
       break;
     case 'r' : /* repetitions */
       if(!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000))
-	usage_bail(argv[0]);
+        usage_bail();
       else
 	result->reps = argval;
       break;
     case 'd' : /* delay between reps - WITHOUT delay after last beep*/
       if(!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000))
-	usage_bail(argv[0]);
+        usage_bail();
       else {
 	result->delay = argval;
 	result->end_delay = NO_END_DELAY;
@@ -275,7 +284,7 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
       break;
     case 'D' : /* delay between reps - WITH delay after last beep */
       if(!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000))
-	usage_bail(argv[0]);
+	usage_bail();
       else {
 	result->delay = argval;
 	result->end_delay = YES_END_DELAY;
@@ -313,25 +322,25 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
 	static char realpath_optarg[PATH_MAX+1];
 	if (realpath(optarg, realpath_optarg) == NULL) {
 	  const int saved_errno = errno;
-	  fprintf(stderr, "%s: "
+          fprintf(stderr, PROG_PREFIX
 		  "could not run realpath(3) on '%s': %s\n",
-		  argv[0], optarg, strerror(saved_errno));
+                  optarg, strerror(saved_errno));
 	  exit(EXIT_FAILURE);
 	}
 	if (is_device_whitelisted(realpath_optarg)) {
 	  console_device = realpath_optarg;
 	} else {
-	  fprintf(stderr, "%s: "
+          fprintf(stderr, PROG_PREFIX
 		  "Not using device '%s'. If you do need this device, please "
 		  "report that fact to <https://github.com/ndim/beep/issues>.\n",
-		  argv[0], realpath_optarg);
+                  realpath_optarg);
 	  exit(EXIT_FAILURE);
 	}
       }
       break;
     case 'h' : /* notice that this is also --help */
     default :
-      usage_bail(argv[0]);
+      usage_bail();
     }
   }
   if (result->freq == 0)
@@ -370,7 +379,7 @@ void play_beep(beep_parms_t parms) {
  * actually is a character device special file after we have actually
  * opened it.
  */
-int open_chr(const char *const argv0, const char *filename, int flags)
+int open_chr(const char *filename, int flags)
 {
   struct stat sb;
   if (-1 == stat(filename, &sb)) {
@@ -379,9 +388,9 @@ int open_chr(const char *const argv0, const char *filename, int flags)
   if (S_ISCHR(sb.st_mode)) {
     return open(filename, flags);
   } else {
-    fprintf(stderr, "%s: "
+    fprintf(stderr, PROG_PREFIX
 	    "console file '%s' is not a character device special file\n",
-	    argv0, filename);
+	    filename);
     exit(1);
   }
 }
@@ -401,11 +410,11 @@ int main(int argc, char **argv) {
    * So we refuse running setuid or setgid.
    */
   if ((getuid() != geteuid()) || (getgid() != getegid())) {
-    fprintf(stderr, "%s: uid=%d euid=%d gid=%d egid=%d\n",
-	    argv[0], getuid(), geteuid(), getgid(), getegid());
-    fprintf(stderr, "%s: "
-	    "running setuid or setgid, which is not supported for security reasons\n",
-	    argv[0]);
+    fprintf(stderr,
+            PROG_PREFIX "Running setuid or setgid, "
+            "which is not supported for security reasons.\n"
+            PROG_PREFIX
+            "Set up permissions for the pcspkr evdev device file instead.\n");
     exit(1);
   }
 
@@ -414,7 +423,11 @@ int main(int argc, char **argv) {
    * For the reasoning, see the setuid comment above.
    */
   if (getenv("SUDO_COMMAND") || getenv("SUDO_USER") || getenv("SUDO_UID") || getenv("SUDO_GID")) {
-    fprintf(stderr, "%s: Running under sudo. Set up permissions for /dev/input/by-path/platform-pcspkr-event-spkr instead.\n", argv[0]);
+    fprintf(stderr,
+            PROG_PREFIX "Running under sudo, "
+            "which is not supported for security reasons.\n"
+            PROG_PREFIX
+            "Set up permissions for the pcspkr evdev device file instead.\n");
     exit(1);
   }
 
@@ -436,7 +449,7 @@ int main(int argc, char **argv) {
 
   /* Try opening a console device */
   if (console_device) {
-    console_fd = open_chr(argv[0], console_device, O_WRONLY);
+    console_fd = open_chr(console_device, O_WRONLY);
   } else {
     static char *console_device_list[] =
       { "/dev/input/by-path/platform-pcspkr-event-spkr",
@@ -444,7 +457,7 @@ int main(int argc, char **argv) {
 	"/dev/vc/0",
       };
     for (size_t i=0; i<(sizeof(console_device_list)/sizeof(console_device_list[0])); ++i) {
-      if ((console_fd = open_chr(argv[0], console_device_list[i], O_WRONLY)) != -1) {
+      if ((console_fd = open_chr(console_device_list[i], O_WRONLY)) != -1) {
 	console_device = console_device_list[i];
 	break;
       }
@@ -453,10 +466,8 @@ int main(int argc, char **argv) {
 
   if (console_fd == -1) {
     const int saved_errno = errno;
-    fprintf(stderr, "%s: Could not open %s for writing: %s\n",
-	    argv[0],
-	    ((console_device != NULL) ? console_device :
-	     "console device"),
+    fprintf(stderr, PROG_PREFIX "Could not open %s for writing: %s\n",
+	    ((console_device != NULL) ? console_device : "console device"),
 	    strerror(saved_errno));
     /* Output the only beep we can, in an effort to fall back on usefulness */
     printf("\a");

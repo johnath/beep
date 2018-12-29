@@ -1,2 +1,2 @@
-BEEP_EXECUTABLE: Could not open /dev/console for writing: Permission denied
+beep: Could not open /dev/console for writing: Permission denied
 Error
