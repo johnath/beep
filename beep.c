@@ -400,6 +400,16 @@ int open_chr(const char *filename, int flags)
 }
 
 
+/* If stdout is a TTY, print a bell character to stdout as a fallback. */
+void fallback_beep(void)
+{
+  /* Printing '\a' can only beep if we print it to a tty */
+  if (isatty(STDOUT_FILENO)) {
+    putc('\a', stdout);
+  }
+}
+
+
 int main(int argc, char **argv) {
   char sin[4096], *ptr;
 
@@ -474,7 +484,7 @@ int main(int argc, char **argv) {
 	    ((console_device != NULL) ? console_device : "console device"),
 	    strerror(saved_errno));
     /* Output the only beep we can, in an effort to fall back on usefulness */
-    printf("\a");
+    fallback_beep();
     exit(1);
   }
 
@@ -515,7 +525,7 @@ int main(int argc, char **argv) {
 	    "%s: console device '%s' does not support either API\n",
 	    argv[0], console_device);
     /* Output the only beep we can, in an effort to fall back on usefulness */
-    printf("\a");
+    fallback_beep();
     exit(1);
   }
 

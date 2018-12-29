@@ -1,2 +1,2 @@
 beep: console device '/dev/tty4' does not support either API
-Error
+Error
