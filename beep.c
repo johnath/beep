@@ -174,6 +174,50 @@ void usage_bail(const char *executable_name) {
 }
 
 
+/* whether character is a digit */
+int is_digit(char c)
+{
+  return (('0' <= c) && (c <= '9'));
+}
+
+
+/* whether string consists of at least one digit, and only digits */
+int is_number(const char *const str)
+{
+  if (str[0] == '\0') {
+    return 0;
+  }
+  for (size_t i=0; str[i] != '\0'; ++i) {
+    if (!is_digit(str[i])) {
+      return 0;
+    }
+  }
+  return 1;
+}
+
+
+/* whether device is on whitelist */
+int is_device_whitelisted(const char *const dev)
+{
+  if (strncmp("/dev/input/", dev, strlen("/dev/input/")) == 0) {
+    /* If device name starts with /dev/input/, we can assume evdev
+     * input device beeping is wished for and the corresponding
+     * device is somewhere in /dev/input/.
+     */
+    return 1;
+  } else if (strcmp("/dev/console", dev) == 0) {
+    return 1;
+  } else if ((strncmp("/dev/tty", dev, 8) == 0) && is_number(&dev[8])) {
+    /* match numbered /dev/tty<N> devices */
+    return 1;
+  } else if ((strncmp("/dev/vc/", dev, 8) == 0) && is_number(&dev[8])) {
+    /* match numbered /dev/vc/<N> devices */
+    return 1;
+  }
+  return 0;
+}
+
+
 /* Parse the command line.  argv should be untampered, as passed to main.
  * Beep parameters returned in result, subsequent parameters in argv will over-
  * ride previous ones.
@@ -287,23 +331,13 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
 		  argv[0], optarg, strerror(saved_errno));
 	  exit(EXIT_FAILURE);
 	}
-	if (strncmp("/dev/input/", realpath_optarg, strlen("/dev/input/")) == 0) {
-	  /* If device name starts with /dev/input/, we can assume evdev
-	   * input device beeping is wished for and the corresponding
-	   * device is somewhere in /dev/input/. Otherwise, the default
-	   * console beeper will be used with its default name(s). */
-	  console_device = realpath_optarg;
-	} else if (strcmp("/dev/console", realpath_optarg) == 0) {
-	  console_device = realpath_optarg;
-	} else if (strcmp("/dev/tty0", realpath_optarg) == 0) {
-	  console_device = realpath_optarg;
-	} else if (strcmp("/dev/vc/0", realpath_optarg) == 0) {
+	if (is_device_whitelisted(realpath_optarg)) {
 	  console_device = realpath_optarg;
 	} else {
 	  fprintf(stderr, "%s: "
 		  "Not using device '%s'. If you do need this device, please "
 		  "report that fact to <https://github.com/ndim/beep/issues>.\n",
-		  argv[0], optarg);
+		  argv[0], realpath_optarg);
 	  exit(EXIT_FAILURE);
 	}
       }
