@@ -318,6 +318,10 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
       verbose = 1;
       break;
     case 'e' : /* also --device */
+      if (console_device) {
+        fprintf(stderr, PROG_PREFIX "You cannot give the --device parameter more than once.\n");
+        exit(EXIT_FAILURE);
+      }
       if (1) {
 	static char realpath_optarg[PATH_MAX+1];
 	if (realpath(optarg, realpath_optarg) == NULL) {
