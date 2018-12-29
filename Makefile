@@ -34,6 +34,7 @@ all-local: $(TARGETS)
 HTML_TARGETS =
 HTML_TARGETS += html/README.html
 HTML_TARGETS += html/INSTALL.html
+HTML_TARGETS += html/DEVELOPMENT.html
 
 ifneq ($(shell if test -f /usr/bin/pandoc; then echo yes; fi),yes)
 .PHONY: html
