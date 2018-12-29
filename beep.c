@@ -75,7 +75,6 @@ typedef struct beep_parms_t {
 		     so that beep can be tucked appropriately into a text-
 		     processing pipe.
 		  */
-  int verbose;    /* verbose output?          */
   struct beep_parms_t *next;  /* in case -n/--new is used. */
 } beep_parms_t;
 
@@ -89,6 +88,9 @@ typedef enum {
 	      /* Use the evdev API */
 	      BEEP_TYPE_EVDEV   = 2,
 } beep_type_E;
+
+/* global output verbosity */
+int verbose = 0;
 
 /* Momma taught me never to use globals, but we need something the signal
    handlers can get at.*/
@@ -300,12 +302,11 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
       result->next->delay      = DEFAULT_DELAY;
       result->next->end_delay  = DEFAULT_END_DELAY;
       result->next->stdin_beep = DEFAULT_STDIN_BEEP;
-      result->next->verbose    = result->verbose;
       result->next->next       = NULL;
       result = result->next; /* yes, I meant to do that. */
       break;
     case 'X' : /* --debug / --verbose */
-      result->verbose = 1;
+      verbose = 1;
       break;
     case 'e' : /* also --device */
       if (1) {
@@ -340,10 +341,11 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
 void play_beep(beep_parms_t parms) {
   unsigned int i; /* loop counter */
 
-  if(parms.verbose == 1)
-      fprintf(stderr, "[DEBUG] %d times %d ms beeps (%d delay between, "
-	"%d delay after) @ %d Hz\n",
-	parms.reps, parms.length, parms.delay, parms.end_delay, parms.freq);
+  if (verbose == 1) {
+    fprintf(stderr, "[DEBUG] %d times %d ms beeps (%d delay between, "
+	    "%d delay after) @ %d Hz\n",
+	    parms.reps, parms.length, parms.delay, parms.end_delay, parms.freq);
+  }
 
   /* Beep */
   for (i = 0; i < parms.reps; i++) {                    /* start beep */
@@ -428,7 +430,6 @@ int main(int argc, char **argv) {
   parms->delay      = DEFAULT_DELAY;
   parms->end_delay  = DEFAULT_END_DELAY;
   parms->stdin_beep = DEFAULT_STDIN_BEEP;
-  parms->verbose    = 0;
   parms->next       = NULL;
 
   parse_command_line(argc, argv, parms);
@@ -484,13 +485,13 @@ int main(int argc, char **argv) {
 
   /* Determine the API supported by the opened console device */
   if (ioctl(console_fd, EVIOCGSND(0)) != -1) {
-    if (parms->verbose) {
+    if (verbose) {
       printf("Using BEEP_TYPE_EVDEV on '%s'\n", console_device);
     }
     console_type = BEEP_TYPE_EVDEV;
   } else if (ioctl(console_fd, KIOCSOUND, 0) >= 0) {
     /* turning off the beeps should be a safe way to check for API support */
-    if (parms->verbose) {
+    if (verbose) {
       printf("Using BEEP_TYPE_CONSOLE on '%s'\n", console_device);
     }
     console_type = BEEP_TYPE_CONSOLE;
