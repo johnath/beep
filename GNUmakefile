@@ -199,6 +199,7 @@ all-local: $(bin_PROGRAMS) $(sbin_PROGRAMS) $(ALL_PROGRAMS) $(man1_DATA)
 
 SLOC_SOURCES =
 SLOC_SOURCES += beep*.[ch]
+SLOC_SOURCES += gen-freq-table
 SLOC_SOURCES += tests/run-tests
 SLOC_SOURCES += tests/*.sh
 SLOC_SOURCES += GNUmakefile

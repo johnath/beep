@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+#
+# calculate and print the frequency table for use in beep.1 man page
+
+import math
+
+n_list = range(-9, 3+1)
+
+octave_list = range(3, 6+1)
+
+freqs = [ [ (440*(2**(i-4))*math.exp(math.log(2)*n/12)) for i in octave_list ] for n in n_list ]
+
+notes = [ "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C" ]
+
+print("""\
+.TS
+center box;
+Cb | Cb s  s  s
+Cb | Cb Cb Cb Cb
+-  | -  -  -  -
+C  | N  N  N  N.
+note	octave
+""", end="")
+
+print("name\t", end="")
+for octave in octave_list:
+    print("%d\t" % octave, end="")
+print()
+
+for (note, freqline) in zip(notes,freqs):
+    print("%s\t" % note, end="")
+    for f in freqline:
+        print("%d\t" % int(round(f)), end="")
+    print()
+
+print("""\
+.TE
+""", end="")
