@@ -387,6 +387,15 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
+  /* Bail out if running under sudo.
+   *
+   * For the reasoning, see the setuid comment above.
+   */
+  if (getenv("SUDO_COMMAND") || getenv("SUDO_USER") || getenv("SUDO_UID") || getenv("SUDO_GID")) {
+    fprintf(stderr, "%s: Running under sudo. Set up permissions for /dev/input/by-path/platform-pcspkr-event-spkr instead.\n", argv[0]);
+    exit(1);
+  }
+
   /* Parse command line */
   beep_parms_t *parms = (beep_parms_t *)malloc(sizeof(beep_parms_t));
   if (NULL == parms) {
