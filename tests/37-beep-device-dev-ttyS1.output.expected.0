@@ -1,2 +1,2 @@
-beep: Not using device '/dev/ttyS1'. If you do need this device, please report that fact to <https://github.com/ndim/beep/issues>.
+BEEP_EXECUTABLE: Error: Not using device '/dev/ttyS1'. If you do need this device, please report that fact to <https://github.com/ndim/beep/issues>.
 Error

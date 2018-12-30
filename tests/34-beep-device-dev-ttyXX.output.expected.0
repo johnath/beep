@@ -1,2 +1,2 @@
-beep: could not run realpath(3) on '/dev/ttyXX': No such file or directory
+BEEP_EXECUTABLE: Error: could not run realpath(3) on '/dev/ttyXX': No such file or directory
 Error

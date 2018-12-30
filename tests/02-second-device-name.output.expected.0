@@ -1,2 +1,2 @@
-beep: You cannot give the --device parameter more than once.
+BEEP_EXECUTABLE: Error: You cannot give the --device parameter more than once.
 Error

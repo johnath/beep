@@ -33,6 +33,8 @@
 #include <linux/kd.h>
 #include <linux/input.h>
 
+#include "beep-log.h"
+
 
 /* Use PIT_TICK_RATE value from the kernel. */
 #ifndef CLOCK_TICK_RATE
@@ -42,8 +44,6 @@
 /* The name to use as the name of this program in user messages. */
 #define PROG_NAME "beep"
 
-/* Prefix for error messages */
-#define PROG_PREFIX PROG_NAME ": "
 
 #define VERSION_STRING "beep-1.3"
 char *copyright = 
@@ -94,9 +94,6 @@ typedef enum {
 	      /* Use the evdev API */
 	      BEEP_TYPE_EVDEV   = 2,
 } beep_type_E;
-
-/* global output verbosity */
-int verbose = 0;
 
 /* Momma taught me never to use globals, but we need something the signal
    handlers can get at.*/
@@ -235,7 +232,7 @@ int is_device_whitelisted(const char *const dev)
  * March 29, 2002 - Daniel Eisenbud points out that c should be int, not char,
  * for correctness on platforms with unsigned chars.
  */
-void parse_command_line(int argc, char **argv, beep_parms_t *result) {
+void parse_command_line(const int argc, char *const argv[], beep_parms_t *result) {
   int c;
 
   struct option opt_list[7] = {{"help", 0, NULL, 'h'},
@@ -315,29 +312,27 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
       result = result->next; /* yes, I meant to do that. */
       break;
     case 'X' : /* --debug / --verbose */
-      verbose = 1;
+      log_level += 1;
       break;
     case 'e' : /* also --device */
       if (console_device) {
-        fprintf(stderr, PROG_PREFIX "You cannot give the --device parameter more than once.\n");
+        log_error("You cannot give the --device parameter more than once.\n");
         exit(EXIT_FAILURE);
       }
       if (1) {
 	static char realpath_optarg[PATH_MAX+1];
 	if (realpath(optarg, realpath_optarg) == NULL) {
 	  const int saved_errno = errno;
-          fprintf(stderr, PROG_PREFIX
-		  "could not run realpath(3) on '%s': %s\n",
-                  optarg, strerror(saved_errno));
+          log_error("could not run realpath(3) on '%s': %s\n",
+                    optarg, strerror(saved_errno));
 	  exit(EXIT_FAILURE);
 	}
 	if (is_device_whitelisted(realpath_optarg)) {
 	  console_device = realpath_optarg;
 	} else {
-          fprintf(stderr, PROG_PREFIX
-		  "Not using device '%s'. If you do need this device, please "
-		  "report that fact to <https://github.com/ndim/beep/issues>.\n",
-                  realpath_optarg);
+          log_error("Not using device '%s'. If you do need this device, please "
+                    "report that fact to <https://github.com/ndim/beep/issues>.\n",
+                    realpath_optarg);
 	  exit(EXIT_FAILURE);
 	}
       }
@@ -354,11 +349,9 @@ void parse_command_line(int argc, char **argv, beep_parms_t *result) {
 void play_beep(beep_parms_t parms) {
   unsigned int i; /* loop counter */
 
-  if (verbose == 1) {
-    fprintf(stderr, "[DEBUG] %d times %d ms beeps (%d delay between, "
-	    "%d delay after) @ %d Hz\n",
-	    parms.reps, parms.length, parms.delay, parms.end_delay, parms.freq);
-  }
+  log_verbose("%d times %d ms beeps (%d delay between, "
+              "%d delay after) @ %d Hz\n",
+              parms.reps, parms.length, parms.delay, parms.end_delay, parms.freq);
 
   /* Beep */
   for (i = 0; i < parms.reps; i++) {                    /* start beep */
@@ -392,9 +385,8 @@ int open_chr(const char *filename, int flags)
   if (S_ISCHR(sb.st_mode)) {
     return open(filename, flags);
   } else {
-    fprintf(stderr, PROG_PREFIX
-	    "console file '%s' is not a character device special file\n",
-	    filename);
+    log_error("console file '%s' is not a character device special file\n",
+              filename);
     exit(1);
   }
 }
@@ -410,7 +402,9 @@ void fallback_beep(void)
 }
 
 
-int main(int argc, char **argv) {
+int main(const int argc, char *const argv[]) {
+  log_init(argc, argv);
+
   char sin[4096], *ptr;
 
   /* Bail out if running setuid or setgid.
@@ -424,11 +418,9 @@ int main(int argc, char **argv) {
    * So we refuse running setuid or setgid.
    */
   if ((getuid() != geteuid()) || (getgid() != getegid())) {
-    fprintf(stderr,
-            PROG_PREFIX "Running setuid or setgid, "
-            "which is not supported for security reasons.\n"
-            PROG_PREFIX
-            "Set up permissions for the pcspkr evdev device file instead.\n");
+    log_error("Running setuid or setgid, "
+              "which is not supported for security reasons.\n");
+    log_error("Set up permissions for the pcspkr evdev device file instead.\n");
     exit(1);
   }
 
@@ -437,11 +429,9 @@ int main(int argc, char **argv) {
    * For the reasoning, see the setuid comment above.
    */
   if (getenv("SUDO_COMMAND") || getenv("SUDO_USER") || getenv("SUDO_UID") || getenv("SUDO_GID")) {
-    fprintf(stderr,
-            PROG_PREFIX "Running under sudo, "
-            "which is not supported for security reasons.\n"
-            PROG_PREFIX
-            "Set up permissions for the pcspkr evdev device file instead.\n");
+    log_error("Running under sudo, "
+          "which is not supported for security reasons.\n");
+    log_error("Set up permissions for the pcspkr evdev device file instead.\n");
     exit(1);
   }
 
@@ -480,9 +470,9 @@ int main(int argc, char **argv) {
 
   if (console_fd == -1) {
     const int saved_errno = errno;
-    fprintf(stderr, PROG_PREFIX "Could not open %s for writing: %s\n",
-	    ((console_device != NULL) ? console_device : "console device"),
-	    strerror(saved_errno));
+    log_error("Could not open %s for writing: %s\n",
+              ((console_device != NULL) ? console_device : "console device"),
+              strerror(saved_errno));
     /* Output the only beep we can, in an effort to fall back on usefulness */
     fallback_beep();
     exit(1);
@@ -501,29 +491,23 @@ int main(int argc, char **argv) {
       /* BAD: console_fd is not a character device special file. Do
        * not use it any further, and certainly DO NOT WRITE to it.
        */
-      fprintf(stderr,
-	      "%s: opened console '%s' is not a character special device\n",
-	      argv[0], console_device);
+      log_error("opened console '%s' is not a character special device\n",
+                console_device);
       exit(1);
     }
   }
 
   /* Determine the API supported by the opened console device */
   if (ioctl(console_fd, EVIOCGSND(0)) != -1) {
-    if (verbose) {
-      printf("Using BEEP_TYPE_EVDEV on '%s'\n", console_device);
-    }
+    log_verbose("Using BEEP_TYPE_EVDEV on '%s'\n", console_device);
     console_type = BEEP_TYPE_EVDEV;
   } else if (ioctl(console_fd, KIOCSOUND, 0) >= 0) {
     /* turning off the beeps should be a safe way to check for API support */
-    if (verbose) {
-      printf("Using BEEP_TYPE_CONSOLE on '%s'\n", console_device);
-    }
+    log_verbose("Using BEEP_TYPE_CONSOLE on '%s'\n", console_device);
     console_type = BEEP_TYPE_CONSOLE;
   } else {
-    fprintf(stderr,
-	    "%s: console device '%s' does not support either API\n",
-	    argv[0], console_device);
+    log_error("console device '%s' does not support either API\n",
+              console_device);
     /* Output the only beep we can, in an effort to fall back on usefulness */
     fallback_beep();
     exit(1);

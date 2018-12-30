@@ -115,12 +115,14 @@ endif
 bin_PROGRAMS += beep
 beep_OBJS =
 beep_OBJS += beep.o
+beep_OBJS += beep-log.o
 beep_LIBS =
 beep_LIBS += -lm
 
 # sbin_PROGRAMS += beep2
 # beep2_OBJS =
 # beep2_OBJS += beep.o
+# beep2_OBJS += beep-log.o
 # beep2_LIBS =
 # beep2_LIBS += -lm
 
