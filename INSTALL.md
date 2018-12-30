@@ -4,9 +4,9 @@ Installing beep
 This document describes how to install `beep` from sources and how to
 set up the system afterwards.
 
-If you are using `beep` as shipped in a distribution package, you
-should not have to do those steps -- with the one exception of adding
-users to the `beep` group.
+If you are using `beep` as shipped in a distribution package, the
+package should have done most of those steps for you.  The one
+exception should be adding users to the `beep` group.
 
 
 Compile and Install
@@ -30,8 +30,20 @@ or
 
 For the complete list of those variables, see the top of `GNUmakefile`.
 
-If you want to build and install the documentation to `pkgdocdir`, use
-the `doc` and `install-doc` targets, repectively.
+
+System configuration
+====================
+
+  * Add a line
+
+        alias platform:pcspkr pcspkr
+
+    to a file like e.g. `/etc/modprobe.d/pcspkr-beep.conf`.
+
+	After udev rule setup, run `modprobe pcspkr.ko` to load the driver
+    without a reboot, creating the
+    `/dev/input/by-path/platform-pcspkr-event-spkr` evdev device with
+    the desired permissions.
 
 
 Device permission setup to allow non-root users to beep
@@ -85,12 +97,14 @@ Now add the users who are allowed to use beep to the `beep` group:
     [root@host ~]# usermod jane -a -G beep
     [root@host ~]# 
 
-After having user `jane` log out and killing user `jane`'s running
-`tmux` instances, running `system --user` sessions for user `jane`, or
-just plain rebooting, user `jane` can log back in and check whether
-she now a `beep` group member:
+After having user `jane` log out (and after killing user `jane`'s
+running `tmux` instances, killing `system --user` sessions for user
+`jane`, or just plain rebooting), user `jane` can log back in and
+check whether she now a `beep` group member:
 
     [jane@host ~]$ id
     uid=1000(jane) gid=1000(jane) groups=1000(jane),10(wheel),942(beep) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
     [jane@host ~]$ ./beep -f 220 -n -f 275 -n -f 330 -n -f 440 -n -f 550 -n -f 660 -n -f 880
     [jane@host ~]$ 
+
+

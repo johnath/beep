@@ -49,6 +49,8 @@ all: all-local
 # Variables to add to later
 ########################################################################
 
+pkgdoc_DATA =
+
 ALL_PROGRAMS =
 bin_PROGRAMS =
 sbin_PROGRAMS =
@@ -205,6 +207,8 @@ CLEANFILES += beep.1
 HTML_DATA += html/README.html
 HTML_DATA += html/INSTALL.html
 HTML_DATA += html/DEVELOPMENT.html
+HTML_DATA += html/PACKAGING.html
+HTML_DATA += html/PERMISSIONS.html
 
 .PHONY: html
 html: $(HTML_DATA)
@@ -221,7 +225,12 @@ html/%.html: %.md
 		exit 1; \
 	fi
 
+pkgdoc_DATA += CHANGELOG
+pkgdoc_DATA += COPYING
+pkgdoc_DATA += CREDITS
 pkgdoc_DATA += README.md
+pkgdoc_DATA += PERMISSIONS.md
+
 
 ########################################################################
 # Generic targets
