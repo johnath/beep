@@ -563,7 +563,7 @@ int main(const int argc, char *const argv[]) {
     parms = next;
   }
 
-  close(console_fd);
+  (void) close(console_fd);
   console_fd = -1;
 
   return EXIT_SUCCESS;
