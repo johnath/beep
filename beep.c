@@ -109,7 +109,7 @@ void do_beep(unsigned int freq) {
       if (-1 == ioctl(console_fd, KIOCSOUND, argp)) {
 	/* If we cannot use the sound API, we cannot silence the sound either */
 	perror("ioctl KIOCSOUND");
-	exit(1);
+	exit(EXIT_FAILURE);
       }
     }
     break;
@@ -124,7 +124,7 @@ void do_beep(unsigned int freq) {
       if (sizeof(e) != write(console_fd, &e, sizeof(e))) {
 	/* If we cannot use the sound API, we cannot silence the sound either */
 	perror("write EV_SND");
-	exit(1);
+	exit(EXIT_FAILURE);
       }
     }
     break;
@@ -296,7 +296,7 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
     case 'v' :
     case 'V' : /* also --version */
       printf("%s\n",VERSION_STRING);
-      exit(0);
+      exit(EXIT_SUCCESS);
       break;
     case 'n' : /* also --new - create another beep */
       if (result->freq == 0)
@@ -387,7 +387,7 @@ int open_chr(const char *filename, int flags)
   } else {
     log_error("console file '%s' is not a character device special file\n",
               filename);
-    exit(1);
+    exit(EXIT_FAILURE);
   }
 }
 
@@ -421,7 +421,7 @@ int main(const int argc, char *const argv[]) {
     log_error("Running setuid or setgid, "
               "which is not supported for security reasons.\n");
     log_error("Set up permissions for the pcspkr evdev device file instead.\n");
-    exit(1);
+    exit(EXIT_FAILURE);
   }
 
   /* Bail out if running under sudo.
@@ -432,14 +432,14 @@ int main(const int argc, char *const argv[]) {
     log_error("Running under sudo, "
           "which is not supported for security reasons.\n");
     log_error("Set up permissions for the pcspkr evdev device file instead.\n");
-    exit(1);
+    exit(EXIT_FAILURE);
   }
 
   /* Parse command line */
   beep_parms_t *parms = (beep_parms_t *)malloc(sizeof(beep_parms_t));
   if (NULL == parms) {
     perror("malloc");
-    exit(1);
+    exit(EXIT_FAILURE);
   }
   parms->freq       = 0;
   parms->length     = DEFAULT_LENGTH;
@@ -475,7 +475,7 @@ int main(const int argc, char *const argv[]) {
               strerror(saved_errno));
     /* Output the only beep we can, in an effort to fall back on usefulness */
     fallback_beep();
-    exit(1);
+    exit(EXIT_FAILURE);
   }
 
   /* Verify that console_fd is actually a character device special file */
@@ -483,7 +483,7 @@ int main(const int argc, char *const argv[]) {
     struct stat sb;
     if (-1 == fstat(console_fd, &sb)) {
       perror("fstat");
-      exit(1);
+      exit(EXIT_FAILURE);
     }
     if (S_ISCHR(sb.st_mode)) {
       /* GOOD: console_fd is a character device special file. Use it. */
@@ -493,7 +493,7 @@ int main(const int argc, char *const argv[]) {
        */
       log_error("opened console '%s' is not a character special device\n",
                 console_device);
-      exit(1);
+      exit(EXIT_FAILURE);
     }
   }
 
@@ -510,7 +510,7 @@ int main(const int argc, char *const argv[]) {
               console_device);
     /* Output the only beep we can, in an effort to fall back on usefulness */
     fallback_beep();
-    exit(1);
+    exit(EXIT_FAILURE);
   }
 
   /* At this time, we know what API to use on which device, and we do
