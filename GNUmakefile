@@ -215,6 +215,20 @@ sloccount:
 		echo "sloccount not found"; \
 	fi
 
+SPLINT = splint
+SPLINT_FLAGS += -standard
+# SPLINT_FLAGS += -checks
+# SPLINT_FLAGS += -strict
+SPLINT_FLAGS += +posixstrictlib
+SPLINT_FLAGS += +gnuextensions
+SPLINT_FLAGS += -preproc
+SPLINT_FLAGS += -syntax
+SPLINT_FLAGS += -D__signed__=signed
+
+.PHONY: lint
+lint:
+	$(SPLINT) $(SPLINT_FLAGS) beep*.c beep*.h
+
 .PHONY: check-targets
 check-targets: $(TARGETS) $(CHECK_TARGETS)
 
