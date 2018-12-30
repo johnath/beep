@@ -116,6 +116,7 @@ bin_PROGRAMS += beep
 beep_OBJS =
 beep_OBJS += beep.o
 beep_OBJS += beep-log.o
+beep_OBJS += beep-usage.o
 beep_LIBS =
 beep_LIBS += -lm
 
@@ -125,6 +126,21 @@ beep_LIBS += -lm
 # beep2_OBJS += beep-log.o
 # beep2_LIBS =
 # beep2_LIBS += -lm
+
+
+########################################################################
+# Built sources
+########################################################################
+
+CLEANFILES += beep-usage.c
+beep-usage.c: beep-usage.txt
+	echo '/* Auto-generated from beep-usage.txt. Modify that file instead. */' > $@
+	echo '#include "beep-usage.h"' >> $@
+	echo 'char beep_usage[] =' >> $@
+	set -e; IFS=""; while read line; do \
+		echo "  \"$${line}\\n\"" >> $@; \
+	done < $<
+	echo '  ;' >> $@
 
 
 ########################################################################

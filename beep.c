@@ -34,6 +34,7 @@
 #include <linux/input.h>
 
 #include "beep-log.h"
+#include "beep-usage.h"
 
 
 /* Use PIT_TICK_RATE value from the kernel. */
@@ -154,17 +155,18 @@ void handle_signal(int signum) {
 }
 
 
+/* print usage and leave exit code up to the caller */
+void print_usage(void)
+{
+    fputs(beep_usage, stdout);
+}
+
+
 /* print usage and exit */
-void usage_bail(void) {
-  printf("Usage:\n"
-
-         "  " PROG_NAME " [-f freq] [-l length] [-r reps] [-d delay] "
-         "[-D delay] [-s] [-c] [--verbose | --debug] [-e device]\n"
-
-         "  " PROG_NAME " [Options...] [-n] [--new] [Options...] ... \n"
-         "  " PROG_NAME " [-h] [--help]\n"
-         "  " PROG_NAME " [-v] [-V] [--version]\n");
-  exit(1);
+void usage_bail(void)
+{
+    print_usage();
+    exit(EXIT_FAILURE);
 }
 
 
@@ -253,8 +255,7 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
         usage_bail();
       } else {
 	if (result->freq != 0) {
-	  fprintf(stderr, "WARNING: multiple -f values given, only last "
-	    "one is used.\n");
+	  log_warning("multiple -f values given, only last one is used.\n");
 	}
 	result->freq = ((unsigned int)rintf(argfreq));
       }
@@ -295,7 +296,7 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
       break;
     case 'v' :
     case 'V' : /* also --version */
-      printf("%s\n",VERSION_STRING);
+      log_output("%s\n", VERSION_STRING);
       exit(EXIT_SUCCESS);
       break;
     case 'n' : /* also --new - create another beep */
@@ -337,9 +338,13 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
 	}
       }
       break;
-    case 'h' : /* notice that this is also --help */
-    default :
-      usage_bail();
+    case 'h': /* also --help */
+        print_usage();
+        exit(EXIT_SUCCESS);
+        break;
+    default:
+        usage_bail();
+        break;
     }
   }
   if (result->freq == 0)

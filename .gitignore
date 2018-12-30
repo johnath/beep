@@ -5,6 +5,9 @@
 /*.clang
 /*.gcc
 
+# Built sources
+/beep-usage.c
+
 # Build intermediates
 *.dep
 *.clang-o

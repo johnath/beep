@@ -1,0 +1,39 @@
+Usage:
+  beep [--verbose|--debug] [-e DEVICE]
+       [-f FREQ_Hz] [-l LEN_ms] [-r REPS] [<-d|-D> DELAY_ms] [-s] [-c]
+  beep [OPTIONS] <TONE_OPTS> [-n|--new TONE_OPTS...]
+  beep [-h|--help]
+  beep [-v|-V|--version]
+
+Options:
+  Information options:
+    -h, --help
+    -V, -v, --version
+
+  Global options:
+    -e, --device=DEVICE
+                  set the device to output the beeps to (see beep(1) man page)
+    --debug, --verbose
+                  make program output more verbose
+
+  Tone options:
+    -f FREQ_Hz    frequency of the tone in Hertz (Hz)
+    -l LENGTH_ms  length of the tone in milliseconds (ms)
+    -d DELAY_ms   delay between repetitions of the tone
+                  *without* delay after last repetition of the tone
+    -D DELAY_ms   delay between repetitions of the tone
+                  *with* delay after last repetition of the tone
+    -r REPS       number of repetitions of the last tone
+
+    -n, --new     start a new tone
+
+    -s            read text from stdin and write it through to stdout,
+                  beeping the last defined tone for every newline in the text,
+		  until EOF in stdin
+    -c            like -s, but beep for every character in the text
+
+Exit status:
+ 0      if OK
+ non-0  if any problems occured
+
+More documentation is available in the beep(1) man page via: man 1 beep
