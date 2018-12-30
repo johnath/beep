@@ -94,7 +94,7 @@ typedef enum {
    handlers can get at.*/
 int console_fd = -1;
 beep_type_E console_type = BEEP_TYPE_UNSET;
-char *console_device = NULL;
+const char *console_device = NULL;
 
 
 void do_beep(unsigned int freq) {
