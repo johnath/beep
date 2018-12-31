@@ -31,6 +31,26 @@ $(MAN_FILE): beep.1
 
 all-local: $(TARGETS)
 
+HTML_TARGETS =
+HTML_TARGETS += html/README.html
+HTML_TARGETS += html/INSTALL.html
+
+ifneq ($(shell if test -f /usr/bin/pandoc; then echo yes; fi),yes)
+.PHONY: html
+html:
+	@echo "You need to install pandoc."
+	@exit 1
+else
+.PHONY: html
+html: $(HTML_TARGETS)
+	mkdir -p html
+	cp -f pandoc.css html/
+
+html/%.html: %.md Makefile
+	mkdir -p  html
+	pandoc --from gfm --to html --standalone -M pagetitle="$$(sed -n 1p $<)" -M title="" -c pandoc.css $< -o $@
+endif
+
 .PHONY: clean
 clean:
 	rm -f $(TARGETS)

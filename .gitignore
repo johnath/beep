@@ -10,3 +10,6 @@
 
 # The compressed man page
 /beep.1.gz
+
+# Built stuff
+/html/
