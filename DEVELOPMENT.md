@@ -103,7 +103,6 @@ Options:
 TODO list
 ---------
 
-  * TODO: Add license notices to all source files, and the `--version` message.
   * TODO: Make sure all C code uses {} around code blocks everywhere.
   * TODO: Make beep.1 refer to README.md at the installed location.
   * TODO: Add memory barrier before installing signal handlers (C11 atomic_signal_fence())

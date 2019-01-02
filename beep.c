@@ -1,20 +1,28 @@
-/*  beep - just what it sounds like, makes the console beep - but with
- * precision control.  See the man page for details.
+/* beep - beep the pc speaker any number of ways
+ * Copyright (C) 2000-2010 Johnathan Nightingale
+ * Copyright (C) 2010-2013 Gerfried Fuchs
+ * Copyright (C) 2013-2018 Hans Ulrich Niedermann
  *
- * Try beep -h for command line args
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * This code is copyright (C) Johnathan Nightingale, 2000.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * This code may distributed only under the terms of the GNU Public License 
- * which can be found at http://www.gnu.org/copyleft or in the file COPYING 
- * supplied with this code.
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * This code is not distributed with warranties of any kind, including implied
- * warranties of merchantability or fitness for a particular use or ability to 
- * breed pandas in captivity, it just can't be done.
- *
- * Bug me, I like it:  http://johnath.com/  or johnath@johnath.com
  */
+
+/*
+ * For more documentation on beep, see the beep-usage.txt and beep.1 files.
+ */
+
 
 #include <errno.h>
 #include <fcntl.h>
