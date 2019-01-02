@@ -28,7 +28,10 @@ or
     $ make
     $ make DESTDIR=$PWD/__installroot install
 
-For the complete list of those variables, see the top of `Makefile`.
+For the complete list of those variables, see the top of `GNUmakefile`.
+
+If you want to build and install the documentation to `pkgdocdir`, use
+the `doc` and `install-doc` targets, repectively.
 
 
 Device permission setup to allow non-root users to beep

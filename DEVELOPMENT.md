@@ -5,6 +5,15 @@ This file contains a number of notes, links and remarks which can be
 useful if you need to change `beep`.
 
 
+Testing
+=======
+
+If you want to run the tests only for the executables compiled with
+clang, run
+
+    $ make check COMPILERS=clang
+
+
 APIs
 ====
 

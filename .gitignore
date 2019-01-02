@@ -2,10 +2,13 @@
 
 # The compiled executable
 /beep
-/beep.clang
-/beep.gcc
+/*.clang
+/*.gcc
 
 # Build intermediates
+*.dep
+*.clang-o
+*.gcc-o
 *.o
 *.i
 *.s
