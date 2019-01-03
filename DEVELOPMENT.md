@@ -105,7 +105,6 @@ TODO list
 
   * TODO: Make sure all C code uses {} around code blocks everywhere.
   * TODO: Make beep.1 refer to README.md at the installed location.
-  * TODO: Add memory barrier before installing signal handlers (C11 atomic_signal_fence())
   * TODO: Document references to Johnathan's Email or Website as historic.
   * TODO: Update CREDITS with the changes since 2010 (beep-1.3) and/or 2013 (last commit to github.com/johnath/beep)
   * TODO: Go over all documentation regarding links.

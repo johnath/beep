@@ -527,6 +527,14 @@ int main(const int argc, char *const argv[]) {
    * not have to fall back onto printing '\a' any more.
    */
 
+  /* Memory barrier. All globals have been set up, so we make sure the
+   * values are actually written to memory.  Only then do we install
+   * the signal handlers.
+   *
+   * TBD: Use C11 atomic_signal_fence() instead of "__asm__ volatile"?
+   */
+  __asm__ volatile ("" : : : "memory");
+
   /* After all the initialization has happened and the global
    * variables used to communicate with the signal handlers have
    * actually been set up properly, we can finally install the signal
