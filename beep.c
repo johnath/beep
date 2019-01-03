@@ -50,15 +50,12 @@
 #define CLOCK_TICK_RATE 1193182UL
 #endif
 
-/* The name to use as the name of this program in user messages. */
-#define PROG_NAME "beep"
-
-
-#define VERSION_STRING "beep-1.3"
-char *copyright = 
-"Copyright (C) Johnathan Nightingale, 2002.  "
-"Use and Distribution subject to GPL.  "
-"For information: http://www.gnu.org/copyleft/.";
+const char version_message[] =
+    PACKAGE_TARNAME " " PACKAGE_VERSION "\n"
+    "Copyright (C) 2002-2016 Johnathan Nightingale\n"
+    "Copyright (C) 2013-2018 Hans Ulrich Niedermann\n"
+    "Use and Distribution subject to GPL.\n"
+    "For information: http://www.gnu.org/copyleft/.\n";
 
 /* Meaningful Defaults */
 #define DEFAULT_FREQ       440   /* Middle A */
@@ -304,9 +301,9 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
       break;
     case 'v' :
     case 'V' : /* also --version */
-      log_output("%s\n", VERSION_STRING);
-      exit(EXIT_SUCCESS);
-      break;
+        fputs(version_message, stdout);
+        exit(EXIT_SUCCESS);
+        break;
     case 'n' : /* also --new - create another beep */
       if (result->freq == 0)
 	result->freq = DEFAULT_FREQ;

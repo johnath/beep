@@ -1,3 +1,17 @@
+1.4.0
+-----
+- Fix CVE-2018-1000532 External Control of File Name or Path vulnerability in --device option
+- Fix CVE-2018-0492 race condition that allows local privilege escalation
+- Make /dev/input/by-path/platform-pcspkr-event-spkr the default device to use
+  as the system administrator can allow access to that without needing any
+  priviledge escalation risks via setuid or sudo.
+- Adapt --help output, beep.1 man page, README.md, INSTALL.md to reflect the new device use.
+- Add basic suite of tests.
+- Constrained a few integers to avoid integer overflows.
+- Only issue fallback '\a' type beeps if that '\a' actually goes to a tty device
+  which can actually beep
+- Stop promoting floating point frequencies which no Kernel API can even use
+
 1.3
 ---
 - 8 years have passed!

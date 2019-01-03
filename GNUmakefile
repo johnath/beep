@@ -7,6 +7,7 @@
 # installation location for beep.
 
 PACKAGE_TARNAME = beep
+PACKAGE_VERSION = 1.4.0
 
 DESTDIR=
 prefix=/usr
@@ -60,6 +61,14 @@ pkgdoc_DATA =
 ########################################################################
 # Define compilers and their flags
 ########################################################################
+
+# We want accidental invocations of rules with $(CC) to fail
+CC = false
+
+# CPPFLAGS common to all compilers
+CPPFLAGS_COMMON = 
+CPPFLAGS_COMMON += -DPACKAGE_TARNAME='"$(PACKAGE_TARNAME)"'
+CPPFLAGS_COMMON += -DPACKAGE_VERSION='"$(PACKAGE_VERSION)"'
 
 COMPILER_gcc = gcc
 LINKER_gcc = gcc
@@ -161,10 +170,10 @@ define PER_COMPILER
 $(foreach exec,$(bin_PROGRAMS) $(sbin_PROGRAMS),$(eval $(call LINK_RULE,$(1),$(exec))))
 
 %.$(1)-o: %.c
-	$$(COMPILER_$(1)) $$(CPPFLAGS) $$(CPPFLAGS_$(1)) $$(CFLAGS) $$(CFLAGS_$(1)) -o $$@ -c $$<
+	$$(COMPILER_$(1)) $$(CPPFLAGS) $$(CPPFLAGS_COMMON) $$(CPPFLAGS_$(1)) $$(CFLAGS) $$(CFLAGS_$(1)) -o $$@ -c $$<
 
 %.$(1)-o.dep: %.c
-	$$(COMPILER_$(1)) $$(CPPFLAGS) $$(CPPFLAGS_$(1)) $$(CFLAGS) $$(CFLAGS_$(1)) -MM -MT "$$*.$(1)-o $$@ " $$< > $$@.tmp
+	$$(COMPILER_$(1)) $$(CPPFLAGS) $$(CPPFLAGS_COMMON) $$(CPPFLAGS_$(1)) $$(CFLAGS) $$(CFLAGS_$(1)) -MM -MT "$$*.$(1)-o $$@ " $$< > $$@.tmp
 	mv -f $$@.tmp $$@
 
 -include $$(patsubst %.o,%.$(1)-o.dep,$(beep_OBJS))
@@ -240,6 +249,7 @@ SPLINT_FLAGS += +gnuextensions
 SPLINT_FLAGS += -preproc
 SPLINT_FLAGS += -syntax
 SPLINT_FLAGS += -D__signed__=signed
+SPLINT_FLAGS += $(CPPFLAGS_COMMON)
 
 .PHONY: lint
 lint:
