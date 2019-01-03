@@ -266,33 +266,35 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
       }
       break;
     case 'l' : /* length */
-      if(!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000))
-        usage_bail();
-      else
-	result->length = argval;
-      break;
+        if (!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000)) {
+            usage_bail();
+        } else {
+            result->length = argval;
+        }
+        break;
     case 'r' : /* repetitions */
-      if(!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000))
-        usage_bail();
-      else
-	result->reps = argval;
-      break;
+        if (!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000)) {
+            usage_bail();
+        } else {
+            result->reps = argval;
+        }
+        break;
     case 'd' : /* delay between reps - WITHOUT delay after last beep*/
-      if(!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000))
-        usage_bail();
-      else {
-	result->delay = argval;
-	result->end_delay = NO_END_DELAY;
-      }
-      break;
+        if (!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000)) {
+            usage_bail();
+        } else {
+            result->delay = argval;
+            result->end_delay = NO_END_DELAY;
+        }
+        break;
     case 'D' : /* delay between reps - WITH delay after last beep */
-      if(!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000))
-	usage_bail();
-      else {
-	result->delay = argval;
-	result->end_delay = YES_END_DELAY;
-      }
-      break;
+        if (!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000)) {
+            usage_bail();
+        } else {
+            result->delay = argval;
+            result->end_delay = YES_END_DELAY;
+        }
+        break;
     case 's' :
       result->stdin_beep = LINE_STDIN_BEEP;
       break;
@@ -305,8 +307,9 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
         exit(EXIT_SUCCESS);
         break;
     case 'n' : /* also --new - create another beep */
-      if (result->freq == 0)
-	result->freq = DEFAULT_FREQ;
+      if (result->freq == 0) {
+        result->freq = DEFAULT_FREQ;
+      }
       result->next = (beep_parms_t *)malloc(sizeof(beep_parms_t));
       result->next->freq       = 0;
       result->next->length     = DEFAULT_LENGTH;
@@ -352,9 +355,11 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
         break;
     }
   }
-  if (result->freq == 0)
-    result->freq = DEFAULT_FREQ;
-}  
+  if (result->freq == 0) {
+      result->freq = DEFAULT_FREQ;
+  }
+}
+
 
 void play_beep(beep_parms_t parms) {
   unsigned int i; /* loop counter */

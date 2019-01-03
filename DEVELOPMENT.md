@@ -103,7 +103,6 @@ Options:
 TODO list
 ---------
 
-  * TODO: Make sure all C code uses {} around code blocks everywhere.
   * TODO: Make beep.1 refer to README.md at the installed location.
   * TODO: Document references to Johnathan's Email or Website as historic.
   * TODO: Update CREDITS with the changes since 2010 (beep-1.3) and/or 2013 (last commit to github.com/johnath/beep)
