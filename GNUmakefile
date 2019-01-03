@@ -77,6 +77,7 @@ CFLAGS_gcc += -Wall -Wextra
 CFLAGS_gcc += -std=gnu99 -pedantic
 CFLAGS_gcc += -Werror
 CFLAGS_gcc += -O -gstabs
+CFLAGS_gcc += -Wa,-adhlns=$(@:-o=-lst)
 CFLAGS_gcc += -Werror=format-security
 CFLAGS_gcc += -Wp,-D_FORTIFY_SOURCE=2
 CFLAGS_gcc += -Wp,-D_GLIBCXX_ASSERTIONS
@@ -268,6 +269,7 @@ clean:
 	rm -f $(CLEANFILES)
 	rm -f $(foreach comp,$(COMPILERS),*.$(comp) *.$(comp)-o)
 	rm -f *.dep
+	rm -f *.lst *.gcc-lst
 	rm -f tests/*.new tests/*.output.actual
 	rm -rf html
 	rm -f *.o *.i *.s
