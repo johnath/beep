@@ -103,5 +103,8 @@ Options:
 TODO list
 ---------
 
+Post-1.4.0:
 
-
+  * TODO: Go through all github.com forks of johnath/beep
+  * TODO: Read up on signal(2).
+  * TODO: Implement the uinput based beep-daemon for Raspberry Pi.
