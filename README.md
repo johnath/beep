@@ -4,11 +4,16 @@ beep - beep the PC loudspeaker on Linux
 `beep` allows you to have the PC speaker issue beeps and beep patterns
 with given frequencies, durations, and spacing.
 
-This version of beep can be found at
-[github.com/ndim/beep/](https://github.com/ndim/beep/). It is based on
-Johnathan Nightingales' original beep from
+Beginning in 2019, this version of beep can be found at
+[github.com/spkr-beep/beep/](https://github.com/spkr-beep/beep/). Please
+report bugs and other problems at
+[github.com/spkr-beep/beep/issues](https://github.com/spkr-beep/beep/issues).
+
+This version of`beep` is based on Johnathan Nightingales' original
+`beep` from
 [github.com/johnath/beep/](https://github.com/johnath/beep/) and
-[johnath.com/beep/](http://johnath.com/beep/).
+[johnath.com/beep/](http://johnath.com/beep/) which was maintained
+from around 2000 to around 2013.
 
 
 What beep does

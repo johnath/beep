@@ -386,7 +386,7 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
 	  console_device = realpath_optarg;
 	} else {
           log_error("Not using device '%s'. If you do need this device, please "
-                    "report that fact to <https://github.com/ndim/beep/issues>.\n",
+                    "report that fact to <https://github.com/spkr-beep/beep/issues>.\n",
                     realpath_optarg);
 	  exit(EXIT_FAILURE);
 	}

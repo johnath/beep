@@ -103,8 +103,5 @@ Options:
 TODO list
 ---------
 
-  * TODO: Document references to Johnathan's Email or Website as historic.
-  * TODO: Go over all documentation regarding links.
 
 
-FIXME: Go over this.

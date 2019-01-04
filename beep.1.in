@@ -213,7 +213,7 @@ C	262	523	1047	2093
 .\"
 .SH BUGS
 Report bugs to
-.UR https://github.com/ndim/beep/issues
+.UR https://github.com/spkr-beep/beep/issues
 .UE .
 .\"
 .\" ====================================================================
@@ -255,5 +255,6 @@ will produce first two 1000Hz beeps, then 5 beeps at the default tone, but only 
 .\" .BR andme (1),
 .BR @pkgdocdir@/README.md ,
 .BR @pkgdocdir@/INSTALL.md ,
-.UR "https://github.com/ndim/beep"
+.BR @pkgdocdir@/PERMISSIONS.md ,
+.UR "https://github.com/spkr-beep/beep"
 .UE
