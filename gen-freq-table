@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# gen-freq-table - calculate and print the frequency table for use in beep.1 man page
+# gen-freq-table - calculate and print the frequency table for use in beep(1) man page
 # Copyright (C) 2018-2019 Hans Ulrich Niedermann
 #
 # This program is free software; you can redistribute it and/or modify

@@ -20,7 +20,8 @@
  */
 
 /*
- * For more documentation on beep, see the beep-usage.txt and beep.1 files.
+ * For more documentation on beep, see the beep-usage.txt and
+ * beep.1.in files.
  */
 
 

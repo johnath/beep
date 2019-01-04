@@ -136,7 +136,7 @@ rule to allow write access to
 .B /dev/input/by-path/platform-pcspkr-event-spkr
 for certain users and/or user groups. For details, see the
 .B beep
-.B INSTALL.md
+.B @pkgdocdir@/PERMISSIONS.md
 file.
 .\"
 .SS "APIs"
@@ -253,7 +253,7 @@ will produce first two 1000Hz beeps, then 5 beeps at the default tone, but only 
 .SH SEE ALSO
 .\" .BR fixme (1),
 .\" .BR andme (1),
-.BR README.md ,
-.BR INSTALL.md ,
+.BR @pkgdocdir@/README.md ,
+.BR @pkgdocdir@/INSTALL.md ,
 .UR "https://github.com/ndim/beep"
 .UE

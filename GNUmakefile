@@ -193,6 +193,11 @@ $(foreach compiler,$(COMPILERS),$(eval $(call PER_COMPILER,$(compiler))))
 
 man1_DATA  += beep.1.gz
 CLEANFILES += beep.1.gz
+CLEANFILES += beep.1
+
+%.1: %.1.in
+	$(SED) -e "s|[@]pkgdocdir@|$(pkgdocdir)|g" < $< > $@.tmp
+	mv -f $@.tmp $@
 
 %.1.gz: %.1
 	$(GZIP) --best -c < $< > $@
@@ -291,9 +296,6 @@ ifneq (,$(man1_DATA))
 	$(INSTALL) -m 0755 -d              $(DESTDIR)$(man1dir)
 	$(INSTALL) -m 0644 -p $(man1_DATA) $(DESTDIR)$(man1dir)/
 endif
-
-.PHONY: install-doc
-install-doc: doc
 ifneq (,$(pkgdoc_DATA))
 	$(INSTALL) -m 0755 -d                $(DESTDIR)$(pkgdocdir)
 	$(INSTALL) -m 0644 -p $(pkgdoc_DATA) $(DESTDIR)$(pkgdocdir)/

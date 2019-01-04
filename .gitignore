@@ -17,6 +17,7 @@
 *.s
 *.lst
 *.gcc-lst
+/beep.1
 
 # The compressed man page
 /beep.1.gz
