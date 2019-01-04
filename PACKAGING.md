@@ -13,6 +13,26 @@ The building and installing during a package build can be achieved with
     make
     make DESTDIR=/path/to/package-root install
 
+If you want to replace the compiler flags, run `make` like e.g.
+
+    make CFLAGS_gcc="-O -gstabs,foo" CFLAGS_clang=""
+
+You can also keep `beep`'s default flags and just add your own with
+`CFLAGS`. The same principle applies for `CPPFLAGS`, `LDFLAGS`, and
+`LIBS`.
+
+If the system you are building on has both `gcc` and `clang`, the
+`beep` buildsystem will compile with both by default and choose the
+first one from its COMPILERS make variable, which you can override
+from the command line.
+
+    make COMPILERS="clang gcc"
+
+Or you can specifically disable one of the compilers to only build one
+variant:
+
+    make COMPILER_gcc=no
+
 If you need to set any of the `*dir` variables like `mandir` on the
 `make` command line, please set them both for the build step (`make`)
 and the install step (`make install`). For example, you might want to
