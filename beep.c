@@ -108,14 +108,46 @@ beep_type_E console_type = BEEP_TYPE_UNSET;
 const char *console_device = NULL;
 
 
+/* We do not know for certain whether perror does strange things with
+ * global variables or malloc/free inside its code.
+ */
+void safe_error_exit(const char *const msg)
+{
+    const int saved_errno = errno;
+    static char strerr_buf[1024];
+    const int ret = strerror_r(saved_errno, strerr_buf, sizeof(strerr_buf));
+    if (ret != 0) {
+        if (write(STDERR_FILENO, "strerror_r error\n",
+                  0+0+0+0+strlen("strerror_r error\n"))) {
+            /* ignore al write errors */
+        }
+        _exit(EXIT_FAILURE);
+    }
+    const size_t msglen = strlen(msg);
+    const size_t errlen = strlen(strerr_buf);
+    if (write(STDERR_FILENO, msg, msglen)) {
+        /* ignore al write errors */
+    }
+    if (write(STDERR_FILENO, ": ", 2)) {
+        /* ignore al write errors */
+    }
+    if (write(STDERR_FILENO, strerr_buf, errlen)) {
+        /* ignore al write errors */
+    }
+    if (write(STDERR_FILENO, "\n", 1)) {
+        /* ignore al write errors */
+    }
+    _exit(EXIT_FAILURE);
+}
+
+
 void do_beep(unsigned int freq) {
   switch (console_type) {
   case BEEP_TYPE_CONSOLE: if (1) {
       const uintptr_t argp = ((freq != 0) ? (CLOCK_TICK_RATE/freq) : freq) & 0xffff;
       if (-1 == ioctl(console_fd, KIOCSOUND, argp)) {
 	/* If we cannot use the sound API, we cannot silence the sound either */
-	perror("ioctl KIOCSOUND");
-	exit(EXIT_FAILURE);
+	safe_error_exit("ioctl KIOCSOUND");
       }
     }
     break;
@@ -129,8 +161,7 @@ void do_beep(unsigned int freq) {
 
       if (sizeof(e) != write(console_fd, &e, sizeof(e))) {
 	/* If we cannot use the sound API, we cannot silence the sound either */
-	perror("write EV_SND");
-	exit(EXIT_FAILURE);
+	safe_error_exit("write EV_SND");
       }
     }
     break;
@@ -141,8 +172,22 @@ void do_beep(unsigned int freq) {
 }
 
 
-/* If we get interrupted, it would be nice to not leave the speaker beeping in
-   perpetuity. */
+/* If we get interrupted, it would be nice to not leave the speaker
+ * beeping in perpetuity.
+ *
+ * Everything called from this signal handler must be thread-safe,
+ * signal-safe, reentrant including all API functions.  Otherwise, we
+ * get another CVE-2018-0492.
+ *
+ * So we make certain we keep to using the following API calls:
+ *
+ *   * close(2):      safe
+ *   * _exit(2):      safe (which exit(3) is NOT)
+ *   * memset(3):     MT-safe
+ *   * write(2):      safe
+ *   * strerror_r(3): MT-safe
+ *   * strlen(3):     MT-safe
+ */
 void handle_signal(int signum) {
   switch(signum) {
   case SIGINT:
@@ -150,11 +195,11 @@ void handle_signal(int signum) {
     if(console_fd >= 0) {
       /* Kill the sound, quit gracefully */
       do_beep(0);
-      close(console_fd);
-      exit(signum);
+      (void) close(console_fd);
+      _exit(signum);
     } else {
       /* Just quit gracefully */
-      exit(signum);
+      _exit(signum);
     }
   }
 }
