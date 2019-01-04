@@ -146,3 +146,37 @@ for that hardware.
 
 At this time, `beep` provides no software support for any of those
 platforms.
+
+
+Packages
+========
+
+This is a list of links to distribution packages:
+
+  * [archlinux](https://www.archlinux.org/)  
+    https://www.archlinux.org/packages/extra/x86_64/beep/
+    https://git.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/beep
+
+  * [Debian](https://www.debian.org/)  
+    https://sources.debian.org/src/beep/
+
+  * [Fedora](https://getfedora.org/)  
+    https://src.fedoraproject.org/rpms/beep
+
+  * [Gentoo](https://www.gentoo.org/)  
+    https://packages.gentoo.org/packages/app-misc/beep
+    https://gitweb.gentoo.org/repo/gentoo.git/tree/app-misc/beep
+
+  * [OpenWRT](https://openwrt.org/)  
+    https://github.com/openwrt/packages/tree/master/utils/beep
+
+  * [openSUSE](https://www.opensuse.org/)  
+    https://software.opensuse.org/package/beep
+    https://build.opensuse.org/package/show/home%3AChristianMauderer%3Aopensuse-installations/beep
+
+  * [Raspbian](https://www.raspbian.org/)  
+    Sources: See Debian.
+
+  * [Ubuntu](https://www.ubuntu.com/)  
+    http://packages.ubuntu.com/src:beep
+    Sources: See Debian.
