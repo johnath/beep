@@ -306,7 +306,7 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
         usage_bail();
       } else {
 	if (result->freq != 0) {
-	  log_warning("multiple -f values given, only last one is used.\n");
+	  log_warning("multiple -f values given, only last one is used.");
 	}
 	result->freq = ((unsigned int)rintf(argfreq));
       }
@@ -371,14 +371,14 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
       break;
     case 'e' : /* also --device */
       if (console_device) {
-        log_error("You cannot give the --device parameter more than once.\n");
+        log_error("You cannot give the --device parameter more than once.");
         exit(EXIT_FAILURE);
       }
       if (1) {
 	static char realpath_optarg[PATH_MAX+1];
 	if (realpath(optarg, realpath_optarg) == NULL) {
 	  const int saved_errno = errno;
-          log_error("could not run realpath(3) on '%s': %s\n",
+          log_error("could not run realpath(3) on '%s': %s",
                     optarg, strerror(saved_errno));
 	  exit(EXIT_FAILURE);
 	}
@@ -386,7 +386,7 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
 	  console_device = realpath_optarg;
 	} else {
           log_error("Not using device '%s'. If you do need this device, please "
-                    "report that fact to <https://github.com/spkr-beep/beep/issues>.\n",
+                    "report that fact to <https://github.com/spkr-beep/beep/issues>.",
                     realpath_optarg);
 	  exit(EXIT_FAILURE);
 	}
@@ -411,7 +411,7 @@ void play_beep(beep_parms_t parms) {
   unsigned int i; /* loop counter */
 
   log_verbose("%d times %d ms beeps (%d delay between, "
-              "%d delay after) @ %d Hz\n",
+              "%d delay after) @ %d Hz",
               parms.reps, parms.length, parms.delay, parms.end_delay, parms.freq);
 
   /* Beep */
@@ -446,7 +446,7 @@ int open_chr(const char *filename, int flags)
   if (S_ISCHR(sb.st_mode)) {
     return open(filename, flags);
   } else {
-    log_error("console file '%s' is not a character device special file\n",
+    log_error("console file '%s' is not a character device special file",
               filename);
     exit(EXIT_FAILURE);
   }
@@ -480,8 +480,8 @@ int main(const int argc, char *const argv[]) {
    */
   if ((getuid() != geteuid()) || (getgid() != getegid())) {
     log_error("Running setuid or setgid, "
-              "which is not supported for security reasons.\n");
-    log_error("Set up permissions for the pcspkr evdev device file instead.\n");
+              "which is not supported for security reasons.");
+    log_error("Set up permissions for the pcspkr evdev device file instead.");
     exit(EXIT_FAILURE);
   }
 
@@ -491,8 +491,8 @@ int main(const int argc, char *const argv[]) {
    */
   if (getenv("SUDO_COMMAND") || getenv("SUDO_USER") || getenv("SUDO_UID") || getenv("SUDO_GID")) {
     log_error("Running under sudo, "
-          "which is not supported for security reasons.\n");
-    log_error("Set up permissions for the pcspkr evdev device file instead.\n");
+              "which is not supported for security reasons.");
+    log_error("Set up permissions for the pcspkr evdev device file instead.");
     exit(EXIT_FAILURE);
   }
 
@@ -531,7 +531,7 @@ int main(const int argc, char *const argv[]) {
 
   if (console_fd == -1) {
     const int saved_errno = errno;
-    log_error("Could not open %s for writing: %s\n",
+    log_error("Could not open %s for writing: %s",
               ((console_device != NULL) ? console_device : "console device"),
               strerror(saved_errno));
     /* Output the only beep we can, in an effort to fall back on usefulness */
@@ -552,7 +552,7 @@ int main(const int argc, char *const argv[]) {
       /* BAD: console_fd is not a character device special file. Do
        * not use it any further, and certainly DO NOT WRITE to it.
        */
-      log_error("opened console '%s' is not a character special device\n",
+      log_error("opened console '%s' is not a character special device",
                 console_device);
       exit(EXIT_FAILURE);
     }
@@ -560,14 +560,14 @@ int main(const int argc, char *const argv[]) {
 
   /* Determine the API supported by the opened console device */
   if (ioctl(console_fd, EVIOCGSND(0)) != -1) {
-    log_verbose("Using BEEP_TYPE_EVDEV on '%s'\n", console_device);
+    log_verbose("Using BEEP_TYPE_EVDEV on '%s'", console_device);
     console_type = BEEP_TYPE_EVDEV;
   } else if (ioctl(console_fd, KIOCSOUND, 0) >= 0) {
     /* turning off the beeps should be a safe way to check for API support */
-    log_verbose("Using BEEP_TYPE_CONSOLE on '%s'\n", console_device);
+    log_verbose("Using BEEP_TYPE_CONSOLE on '%s'", console_device);
     console_type = BEEP_TYPE_CONSOLE;
   } else {
-    log_error("console device '%s' does not support either API\n",
+    log_error("console device '%s' does not support either API",
               console_device);
     /* Output the only beep we can, in an effort to fall back on usefulness */
     fallback_beep();

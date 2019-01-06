@@ -40,6 +40,7 @@ void log_internal_vf(const char *levelstr, const char *format, va_list args)
 {
     fprintf(stdout, "%s: %s: ", progname, levelstr);
     vfprintf(stdout, format, args);
+    fputc('\n', stdout);
 }
 
 
