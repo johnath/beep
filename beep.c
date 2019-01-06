@@ -115,7 +115,7 @@ const char *console_device = NULL;
 void safe_error_exit(const char *const msg)
 {
     const int saved_errno = errno;
-    static char strerr_buf[1024];
+    char strerr_buf[128];
     const int ret = strerror_r(saved_errno, strerr_buf, sizeof(strerr_buf));
     if (ret != 0) {
         if (write(STDERR_FILENO, "strerror_r error\n",
