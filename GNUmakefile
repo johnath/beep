@@ -102,6 +102,7 @@ LINKER_clang = clang
 CPPFLAGS_clang =
 CFLAGS_clang += -Wall -Wextra
 CFLAGS_clang += -Weverything
+CFLAGS_clang += -Wno-padded
 CFLAGS_clang += -std=gnu99 -pedantic
 CFLAGS_clang += -Werror
 CFLAGS_clang += -fsanitize=undefined
@@ -128,8 +129,13 @@ endif
 bin_PROGRAMS += beep
 beep_OBJS =
 beep_OBJS += beep.o
+beep_OBJS += beep-library.o
 beep_OBJS += beep-log.o
 beep_OBJS += beep-usage.o
+beep_OBJS += beep-drivers.o
+beep_OBJS += beep-driver-console.o
+beep_OBJS += beep-driver-evdev.o
+# beep_OBJS += beep-driver-noop.o
 beep_LIBS =
 
 beep-log.clang-o : CFLAGS_clang += -Wno-format-nonliteral
@@ -161,7 +167,7 @@ beep-usage.c: beep-usage.txt
 # Compile and Link rules including automatic dependency generation
 ########################################################################
 
-# CALL: LINK_RULE <compiler> <executable> <executable_as_variable_part>
+# CALL: LINK_RULE <compiler> <executable> <executable_as_varname_part>
 define LINK_RULE
 ALL_PROGRAMS += $(2).$(1)
 

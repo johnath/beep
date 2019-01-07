@@ -1,2 +1,2 @@
-BEEP_EXECUTABLE: Error: could not run realpath(3) on '/dev/vc/0': No such file or directory
+BEEP_EXECUTABLE: Error: Could not open /dev/vc/0 for writing: No such file or directory
 Error

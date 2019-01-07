@@ -1,2 +1,2 @@
-BEEP_EXECUTABLE: Error: Not using device '/dev/ttyS1'. If you do need this device, please report that fact to <https://github.com/spkr-beep/beep/issues>.
+BEEP_EXECUTABLE: Error: Could not open /dev/ttyS1 for writing: Permission denied
 Error
