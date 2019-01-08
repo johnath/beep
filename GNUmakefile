@@ -101,6 +101,7 @@ COMPILER_clang = clang
 LINKER_clang = clang
 CPPFLAGS_clang =
 CFLAGS_clang += -Wall -Wextra
+CFLAGS_clang += -Weverything
 CFLAGS_clang += -std=gnu99 -pedantic
 CFLAGS_clang += -Werror
 CFLAGS_clang += -fsanitize=undefined
@@ -130,7 +131,8 @@ beep_OBJS += beep.o
 beep_OBJS += beep-log.o
 beep_OBJS += beep-usage.o
 beep_LIBS =
-beep_LIBS += -lm
+
+beep-log.clang-o : CFLAGS_clang += -Wno-format-nonliteral
 
 # sbin_PROGRAMS += beep-foo
 # beep_foo_OBJS =

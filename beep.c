@@ -29,7 +29,6 @@
 #include <fcntl.h>
 #include <getopt.h>
 #include <limits.h>
-#include <math.h>
 #include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -51,6 +50,7 @@
 #define CLOCK_TICK_RATE 1193182UL
 #endif
 
+static
 const char version_message[] =
     PACKAGE_TARNAME " " PACKAGE_VERSION "\n"
     "Copyright (C) 2002-2016 Johnathan Nightingale\n"
@@ -104,14 +104,22 @@ typedef enum {
 
 /* Momma taught me never to use globals, but we need something the signal
    handlers can get at.*/
+static
 int console_fd = -1;
+static
 beep_type_E console_type = BEEP_TYPE_UNSET;
+static
 const char *console_device = NULL;
 
 
 /* We do not know for certain whether perror does strange things with
  * global variables or malloc/free inside its code.
  */
+static
+void safe_error_exit(const char *const msg)
+    __attribute__(( noreturn ));
+
+static
 void safe_error_exit(const char *const msg)
 {
     const int saved_errno = errno;
@@ -142,6 +150,7 @@ void safe_error_exit(const char *const msg)
 }
 
 
+static
 void do_beep(unsigned int freq) {
   switch (console_type) {
   case BEEP_TYPE_CONSOLE: if (1) {
@@ -158,7 +167,7 @@ void do_beep(unsigned int freq) {
       memset(&e, 0, sizeof(e));
       e.type = EV_SND;
       e.code = SND_TONE;
-      e.value = freq;
+      e.value = (freq & 0xffff);
 
       if (sizeof(e) != write(console_fd, &e, sizeof(e))) {
 	/* If we cannot use the sound API, we cannot silence the sound either */
@@ -189,7 +198,10 @@ void do_beep(unsigned int freq) {
  *   * strerror_r(3): MT-safe
  *   * strlen(3):     MT-safe
  */
-void handle_signal(int signum) {
+void handle_signal(int signum);
+
+void handle_signal(int signum)
+{
   switch(signum) {
   case SIGINT:
   case SIGTERM:
@@ -207,6 +219,7 @@ void handle_signal(int signum) {
 
 
 /* print usage and leave exit code up to the caller */
+static
 void print_usage(void)
 {
     fputs(beep_usage, stdout);
@@ -214,6 +227,11 @@ void print_usage(void)
 
 
 /* print usage and exit */
+static
+void usage_bail(void)
+    __attribute__(( noreturn ));
+
+static
 void usage_bail(void)
 {
     print_usage();
@@ -222,6 +240,7 @@ void usage_bail(void)
 
 
 /* whether character is a digit */
+static
 int is_digit(char c)
 {
   return (('0' <= c) && (c <= '9'));
@@ -229,6 +248,7 @@ int is_digit(char c)
 
 
 /* whether string consists of at least one digit, and only digits */
+static
 int is_number(const char *const str)
 {
   if (str[0] == '\0') {
@@ -244,6 +264,7 @@ int is_number(const char *const str)
 
 
 /* whether device is on whitelist */
+static
 int is_device_whitelisted(const char *const dev)
 {
   if (strncmp("/dev/input/", dev, strlen("/dev/input/")) == 0) {
@@ -285,6 +306,7 @@ int is_device_whitelisted(const char *const dev)
  * March 29, 2002 - Daniel Eisenbud points out that c should be int, not char,
  * for correctness on platforms with unsigned chars.
  */
+static
 void parse_command_line(const int argc, char *const argv[], beep_parms_t *result) {
   int c;
 
@@ -297,49 +319,62 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
 			       {0,0,0,0}};
   while((c = getopt_long(argc, argv, "f:l:r:d:D:schvVne:", opt_list, NULL))
 	!= EOF) {
-    int argval = -1;    /* handle parsed numbers for various arguments */
-    float argfreq = -1; 
-    switch(c) {      
+    /* handle parsed numbers for various arguments */
+    int          argval_i = -1;
+    unsigned int argval_u = ~0U;
+    float        argval_f = -1.0f;
+    switch (c) {
     case 'f':  /* freq */
-      if(!sscanf(optarg, "%f", &argfreq) || (argfreq >= 20000.0f /* ack! */) ||
-	 (argfreq <= 0.0f)) {
-        usage_bail();
-      } else {
-	if (result->freq != 0) {
-	  log_warning("multiple -f values given, only last one is used.");
-	}
-	result->freq = ((unsigned int)rintf(argfreq));
-      }
-      break;
-    case 'l' : /* length */
-        if (!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000)) {
+        if (sscanf(optarg, "%f", &argval_f) != 1) {
             usage_bail();
-        } else {
-            result->length = argval;
         }
+        if ((argval_f < 0.0f) || (argval_f > 20000.0f)) {
+            usage_bail();
+        }
+        argval_i = (int) (argval_f + 0.5f);
+        argval_u = (unsigned int) argval_i;
+	if (result->freq != 0) {
+            log_warning("multiple -f values given, only last one is used.");
+	}
+	result->freq = argval_u;
+        break;
+    case 'l' : /* length */
+        if (sscanf(optarg, "%u", &argval_u) != 1) {
+            usage_bail();
+        }
+        if (argval_u > 300000) { /* 5 minutes */
+            usage_bail();
+        }
+        result->length = argval_u;
         break;
     case 'r' : /* repetitions */
-        if (!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000)) {
+        if (sscanf(optarg, "%u", &argval_u) != 1) {
             usage_bail();
-        } else {
-            result->reps = argval;
         }
+        if (argval_u > 300000) { /* 5 minutes */
+            usage_bail();
+        }
+        result->reps = argval_u;
         break;
     case 'd' : /* delay between reps - WITHOUT delay after last beep*/
-        if (!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000)) {
+        if (sscanf(optarg, "%u", &argval_u) != 1) {
             usage_bail();
-        } else {
-            result->delay = argval;
-            result->end_delay = NO_END_DELAY;
         }
+        if (argval_u > 300000) { /* 5 minutes */
+            usage_bail();
+        }
+        result->delay = argval_u;
+        result->end_delay = NO_END_DELAY;
         break;
     case 'D' : /* delay between reps - WITH delay after last beep */
-        if (!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000)) {
+        if (sscanf(optarg, "%u", &argval_u) != 1) {
             usage_bail();
-        } else {
-            result->delay = argval;
-            result->end_delay = YES_END_DELAY;
         }
+        if (argval_u > 300000) { /* 5 minutes */
+            usage_bail();
+        }
+        result->delay = argval_u;
+        result->end_delay = YES_END_DELAY;
         break;
     case 's' :
       result->stdin_beep = LINE_STDIN_BEEP;
@@ -351,7 +386,7 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
     case 'V' : /* also --version */
         fputs(version_message, stdout);
         exit(EXIT_SUCCESS);
-        break;
+        /* break; unreachable */
     case 'n' : /* also --new - create another beep */
       if (result->freq == 0) {
         result->freq = DEFAULT_FREQ;
@@ -395,10 +430,10 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
     case 'h': /* also --help */
         print_usage();
         exit(EXIT_SUCCESS);
-        break;
+        /* break; unreachable */
     default:
         usage_bail();
-        break;
+        /* break; unreachable */
     }
   }
   if (result->freq == 0) {
@@ -407,6 +442,7 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
 }
 
 
+static
 void play_beep(beep_parms_t parms) {
   unsigned int i; /* loop counter */
 
@@ -437,6 +473,7 @@ void play_beep(beep_parms_t parms) {
  * actually is a character device special file after we have actually
  * opened it.
  */
+static
 int open_chr(const char *filename, int flags)
 {
   struct stat sb;
@@ -454,12 +491,13 @@ int open_chr(const char *filename, int flags)
 
 
 /* If stdout is a TTY, print a bell character to stdout as a fallback. */
+static
 void fallback_beep(void)
 {
-  /* Printing '\a' can only beep if we print it to a tty */
-  if (isatty(STDOUT_FILENO)) {
-    putc('\a', stdout);
-  }
+    /* Printing '\a' can only beep if we print it to a tty */
+    if (isatty(STDOUT_FILENO)) {
+        fputc('\a', stdout);
+    }
 }
 
 
