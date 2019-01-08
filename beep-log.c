@@ -31,12 +31,12 @@ const char *progname = "beep-log";
 
 /** beep-log internal function to actually print a message */
 static
-void log_internal_vf(const char *levelstr, const char *format, va_list args)
+void log_internal_vf(const char *levelstr, const char *const format, va_list args)
     __attribute__ ((nonnull (1,2)));
 
 
 static
-void log_internal_vf(const char *levelstr, const char *format, va_list args)
+void log_internal_vf(const char *levelstr, const char *const format, va_list args)
 {
     fprintf(stdout, "%s: %s: ", progname, levelstr);
     vfprintf(stdout, format, args);
@@ -44,7 +44,7 @@ void log_internal_vf(const char *levelstr, const char *format, va_list args)
 }
 
 
-void log_output(const char *format, ...)
+void log_output(const char *const format, ...)
 {
     va_list args;
 
@@ -54,7 +54,7 @@ void log_output(const char *format, ...)
 }
 
 
-void log_error(const char *format, ...)
+void log_error(const char *const format, ...)
 {
     va_list args;
 
@@ -64,7 +64,7 @@ void log_error(const char *format, ...)
 }
 
 
-void log_warning(const char *format, ...)
+void log_warning(const char *const format, ...)
 {
     va_list args;
 
@@ -73,7 +73,7 @@ void log_warning(const char *format, ...)
     va_end(args);
 }
 
-void log_verbose(const char *format, ...)
+void log_verbose(const char *const format, ...)
 {
     va_list args;
 
