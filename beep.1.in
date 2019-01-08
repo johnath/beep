@@ -28,11 +28,9 @@ beep \- beep the pc speaker any number of ways
 .br
 .B beep
 .RB [\| GLOBALS \|]
-.RI <\| TONE
-.IR OPTIONS \|>
+.RI <\| TONE_OPTIONS \|>
 .RB [\| \-n|\-\-new \|]
-.RI <\| TONE
-.IR OPTIONS \|>
+.RI <\| TONE_OPTIONS \|>
 .br
 .B beep
 .RI <\| \-h | \-\-help \|>
