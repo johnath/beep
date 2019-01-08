@@ -101,6 +101,7 @@ COMPILER_clang = clang
 LINKER_clang = clang
 CPPFLAGS_clang =
 CFLAGS_clang += -Wall -Wextra
+CFLAGS_clang += -Weverything
 CFLAGS_clang += -std=gnu99 -pedantic
 CFLAGS_clang += -Werror
 CFLAGS_clang += -fsanitize=undefined
