@@ -23,7 +23,7 @@
  *
  * Default is 0. Values greater than 0 are for verbose output.
  */
-int log_level;
+extern int log_level;
 
 
 /** Program name to use in log messages.
@@ -32,7 +32,7 @@ int log_level;
  * string, or run log_init() to set this up from the non-path part of
  * argv[0].
  */
-const char *progname;
+extern const char *progname;
 
 
 /** Write a standard message */
