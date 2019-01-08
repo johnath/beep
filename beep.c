@@ -386,7 +386,7 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
     case 'V' : /* also --version */
         fputs(version_message, stdout);
         exit(EXIT_SUCCESS);
-        break;
+        /* break; unreachable */
     case 'n' : /* also --new - create another beep */
       if (result->freq == 0) {
         result->freq = DEFAULT_FREQ;
@@ -430,10 +430,10 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
     case 'h': /* also --help */
         print_usage();
         exit(EXIT_SUCCESS);
-        break;
+        /* break; unreachable */
     default:
         usage_bail();
-        break;
+        /* break; unreachable */
     }
   }
   if (result->freq == 0) {
