@@ -494,10 +494,10 @@ int open_chr(const char *filename, int flags)
 static
 void fallback_beep(void)
 {
-  /* Printing '\a' can only beep if we print it to a tty */
-  if (isatty(STDOUT_FILENO)) {
-    putc('\a', stdout);
-  }
+    /* Printing '\a' can only beep if we print it to a tty */
+    if (isatty(STDOUT_FILENO)) {
+        fputc('\a', stdout);
+    }
 }
 
 
