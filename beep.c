@@ -167,7 +167,7 @@ void do_beep(unsigned int freq) {
       memset(&e, 0, sizeof(e));
       e.type = EV_SND;
       e.code = SND_TONE;
-      e.value = freq;
+      e.value = (freq & 0xffff);
 
       if (sizeof(e) != write(console_fd, &e, sizeof(e))) {
 	/* If we cannot use the sound API, we cannot silence the sound either */
