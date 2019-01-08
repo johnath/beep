@@ -132,12 +132,12 @@ beep_OBJS += beep-usage.o
 beep_LIBS =
 beep_LIBS += -lm
 
-# sbin_PROGRAMS += beep2
-# beep2_OBJS =
-# beep2_OBJS += beep.o
-# beep2_OBJS += beep-log.o
-# beep2_LIBS =
-# beep2_LIBS += -lm
+# sbin_PROGRAMS += beep-foo
+# beep_foo_OBJS =
+# beep_foo_OBJS += beep.o
+# beep_foo_OBJS += beep-log.o
+# beep_foo_LIBS =
+# beep_foo_LIBS += -lm
 
 
 ########################################################################
@@ -159,18 +159,18 @@ beep-usage.c: beep-usage.txt
 # Compile and Link rules including automatic dependency generation
 ########################################################################
 
-# CALL: LINK_RULE <compiler> <executable>
+# CALL: LINK_RULE <compiler> <executable> <executable_as_variable_part>
 define LINK_RULE
 ALL_PROGRAMS += $(2).$(1)
 
-$(2).$(1): $(patsubst %.o,%.$(1)-o,$($(2)_OBJS))
+$(2).$(1): $(patsubst %.o,%.$(1)-o,$($(3)_OBJS))
 	@: echo "LINK_RULE $$@: $$^"
-	$(LINKER_$(1)) $(CFLAGS) $(CFLAGS_$(1)) $(LDFLAGS) $(LDFLAGS_$(1)) -o $$@ $($(2)_LIBS) $(LIBS_$(1)) $(LIBS) $$^
+	$(LINKER_$(1)) $(CFLAGS) $(CFLAGS_$(1)) $(LDFLAGS) $(LDFLAGS_$(1)) -o $$@ $($(3)_LIBS) $(LIBS_$(1)) $(LIBS) $$^
 endef
 
 # CALL: PER_COMPILER <compiler>
 define PER_COMPILER
-$(foreach exec,$(bin_PROGRAMS) $(sbin_PROGRAMS),$(eval $(call LINK_RULE,$(1),$(exec))))
+$(foreach exec,$(bin_PROGRAMS) $(sbin_PROGRAMS),$(eval $(call LINK_RULE,$(1),$(exec),$(subst -,_,$(exec)))))
 
 %.$(1)-o: %.c
 	$$(COMPILER_$(1)) $$(CPPFLAGS) $$(CPPFLAGS_COMMON) $$(CPPFLAGS_$(1)) $$(CFLAGS) $$(CFLAGS_$(1)) -o $$@ -c $$<
