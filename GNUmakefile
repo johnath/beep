@@ -131,7 +131,6 @@ beep_OBJS += beep.o
 beep_OBJS += beep-log.o
 beep_OBJS += beep-usage.o
 beep_LIBS =
-beep_LIBS += -lm
 
 beep-log.clang-o : CFLAGS_clang += -Wno-format-nonliteral
 

@@ -29,7 +29,6 @@
 #include <fcntl.h>
 #include <getopt.h>
 #include <limits.h>
-#include <math.h>
 #include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -297,49 +296,62 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
 			       {0,0,0,0}};
   while((c = getopt_long(argc, argv, "f:l:r:d:D:schvVne:", opt_list, NULL))
 	!= EOF) {
-    int argval = -1;    /* handle parsed numbers for various arguments */
-    float argfreq = -1; 
-    switch(c) {      
+    /* handle parsed numbers for various arguments */
+    int          argval_i = -1;
+    unsigned int argval_u = ~0U;
+    float        argval_f = -1.0f;
+    switch (c) {
     case 'f':  /* freq */
-      if(!sscanf(optarg, "%f", &argfreq) || (argfreq >= 20000.0f /* ack! */) ||
-	 (argfreq <= 0.0f)) {
-        usage_bail();
-      } else {
-	if (result->freq != 0) {
-	  log_warning("multiple -f values given, only last one is used.");
-	}
-	result->freq = ((unsigned int)rintf(argfreq));
-      }
-      break;
-    case 'l' : /* length */
-        if (!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000)) {
+        if (sscanf(optarg, "%f", &argval_f) != 1) {
             usage_bail();
-        } else {
-            result->length = argval;
         }
+        if ((argval_f < 0.0f) || (argval_f > 20000.0f)) {
+            usage_bail();
+        }
+        argval_i = (int) (argval_f + 0.5f);
+        argval_u = (unsigned int) argval_i;
+	if (result->freq != 0) {
+            log_warning("multiple -f values given, only last one is used.");
+	}
+	result->freq = argval_u;
+        break;
+    case 'l' : /* length */
+        if (sscanf(optarg, "%u", &argval_u) != 1) {
+            usage_bail();
+        }
+        if (argval_u > 300000) { /* 5 minutes */
+            usage_bail();
+        }
+        result->length = argval_u;
         break;
     case 'r' : /* repetitions */
-        if (!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000)) {
+        if (sscanf(optarg, "%u", &argval_u) != 1) {
             usage_bail();
-        } else {
-            result->reps = argval;
         }
+        if (argval_u > 300000) { /* 5 minutes */
+            usage_bail();
+        }
+        result->reps = argval_u;
         break;
     case 'd' : /* delay between reps - WITHOUT delay after last beep*/
-        if (!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000)) {
+        if (sscanf(optarg, "%u", &argval_u) != 1) {
             usage_bail();
-        } else {
-            result->delay = argval;
-            result->end_delay = NO_END_DELAY;
         }
+        if (argval_u > 300000) { /* 5 minutes */
+            usage_bail();
+        }
+        result->delay = argval_u;
+        result->end_delay = NO_END_DELAY;
         break;
     case 'D' : /* delay between reps - WITH delay after last beep */
-        if (!sscanf(optarg, "%d", &argval) || (argval < 0) || (argval > 2100000)) {
+        if (sscanf(optarg, "%u", &argval_u) != 1) {
             usage_bail();
-        } else {
-            result->delay = argval;
-            result->end_delay = YES_END_DELAY;
         }
+        if (argval_u > 300000) { /* 5 minutes */
+            usage_bail();
+        }
+        result->delay = argval_u;
+        result->end_delay = YES_END_DELAY;
         break;
     case 's' :
       result->stdin_beep = LINE_STDIN_BEEP;
