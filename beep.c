@@ -117,6 +117,10 @@ const char *console_device = NULL;
  */
 static
 void safe_error_exit(const char *const msg)
+    __attribute__(( noreturn ));
+
+static
+void safe_error_exit(const char *const msg)
 {
     const int saved_errno = errno;
     char strerr_buf[128];
@@ -194,7 +198,10 @@ void do_beep(unsigned int freq) {
  *   * strerror_r(3): MT-safe
  *   * strlen(3):     MT-safe
  */
-void handle_signal(int signum) {
+void handle_signal(int signum);
+
+void handle_signal(int signum)
+{
   switch(signum) {
   case SIGINT:
   case SIGTERM:
@@ -220,6 +227,10 @@ void print_usage(void)
 
 
 /* print usage and exit */
+static
+void usage_bail(void)
+    __attribute__(( noreturn ));
+
 static
 void usage_bail(void)
 {
