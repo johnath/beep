@@ -1,3 +1,8 @@
+1.4.1
+-----
+- Safer signal handlers (safe_error_exit() without global variables).
+- Reduce accepted range of input numbers. 5 minute beeps should still be enough.
+
 1.4.0
 -----
 - Fix CVE-2018-1000532 External Control of File Name or Path vulnerability in --device option
