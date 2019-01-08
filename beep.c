@@ -50,6 +50,7 @@
 #define CLOCK_TICK_RATE 1193182UL
 #endif
 
+static
 const char version_message[] =
     PACKAGE_TARNAME " " PACKAGE_VERSION "\n"
     "Copyright (C) 2002-2016 Johnathan Nightingale\n"
@@ -103,14 +104,18 @@ typedef enum {
 
 /* Momma taught me never to use globals, but we need something the signal
    handlers can get at.*/
+static
 int console_fd = -1;
+static
 beep_type_E console_type = BEEP_TYPE_UNSET;
+static
 const char *console_device = NULL;
 
 
 /* We do not know for certain whether perror does strange things with
  * global variables or malloc/free inside its code.
  */
+static
 void safe_error_exit(const char *const msg)
 {
     const int saved_errno = errno;
@@ -141,6 +146,7 @@ void safe_error_exit(const char *const msg)
 }
 
 
+static
 void do_beep(unsigned int freq) {
   switch (console_type) {
   case BEEP_TYPE_CONSOLE: if (1) {
@@ -206,6 +212,7 @@ void handle_signal(int signum) {
 
 
 /* print usage and leave exit code up to the caller */
+static
 void print_usage(void)
 {
     fputs(beep_usage, stdout);
@@ -213,6 +220,7 @@ void print_usage(void)
 
 
 /* print usage and exit */
+static
 void usage_bail(void)
 {
     print_usage();
@@ -221,6 +229,7 @@ void usage_bail(void)
 
 
 /* whether character is a digit */
+static
 int is_digit(char c)
 {
   return (('0' <= c) && (c <= '9'));
@@ -228,6 +237,7 @@ int is_digit(char c)
 
 
 /* whether string consists of at least one digit, and only digits */
+static
 int is_number(const char *const str)
 {
   if (str[0] == '\0') {
@@ -243,6 +253,7 @@ int is_number(const char *const str)
 
 
 /* whether device is on whitelist */
+static
 int is_device_whitelisted(const char *const dev)
 {
   if (strncmp("/dev/input/", dev, strlen("/dev/input/")) == 0) {
@@ -284,6 +295,7 @@ int is_device_whitelisted(const char *const dev)
  * March 29, 2002 - Daniel Eisenbud points out that c should be int, not char,
  * for correctness on platforms with unsigned chars.
  */
+static
 void parse_command_line(const int argc, char *const argv[], beep_parms_t *result) {
   int c;
 
@@ -419,6 +431,7 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
 }
 
 
+static
 void play_beep(beep_parms_t parms) {
   unsigned int i; /* loop counter */
 
@@ -449,6 +462,7 @@ void play_beep(beep_parms_t parms) {
  * actually is a character device special file after we have actually
  * opened it.
  */
+static
 int open_chr(const char *filename, int flags)
 {
   struct stat sb;
@@ -466,6 +480,7 @@ int open_chr(const char *filename, int flags)
 
 
 /* If stdout is a TTY, print a bell character to stdout as a fallback. */
+static
 void fallback_beep(void)
 {
   /* Printing '\a' can only beep if we print it to a tty */
