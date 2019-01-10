@@ -30,6 +30,7 @@
 #include <getopt.h>
 #include <limits.h>
 #include <signal.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -103,7 +104,9 @@ struct _beep_parms_T
 };
 
 
-static beep_driver *global_driver = NULL;
+/* Global. Set to true by the signal handlers, read only by the main
+ * thread. */
+static volatile sig_atomic_t global_abort = false;
 
 
 /* If we get interrupted, it would be nice to not leave the speaker
@@ -123,16 +126,11 @@ static beep_driver *global_driver = NULL;
  *   * strerror_r(3): MT-safe
  *   * strlen(3):     MT-safe
  */
-void handle_signal(int signum);
+void handle_signal(int unused_signum);
 
-void handle_signal(int signum)
+void handle_signal(int unused_signum __attribute__(( unused )))
 {
-    switch(signum) {
-    case SIGINT:
-    case SIGTERM:
-        beep_drivers_end_tone(global_driver);
-        _exit(signum);
-    }
+    global_abort = true;
 }
 
 
@@ -164,7 +162,7 @@ static char *param_device_name = NULL;
 /* Parse the command line.  argv should be untampered, as passed to main.
  * Beep parameters returned in result, subsequent parameters in argv will over-
  * ride previous ones.
- * 
+ *
  * Currently valid parameters:
  *  "-f <frequency in Hz>"
  *  "-l <tone length in ms>"
@@ -315,14 +313,20 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_T *result
 
 
 static
-int sleep_ms(unsigned int milliseconds)
+int sleep_ms(beep_driver *driver, unsigned int milliseconds)
 {
     const time_t seconds = milliseconds / 1000U;
     const long   nanoseconds = (milliseconds % 1000UL) * 1000UL * 1000UL;
     const struct timespec request =
         { seconds,
           nanoseconds };
-    return nanosleep(&request, NULL);
+    const int retcode = nanosleep(&request, NULL);
+    if (global_abort) {
+        beep_drivers_end_tone(driver);
+        beep_drivers_fini(driver);
+        exit(EXIT_FAILURE);
+    }
+    return retcode;
 }
 
 
@@ -335,12 +339,12 @@ void play_beep(beep_driver *driver, beep_parms_T parms)
                 parms.freq);
 
     /* repeat the beep */
-    for (unsigned int i = 0; i < parms.reps; i++) {
+    for (unsigned int i = 0; (!global_abort) && (i < parms.reps); i++) {
         beep_drivers_begin_tone(driver, parms.freq & 0xffff);
-        sleep_ms(parms.length);
+        sleep_ms(driver, parms.length);
         beep_drivers_end_tone(driver);
         if ((parms.end_delay == END_DELAY_YES) || ((i+1) < parms.reps)) {
-            sleep_ms(parms.delay);
+            sleep_ms(driver, parms.delay);
         }
     }
 }
@@ -414,17 +418,19 @@ int main(const int argc, char *const argv[])
     beep_drivers_register(&console_driver);
     beep_drivers_register(&evdev_driver);
 
+    beep_driver *driver = NULL;
+
     if (param_device_name) {
-        global_driver = beep_drivers_detect(param_device_name);
-        if (!global_driver) {
+        driver = beep_drivers_detect(param_device_name);
+        if (!driver) {
             const int saved_errno = errno;
             log_error("Could not open %s for writing: %s",
                       param_device_name, strerror(saved_errno));
             exit(EXIT_FAILURE);
         }
     } else {
-        global_driver = beep_drivers_detect(NULL);
-        if (!global_driver) {
+        driver = beep_drivers_detect(NULL);
+        if (!driver) {
             log_error("Could not open any device");
             /* Output the only beep we can, in an effort to fall back on usefulness */
             fallback_beep();
@@ -433,8 +439,8 @@ int main(const int argc, char *const argv[])
     }
 
     log_verbose("beep: using driver %p (name=%s, fd=%d, dev=%s)",
-                (void *)global_driver, global_driver->name,
-                global_driver->device_fd, global_driver->device_name);
+                (void *)driver, driver->name,
+                driver->device_fd, driver->device_name);
 
     /* At this time, we know what API to use on which device, and we do
      * not have to fall back onto printing '\a' any more.
@@ -460,7 +466,7 @@ int main(const int argc, char *const argv[])
     /* this outermost while loop handles the possibility that -n/--new
        has been used, i.e. that we have multiple beeps specified. Each
        iteration will play, then free() one parms instance. */
-    while (parms) {
+    while ((!global_abort) && parms) {
         beep_parms_T *next = parms->next;
 
         if (parms->stdin_beep != STDIN_BEEP_NONE) {
@@ -477,20 +483,20 @@ int main(const int argc, char *const argv[])
             setvbuf(stdout, NULL, _IONBF, 0);
 
             char sin[4096];
-            while (fgets(sin, 4096, stdin)) {
+            while ((!global_abort) && (fgets(sin, 4096, stdin))) {
                 if (parms->stdin_beep == STDIN_BEEP_CHAR) {
-                    for (char *ptr=sin; *ptr; ptr++) {
+                    for (char *ptr=sin; (!global_abort) && (*ptr); ptr++) {
                         putchar(*ptr);
                         fflush(stdout);
-                        play_beep(global_driver, *parms);
+                        play_beep(driver, *parms);
                     }
                 } else { /* STDIN_BEEP_LINE */
                     fputs(sin, stdout);
-                    play_beep(global_driver, *parms);
+                    play_beep(driver, *parms);
                 }
             }
         } else {
-            play_beep(global_driver, *parms);
+            play_beep(driver, *parms);
         }
 
         /* Junk each parms struct after playing it */
@@ -498,10 +504,14 @@ int main(const int argc, char *const argv[])
         parms = next;
     }
 
-    beep_drivers_end_tone(global_driver);
-    beep_drivers_fini(global_driver);
+    beep_drivers_end_tone(driver);
+    beep_drivers_fini(driver);
 
-    return EXIT_SUCCESS;
+    if (global_abort) {
+        return EXIT_FAILURE;
+    } else {
+        return EXIT_SUCCESS;
+    }
 }
 
 
