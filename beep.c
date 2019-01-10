@@ -304,7 +304,7 @@ int is_device_whitelisted(const char *const dev)
  *  "-v/-V/--version"
  *  "-n/--new"
  *
- * March 29, 2002 - Daniel Eisenbud points out that c should be int, not char,
+ * March 29, 2002 - Daniel Eisenbud points out that ch should be int, not char,
  * for correctness on platforms with unsigned chars.
  */
 static
