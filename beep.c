@@ -34,6 +34,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
@@ -443,21 +444,33 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
 
 
 static
+int sleep_ms(unsigned int milliseconds)
+{
+    const time_t seconds = milliseconds / 1000U;
+    const long   nanoseconds = (milliseconds % 1000UL) * 1000UL * 1000UL;
+    const struct timespec request =
+        { seconds,
+          nanoseconds };
+    return nanosleep(&request, NULL);
+}
+
+
+static
 void play_beep(beep_parms_t parms) {
   unsigned int i; /* loop counter */
 
-  log_verbose("%d times %d ms beeps (%d delay between, "
-              "%d delay after) @ %d Hz",
-              parms.reps, parms.length, parms.delay, parms.end_delay, parms.freq);
+  log_verbose("%d times %d ms beeps (%d ms delay between, "
+              "%d ms delay after) @ %d Hz",
+              parms.reps, parms.length, parms.delay, parms.end_delay,
+              parms.freq);
 
   /* Beep */
   for (i = 0; i < parms.reps; i++) {                    /* start beep */
     do_beep(parms.freq);
-    /* Look ma, I'm not ansi C compatible! */
-    usleep(1000U*parms.length);                          /* wait...    */
+    sleep_ms(parms.length);
     do_beep(0);                                         /* stop beep  */
     if (parms.end_delay || ((i+1) < parms.reps)) {
-       usleep(1000U*parms.delay);                        /* wait...    */
+      sleep_ms(parms.delay);                            /* wait...    */
     }
   }                                                     /* repeat.    */
 }
