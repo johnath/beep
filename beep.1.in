@@ -3,7 +3,7 @@
 .\" This man page has been rewritten adhering to the following
 .\" documentation: man(7), man-pages(7), tbl(1)
 .\"
-.TH BEEP 1 "2018-12-29" "Linux" "User commands"
+.TH BEEP 1 "2019\-01\-11" "Linux" "User commands"
 .\"
 .\" ====================================================================
 .\"
@@ -72,20 +72,20 @@ Repeat the tone including delays \fIREPEATS\fR times (defaults to 1).
 .BI \-d\  DELAY\fR\ |\  \-D\  DELAY
 Specify a delay of \fIDELAY\fR milliseconds between repetitions.  Small letter \fB\-d\fR specifies that this delay should only occur \fIbetween\fR beeps, that is, it should \fInot\fR occur after the last repetition.  Capital letter \fB\-D\fR specifies that the delay should occur after every repetition, \fIincluding\fR the last one.  Normally, \fB\-d\fR is what you want, but if, for example, you are stringing several \fBbeep\fR commands together to play the star wars anthem, you may want control over every delay.
 .TP
-.BR -n ,\  \-\-new
+.BR \-n ,\  \-\-new
 The \fB\-\-new\fR option allows you to chain multiple beeps together on a single command line.  Each time the \fB\-\-new\FR is used, \fBbeep\fR starts treating all further arguments as though they were for a new beep.  So for example:
 
-    \fBbeep\fR -f 1000 -n -f 2000 -n -f 1500
+    \fBbeep\fR \-f 1000 \-n \-f 2000 \-n \-f 1500
 
-would produce a sequence of three beeps, the first with a frequency of 1000Hz (and otherwise default values), then a second beep with a frequency of 2000Hz (again, with things like delay and reps being set to their defaults), then a third beep, at 1500Hz.  This is different from specifying a \fB\-r\fR value, since \fB\-r\fR repeats the same beep multiple times, whereas \fB--new\fR allows you to specify different beeps.  After a \fB\-\-new\fR, the new beep is created with all the default values, and any of these can be specified without altering values for preceding (or later) beeps.  See the \fBEXAMPLES\fR section if this managed to confuse you.
+would produce a sequence of three beeps, the first with a frequency of 1000Hz (and otherwise default values), then a second beep with a frequency of 2000Hz (again, with things like delay and reps being set to their defaults), then a third beep, at 1500Hz.  This is different from specifying a \fB\-r\fR value, since \fB\-r\fR repeats the same beep multiple times, whereas \fB\-\-new\fR allows you to specify different beeps.  After a \fB\-\-new\fR, the new beep is created with all the default values, and any of these can be specified without altering values for preceding (or later) beeps.  See the \fBEXAMPLES\fR section if this managed to confuse you.
 .TP
 .BR \-s ,\  \-c
-Both the \fB\-s\fR and the \fB\-c\fR option put \fBbeep\fR into input processing mode.  \fB\-s\fR tells \fBbeep\fR to read from \fIstdin\fR, and beep after each newline.  \fB\-c\fR tells \fBbeep\fR to beep after every character.  In both cases, the \fBbeep\fR will also echo the input back out to stdout, which makes it easy to slip \fBbeep\fR into a text-processing pipeline.  See the \fBEXAMPLES\fR section.
+Both the \fB\-s\fR and the \fB\-c\fR option put \fBbeep\fR into input processing mode.  \fB\-s\fR tells \fBbeep\fR to read from \fIstdin\fR, and beep after each newline.  \fB\-c\fR tells \fBbeep\fR to beep after every character.  In both cases, the \fBbeep\fR will also echo the input back out to stdout, which makes it easy to slip \fBbeep\fR into a text processing pipeline.  See the \fBEXAMPLES\fR section.
 .SS "Other Actions"
 .BR \-h ,\  \-\-help
 Display \fBbeep\fR usage info and exit.
 .TP
-.BR -v ,\  \-V ,\  \-\-version
+.BR \-v ,\  \-V ,\  \-\-version
 Display \fBbeep\fR version information and exit.
 .\"
 .\" ====================================================================
@@ -96,7 +96,7 @@ When successful,
 .B beep
 returns with exit code 0.
 .PP
-Any non-0 exit means
+Any non\-0 exit means
 .B beep
 has encountered an error and has bailed out.
 .\"
@@ -107,7 +107,7 @@ The device files
 .B beep
 uses by default are the following:
 .\"
-    /dev/input/by-path/platform-pcspkr-event-spkr
+    /dev/input/by\-path/platform\-pcspkr\-event\-spkr
     /dev/tty0
     /dev/vc/0
 .\"
@@ -117,7 +117,7 @@ uses by default are the following:
 .SS "Devices and Permissions"
 .PP
 When you run \fBbeep\fR without explicitly giving a device to use, \fBbeep\fR tries opening the following devices in sequence until one succeeds:
-.IP "\fB/dev/input/by-path/platform-pcspkr-event-spkr\fR" 4
+.IP "\fB/dev/input/by\-path/platform\-pcspkr\-event\-spkr\fR" 4
 Uses the evdev API, and system administrator can allow access to any set of users and groups using the normal file permissions.
 .IP "\fB/dev/tty0\fR" 4
 Uses the console API, and the kernel insists you are root or own the TTY.
@@ -128,10 +128,10 @@ Uses the console API, and the kernel insists you are root or own the TTY.
 does not support running as setuid root or via
 .BR "sudo" "(1)" .
 .PP
-For non-root uses, the system administrator can set up a
+For non\-root uses, the system administrator can set up a
 .BR udev "(7)"
 rule to allow write access to
-.B /dev/input/by-path/platform-pcspkr-event-spkr
+.B /dev/input/by\-path/platform\-pcspkr\-event\-spkr
 for certain users and/or user groups. For details, see the
 .B beep
 .B @pkgdocdir@/PERMISSIONS.md
@@ -142,7 +142,7 @@ file.
 Uses the input event device driver, which means running
 .BR "write" "(2)"
 on
-.BR /dev/input/by-path/platform-pcspkr-event-spkr .
+.BR /dev/input/by\-path/platform\-pcspkr\-event\-spkr .
 .IP "console" 4
 Uses the ancient console API, which means running the
 .B "KIOCSOUND"
@@ -154,9 +154,9 @@ on a tty device like
 Concurrent invocations of
 .B beep
 are not supported. There is only one tone generator in the PC hardware, and we do not manage access to that shared resource in any way.  So if a first
-.B "beep -f 1000 -l 10000"
+.B "beep \-f 1000 \-l 10000"
 process starts a long 10 second beep with 1000Hz, and 2 seconds later a second quick
-.B "beep -f 2050 -l 100"
+.B "beep \-f 2050 \-l 100"
 with 2050Hz comes in, you will hear that 2050Hz beep for 100ms, and then silence as the quick beep silences the tone generator. Now you will not hear that the first
 .B "beep"
 process is still running after having waited for the first 2100ms of 10000ms. You will also not that the first
@@ -211,7 +211,7 @@ C	262	523	1047	2093
 .\"
 .SH BUGS
 Report bugs to
-.UR https://github.com/spkr-beep/beep/issues
+.UR https://github.com/spkr\-beep/beep/issues
 .UE .
 .\"
 .\" ====================================================================
@@ -225,22 +225,22 @@ At its simplest (yet still effective)
 .PP
 A more interesting standalone setup
 
-    \fBbeep\fR -f 300.7 -r 2 -d 100 -l 400
+    \fBbeep\fR \-f 300.7 \-r 2 \-d 100 \-l 400
 .\"
 .PP
-As part of a log-watching pipeline
+As part of a log watching pipeline
 
-    tail -f /var/log/xferlog | grep 'passwd' | \fBbeep\fR -f 1000 -r 5 -s
+    tail \-f /var/log/xferlog | grep 'passwd' | \fBbeep\fR \-f 1000 \-r 5 \-s
 .\"
 .PP
-When using -c mode, I recommend using a short -D, and a shorter -l, so that the beeps do not blur together.  Something like this will get you a cheesy 1970's style beep-as-you-type-each-letter effect
+When using \-c mode, I recommend using a short \-D, and a shorter \-l, so that the beeps do not blur together.  Something like this will get you a cheesy 1970's style beep\-as\-you\-type\-each\-letter effect
 
-    cat file | \fBbeep\fR -c -f 400 -D 50 -l 10
+    cat file | \fBbeep\fR \-c \-f 400 \-D 50 \-l 10
 .\"
 .PP
-A highly contrived example of -n/--new usage
+A highly contrived example of \-n/\-\-new usage
 
-    \fBbeep\fR -f 1000 -r 2 -n -r 5 -l 10 --new
+    \fBbeep\fR \-f 1000 \-r 2 \-n \-r 5 \-l 10 \-\-new
 
 will produce first two 1000Hz beeps, then 5 beeps at the default tone, but only 10ms long each, followed by a third beep using all the default settings (since none are specified).
 .\"
@@ -254,5 +254,5 @@ will produce first two 1000Hz beeps, then 5 beeps at the default tone, but only 
 .BR @pkgdocdir@/README.md ,
 .BR @pkgdocdir@/INSTALL.md ,
 .BR @pkgdocdir@/PERMISSIONS.md ,
-.UR "https://github.com/spkr-beep/beep"
+.UR "https://github.com/spkr\-beep/beep"
 .UE
