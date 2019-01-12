@@ -5,10 +5,14 @@ Usage:
   beep [-h|--help]
   beep [-v|-V|--version]
 
+Beep the PC speaker in a number of ways.
+
 Options:
   Information options:
     -h, --help
+                  print this usage information and exit
     -V, -v, --version
+                  print program version information and exit
 
   Global options:
     -e, --device=DEVICE
@@ -33,7 +37,7 @@ Options:
     -c            like -s, but beep for every character in the text
 
 Exit status:
- 0      if OK
- non-0  if any problems occured
+  0      if OK
+  non-0  if any problems occured
 
-More documentation is available in the beep(1) man page via: man 1 beep
+More documentation is available in the beep(1) man page via:  man 1 beep
