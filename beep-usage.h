@@ -1,4 +1,4 @@
-/* beep-log.h - interface to beep usage message string
+/* beep-usage.h - interface to beep usage message string
  * Copyright (C) 2018-2019 Hans Ulrich Niedermann
  *
  * This program is free software; you can redistribute it and/or modify
