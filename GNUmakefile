@@ -277,6 +277,7 @@ check-targets: $(TARGETS) $(CHECK_TARGETS)
 
 .PHONY: check
 check: beep $(ALL_PROGRAMS)
+	env PACKAGE_VERSION="${PACKAGE_VERSION}" \
 	/bin/bash tests/run-tests tests $(foreach compiler,$(COMPILERS),beep.$(compiler))
 
 .PHONY: clean

@@ -28,6 +28,7 @@ SHELL=sh
 FREQS=(440 494 554 587 659 740 831 880 988 1109 1175 1319 1480 1661 1760)
 
 : set -e
+: set -x
 
 test_dir="$1"
 shift
@@ -50,7 +51,7 @@ passmsg="${green}PASS${normal}"
 failmsg="${red}FAIL${normal}"
 
 canonicalize_output() {
-    ${SED} -e "s|${BEEP}|BEEP_EXECUTABLE|g" -e "s|^${BEEP##*/}:|BEEP_EXECUTABLE:|g"
+    ${SED} -e "s|${BEEP}|BEEP_EXECUTABLE|g" -e "s|^${BEEP##*/}:|BEEP_EXECUTABLE:|g" -e "s|$(echo "${PACKAGE_VERSION}" | ${SED} 's/\./\\./g')|PACKAGE_VERSION|g"
 }
 
 success_beeps() {
@@ -64,13 +65,13 @@ success_beeps() {
 for executable; do
     export BEEP="$PWD/$executable"
     freq_idx=0
-    for test in tests/*.sh; do
+    for test in $(ls -1 tests/*.{bash,sh}); do
 	export FREQ="${FREQS[${freq_idx}]}"
-	base="$(basename "$test" .sh)"
+	base="$(basename $(basename "$test" .bash) .sh)"
 	dir="$(dirname "$test")"
 	actual="${dir}/${executable}--${base}.output.actual"
 	printf "${hilite}%-13s${normal} ${hilite}%-32s${normal} " "${executable}" "${base}"
-	if ${SHELL} "${test}" > "${actual}.new" 2>&1; then
+	if "${test}" > "${actual}.new" 2>&1; then
 	    canonicalize_output < "${actual}.new" > "${actual}"
 	    expects_output=false
 	    for file in "${dir}/${base}.output.expected".[0-9]; do
