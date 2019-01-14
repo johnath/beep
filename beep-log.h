@@ -59,6 +59,11 @@ void log_verbose(const char *const format, ...)
     __attribute__ ((format (printf, 1, 2)));
 
 
+/** Log a range of data */
+void log_data(const void *const buf, const size_t start_ofs, const size_t size)
+    __attribute__ ((nonnull (1)));
+
+
 /** Initialize the log message prefix from the non-path part of argv[0]. */
 void log_init(const int argc, char *const argv[])
     __attribute__ ((nonnull (2)));

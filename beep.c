@@ -407,7 +407,9 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
       result = result->next; /* yes, I meant to do that. */
       break;
     case 'X' : /* --debug / --verbose */
-      log_level += 1;
+      if (log_level < 999) {
+        log_level++;
+      }
       break;
     case 'e' : /* also --device */
       if (console_device) {

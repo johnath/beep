@@ -85,6 +85,45 @@ void log_verbose(const char *const format, ...)
 }
 
 
+/** Log a range of data */
+void log_data(const void *const buf, const size_t start_ofs, const size_t size)
+{
+    if (log_level <= 1) {
+        return;
+    }
+    const unsigned char *const ucbuf = buf;
+    static const char hexchar[] = "0123456789abcdef";
+    char linebuf[80] =
+        "0000  __ __ __ __ __ __ __ __-__ __ __ __ __ __ __ __  ........-........";
+    for (size_t line_ofs=0, remaining=size; line_ofs<size; line_ofs+=16, remaining-=16) {
+        linebuf[0]    = hexchar[(line_ofs>>12) & 0xf];
+        linebuf[1]    = hexchar[(line_ofs>> 8) & 0xf];
+        linebuf[2]    = hexchar[(line_ofs>> 4) & 0xf];
+        linebuf[3]    = hexchar[(line_ofs>> 0) & 0xf];
+        const size_t line_cols = (remaining<16)? remaining : 16;
+        for (size_t col_ofs=0; col_ofs<line_cols; ++col_ofs) {
+            const size_t ofs = start_ofs + line_ofs + col_ofs;
+            const unsigned char ch = ucbuf[ofs];
+            const char hex_hi = hexchar[(ch >> 4) & 0x0f];
+            const char hex_lo = hexchar[(ch >> 0) & 0x0f];
+            linebuf[6+3*col_ofs+0]    = hex_hi;
+            linebuf[6+3*col_ofs+1]    = hex_lo;
+            linebuf[6+3*16+1+col_ofs+(col_ofs/8)] = ((0x20 <= ch) && (ch <= 0x7f)) ? (char)ch : '.';
+        }
+        for (size_t col_ofs=line_cols; col_ofs<16; ++col_ofs) {
+            linebuf[6+3*col_ofs+0]    = ' ';
+            linebuf[6+3*col_ofs+1]    = ' ';
+            linebuf[6+3*16+1+col_ofs+(col_ofs/8)] = ' ';
+        }
+        if (line_cols <= 8) {
+            linebuf[6+3*8-1]    = ' ';
+            linebuf[6+3*16+1+8] = ' ';
+        }
+        fprintf(stdout, "%s: %s: %s\n", progname, "Data", linebuf);
+    }
+}
+
+
 void log_init(const int argc, char *const argv[]) {
     /* if argv[0] is "./foo/bar/beep", set progname to "beep" */
     if (argc >= 1) {
