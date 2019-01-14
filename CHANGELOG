@@ -1,3 +1,11 @@
+1.4.2
+-----
+- Improved man page and --help output
+- Cleaned signal handlers of all function calls
+- Use beep driver infrastructure (console and evdev drivers)
+- Abort on unhandled command line parameters
+- Use nanosleep(2) instead of usleep(3)
+
 1.4.1
 -----
 - Safer signal handlers (safe_error_exit() without global variables).
