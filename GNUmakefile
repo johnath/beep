@@ -185,10 +185,10 @@ define PER_COMPILER
 $(foreach exec,$(bin_PROGRAMS) $(sbin_PROGRAMS),$(eval $(call LINK_RULE,$(1),$(exec),$(subst -,_,$(exec)))))
 
 %.$(1)-o: %.c
-	$$(COMPILER_$(1)) $$(CPPFLAGS) $$(CPPFLAGS_COMMON) $$(CPPFLAGS_$(1)) $$(CFLAGS) $$(CFLAGS_$(1)) -o $$@ -c $$<
+	$$(COMPILER_$(1)) $$(CPPFLAGS) $$(CPPFLAGS_COMMON) $$(CPPFLAGS_$(1)) $$(CFLAGS_COMMON) $$(CFLAGS) $$(CFLAGS_$(1)) -o $$@ -c $$<
 
 %.$(1)-o.dep: %.c
-	$$(COMPILER_$(1)) $$(CPPFLAGS) $$(CPPFLAGS_COMMON) $$(CPPFLAGS_$(1)) $$(CFLAGS) $$(CFLAGS_$(1)) -MM -MT "$$*.$(1)-o $$@ " $$< > $$@.tmp
+	$$(COMPILER_$(1)) $$(CPPFLAGS) $$(CPPFLAGS_COMMON) $$(CPPFLAGS_$(1)) $$(CFLAGS_COMMON) $$(CFLAGS) $$(CFLAGS_$(1)) -MM -MT "$$*.$(1)-o $$@ " $$< > $$@.tmp
 	mv -f $$@.tmp $$@
 endef
 
