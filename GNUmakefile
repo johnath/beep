@@ -86,7 +86,9 @@ CFLAGS_gcc += -Wp,-D_GLIBCXX_ASSERTIONS
 CFLAGS_gcc += -fstack-protector-strong
 CFLAGS_gcc += -fasynchronous-unwind-tables
 CFLAGS_gcc += -fstack-clash-protection
+ifeq (yes,$(shell if $(COMPILER_gcc) -fcf-protection -E -o null.o -c - < /dev/null > /dev/null 2>&1; then echo yes; else echo no; fi))
 CFLAGS_gcc += -fcf-protection
+endif
 CFLAGS_gcc += -save-temps=obj
 LDFLAGS_gcc =
 LIBS_gcc =
