@@ -311,13 +311,17 @@ static
 void parse_command_line(const int argc, char *const argv[], beep_parms_t *result) {
   int c;
 
-  struct option opt_list[7] = {{"help", 0, NULL, 'h'},
-			       {"version", 0, NULL, 'V'},
-			       {"new", 0, NULL, 'n'},
-			       {"verbose", 0, NULL, 'X'},
-			       {"debug", 0, NULL, 'X'},
-			       {"device", 1, NULL, 'e'},
-			       {0,0,0,0}};
+  static const
+      struct option opt_list[] =
+      { {"help",    no_argument,       NULL, 'h'},
+        {"version", no_argument,       NULL, 'V'},
+        {"new",     no_argument,       NULL, 'n'},
+        {"verbose", no_argument,       NULL, 'X'},
+        {"debug",   no_argument,       NULL, 'X'},
+        {"device",  required_argument, NULL, 'e'},
+        {NULL,      0,                 NULL,  0 }
+      };
+
   while((c = getopt_long(argc, argv, "f:l:r:d:D:schvVne:", opt_list, NULL))
 	!= EOF) {
     /* handle parsed numbers for various arguments */
