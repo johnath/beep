@@ -173,7 +173,9 @@ ALL_PROGRAMS += $(2).$(1)
 
 $(2).$(1): $(patsubst %.o,%.$(1)-o,$($(3)_OBJS))
 	@: echo "LINK_RULE $$@: $$^"
-	$(LINKER_$(1)) $(CFLAGS) $(CFLAGS_$(1)) $(LDFLAGS) $(LDFLAGS_$(1)) -o $$@ $($(3)_LIBS) $(LIBS_$(1)) $(LIBS) $$^
+	$(LINKER_$(1)) $(CFLAGS) $(CFLAGS_$(1)) $(LDFLAGS) $(LDFLAGS_$(1)) -o $$@ $$^ $($(3)_LIBS) $(LIBS_$(1)) $(LIBS)
+
+-include $$(patsubst %.o,%.$(1)-o.dep,$($(3)_OBJS))
 endef
 
 # CALL: PER_COMPILER <compiler>
@@ -186,8 +188,6 @@ $(foreach exec,$(bin_PROGRAMS) $(sbin_PROGRAMS),$(eval $(call LINK_RULE,$(1),$(e
 %.$(1)-o.dep: %.c
 	$$(COMPILER_$(1)) $$(CPPFLAGS) $$(CPPFLAGS_COMMON) $$(CPPFLAGS_$(1)) $$(CFLAGS) $$(CFLAGS_$(1)) -MM -MT "$$*.$(1)-o $$@ " $$< > $$@.tmp
 	mv -f $$@.tmp $$@
-
--include $$(patsubst %.o,%.$(1)-o.dep,$(beep_OBJS))
 endef
 
 $(foreach compiler,$(COMPILERS),$(eval $(call PER_COMPILER,$(compiler))))
