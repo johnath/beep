@@ -30,6 +30,10 @@
 /tests/*.actual.output
 /tests/*.output.actual.new
 /tests/*.output.actual
+/tests/*.actual.new
+/tests/*.actual
+/tests/*.output.new
+/tests/*.output
 
 # Misc results
 *.strace

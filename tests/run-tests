@@ -69,12 +69,12 @@ for executable; do
 	export FREQ="${FREQS[${freq_idx}]}"
 	base="$(basename $(basename "$test" .bash) .sh)"
 	dir="$(dirname "$test")"
-	actual="${dir}/${executable}--${base}.output.actual"
+	actual="${dir}/${executable}--${base}.actual"
 	printf "${hilite}%-13s${normal} ${hilite}%-32s${normal} " "${executable}" "${base}"
 	if "${test}" > "${actual}.new" 2>&1; then
 	    canonicalize_output < "${actual}.new" > "${actual}"
 	    expects_output=false
-	    for file in "${dir}/${base}.output.expected".[0-9]; do
+	    for file in "${dir}/${base}.expected".[0-9]; do
 		if test -f "$file"; then
 		    expects_output=true
 		    break
@@ -82,10 +82,10 @@ for executable; do
 	    done
 	    if "${expects_output}"; then
 		expect_fail="true"
-		for expected in "${dir}/${base}.output.expected".[0-9]; do
+		for expected in "${dir}/${base}.expected".[0-9]; do
 		    if ${CMP} --quiet "${expected}" "${actual}"; then
 			pass="$(expr "${pass}" + 1)"
-			echo "${passmsg}${expected/#*output.expected}"
+			echo "${passmsg}${expected/#*expected}"
 			expect_fail="false"
 			break
 		    fi
@@ -93,7 +93,7 @@ for executable; do
 		if "$expect_fail"; then
 		    fail="$(expr "${fail}" + 1)"
 		    echo "${failmsg}"
-		    for expected in "${dir}/${base}.output.expected".[0-9]; do
+		    for expected in "${dir}/${base}.expected".[0-9]; do
 			${DIFF} -u "${expected}" "${actual}"
 		    done
 		fi
