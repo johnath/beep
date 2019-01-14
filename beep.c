@@ -437,6 +437,10 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_t *result
         /* break; unreachable */
     }
   }
+  if (optind < argc) {
+    log_error("non-option arguments left on command line");
+    usage_bail();
+  }
   if (result->freq == 0) {
       result->freq = DEFAULT_FREQ;
   }
