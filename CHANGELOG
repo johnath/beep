@@ -1,3 +1,7 @@
+1.4.3
+-----
+- Only use -fcf-protection CFLAGS_gcc if actually supported on this platform
+
 1.4.2
 -----
 - Improved man page and --help output
