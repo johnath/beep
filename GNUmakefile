@@ -135,7 +135,7 @@ endif
 
 bin_PROGRAMS += beep
 beep_OBJS =
-beep_OBJS += beep.o
+beep_OBJS += beep-main.o
 beep_OBJS += beep-library.o
 beep_OBJS += beep-log.o
 beep_OBJS += beep-usage.o
