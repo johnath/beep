@@ -78,7 +78,7 @@ CPPFLAGS_gcc =
 CFLAGS_gcc += -Wall -Wextra
 CFLAGS_gcc += -std=gnu99 -pedantic
 CFLAGS_gcc += -Werror
-CFLAGS_gcc += -O -gstabs
+CFLAGS_gcc += -O -g
 CFLAGS_gcc += -Wa,-adhlns=$(@:-o=-lst)
 CFLAGS_gcc += -Werror=format-security
 CFLAGS_gcc += -Wp,-D_FORTIFY_SOURCE=2
