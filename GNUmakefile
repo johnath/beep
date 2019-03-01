@@ -160,7 +160,7 @@ beep-usage.c: beep-usage.txt
 	echo '#include "beep-usage.h"' >> $@
 	echo 'char beep_usage[] =' >> $@
 	set -e; IFS=""; while read line; do \
-		echo "  \"$${line}\\n\"" >> $@; \
+		printf '  "%s\\n"\n' "$${line}" >> $@; \
 	done < $<
 	echo '  ;' >> $@
 
