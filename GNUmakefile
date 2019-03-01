@@ -72,6 +72,13 @@ CPPFLAGS_COMMON =
 CPPFLAGS_COMMON += -DPACKAGE_TARNAME='"$(PACKAGE_TARNAME)"'
 CPPFLAGS_COMMON += -DPACKAGE_VERSION='"$(PACKAGE_VERSION)"'
 
+# If supported by COMPILER_gcc, add given flags to CFLAGS_gcc.
+# Example usage:
+#   $(eval $(call CHECK_CFLAGS_gcc,-fasynchronous-unwind-tables))
+define CHECK_CFLAGS_gcc
+CFLAGS_gcc += $$(if $$(shell if $$(COMPILER_gcc) $(1) -E -o null.o -c - < /dev/null > /dev/null 2>&1; then echo yes; else :; fi),$(1))
+endef
+
 COMPILER_gcc = gcc
 LINKER_gcc = gcc
 CPPFLAGS_gcc =
@@ -83,12 +90,10 @@ CFLAGS_gcc += -Wa,-adhlns=$(@:-o=-lst)
 CFLAGS_gcc += -Werror=format-security
 CFLAGS_gcc += -Wp,-D_FORTIFY_SOURCE=2
 CFLAGS_gcc += -Wp,-D_GLIBCXX_ASSERTIONS
-CFLAGS_gcc += -fstack-protector-strong
-CFLAGS_gcc += -fasynchronous-unwind-tables
-CFLAGS_gcc += -fstack-clash-protection
-ifeq (yes,$(shell if $(COMPILER_gcc) -fcf-protection -E -o null.o -c - < /dev/null > /dev/null 2>&1; then echo yes; else echo no; fi))
-CFLAGS_gcc += -fcf-protection
-endif
+$(eval $(call CHECK_CFLAGS_gcc,-fasynchronous-unwind-tables))
+$(eval $(call CHECK_CFLAGS_gcc,-fstack-protector-strong))
+$(eval $(call CHECK_CFLAGS_gcc,-fstack-clash-protection))
+$(eval $(call CHECK_CFLAGS_gcc,-fcf-protection))
 CFLAGS_gcc += -save-temps=obj
 LDFLAGS_gcc =
 LIBS_gcc =
