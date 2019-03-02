@@ -7,5 +7,7 @@ language:
 script:
   - make DESTDIR=$PWD/_i
   - make DESTDIR=$PWD/_i install
+  - ./beep --version
+  - ./beep --help
   - ls -l
   - ls -lR _i/
