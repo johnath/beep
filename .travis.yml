@@ -1,0 +1,11 @@
+os:
+  - linux
+
+language:
+  - C
+
+script:
+  - make DESTDIR=$PWD/_i
+  - make DESTDIR=$PWD/_i install
+  - ls -l
+  - ls -lR _i/
