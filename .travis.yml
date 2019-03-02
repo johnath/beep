@@ -5,9 +5,11 @@ language:
   - C
 
 script:
-  - make DESTDIR=$PWD/_i
-  - make DESTDIR=$PWD/_i install
-  - ./beep --version
-  - ./beep --help
+  - make DESTDIR="$PWD/_i"
+  - make DESTDIR="$PWD/_i" install
+  - ./beep --version > beep-usage.from--version
+  - grep "$(date +%Y)" beep-usage.from--version
+  - ./beep --help > beep-usage.from--help
+  - diff -u beep-usage.txt beep-usage.from--help
   - ls -l
   - ls -lR _i/
