@@ -76,7 +76,7 @@ CPPFLAGS_COMMON += -DPACKAGE_VERSION='"$(PACKAGE_VERSION)"'
 # Example usage:
 #   $(eval $(call CHECK_CFLAGS_gcc,-fasynchronous-unwind-tables))
 define CHECK_CFLAGS_gcc
-CFLAGS_gcc += $$(if $$(shell if $$(COMPILER_gcc) $(1) -E -o null.o -c - < /dev/null > /dev/null 2>&1; then echo yes; else :; fi),$(1))
+CFLAGS_gcc += $$(if $$(shell if $$(COMPILER_gcc) $(1) -E -o compile-check.gcc-o -c - < /dev/null > /dev/null 2>&1; then echo yes; else :; fi; rm -f compile-check.gcc-o > /dev/null 2>&1),$(1))
 endef
 
 COMPILER_gcc = gcc
