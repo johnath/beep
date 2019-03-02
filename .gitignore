@@ -10,6 +10,7 @@
 
 # Build intermediates
 *.dep
+*.tmp
 *.clang-o
 *.gcc-o
 *.o
