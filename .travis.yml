@@ -5,8 +5,8 @@ language:
   - C
 
 script:
-  - make DESTDIR="$PWD/_i"
-  - make DESTDIR="$PWD/_i" install
+  - make -j 2 DESTDIR="$PWD/_i"
+  - make -j 2 DESTDIR="$PWD/_i" install
   - ./beep --version > beep-usage.from--version
   # - grep "$(date +%Y)" beep-usage.from--version
   - cat beep-usage.from--version
