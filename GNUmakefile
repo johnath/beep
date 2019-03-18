@@ -27,7 +27,7 @@ pkgdocdir=$(docdir)/$(PACKAGE_TARNAME)
 
 pathsearch = $(firstword $(wildcard $(addsuffix /$(1),$(subst :, ,$(PATH)))))
 
-# Avoid running GNU make builtin rules by mistake
+# Avoid running GNU make builtin rules based on $(CC) by mistake
 CC = false
 
 GZIP = $(call pathsearch,gzip)
@@ -63,9 +63,6 @@ pkgdoc_DATA =
 ########################################################################
 # Define compilers and their flags
 ########################################################################
-
-# We want accidental invocations of rules with $(CC) to fail
-CC = false
 
 # CPPFLAGS common to all compilers
 CPPFLAGS_COMMON = 
