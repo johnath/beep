@@ -252,7 +252,6 @@ will produce first two 1000Hz beeps, then 5 beeps at the default tone, but only 
 .\" .BR fixme (1),
 .\" .BR andme (1),
 .BR @pkgdocdir@/README.md ,
-.BR @pkgdocdir@/INSTALL.md ,
 .BR @pkgdocdir@/PERMISSIONS.md ,
 .UR "https://github.com/spkr\-beep/beep"
 .UE
