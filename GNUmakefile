@@ -69,6 +69,8 @@ CPPFLAGS_COMMON =
 CPPFLAGS_COMMON += -DPACKAGE_TARNAME='"$(PACKAGE_TARNAME)"'
 CPPFLAGS_COMMON += -DPACKAGE_VERSION='"$(PACKAGE_VERSION)"'
 
+comma := ,
+
 # If supported by COMPILER_gcc, add given flags to CFLAGS_gcc.
 # Example usage:
 #   $(eval $(call CHECK_CFLAGS_gcc,-fasynchronous-unwind-tables))
@@ -79,14 +81,13 @@ endef
 COMPILER_gcc = gcc
 LINKER_gcc = gcc
 CPPFLAGS_gcc =
-CFLAGS_gcc += -Wall -Wextra
+CFLAGS_gcc =
 CFLAGS_gcc += -std=gnu99 -pedantic
-CFLAGS_gcc += -Werror
 CFLAGS_gcc += -O -g
 CFLAGS_gcc += -Wa,-adhlns=$(@:-o=-lst)
-CFLAGS_gcc += -Werror=format-security
-CFLAGS_gcc += -Wp,-D_FORTIFY_SOURCE=2
-CFLAGS_gcc += -Wp,-D_GLIBCXX_ASSERTIONS
+$(eval $(call CHECK_CFLAGS_gcc,-Wall -Wextra -Werror -Werror=format-security))
+$(eval $(call CHECK_CFLAGS_gcc,-Wp$$(comma)-D_FORTIFY_SOURCE=2))
+$(eval $(call CHECK_CFLAGS_gcc,-Wp$$(comma)-D_GLIBCXX_ASSERTIONS))
 $(eval $(call CHECK_CFLAGS_gcc,-fasynchronous-unwind-tables))
 $(eval $(call CHECK_CFLAGS_gcc,-fstack-protector-strong))
 $(eval $(call CHECK_CFLAGS_gcc,-fstack-clash-protection))
