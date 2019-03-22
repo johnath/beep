@@ -339,12 +339,12 @@ uninstall:
 # List all references to documentation in the git repo
 .PHONY: refs
 refs:
-	git grep -E '((http|https)://[a-zA-Z0-9\._/-]+|([A-Z]+\.md)|([a-zA-Z][a-zA-Z0-9_-]+\([0-9]+\)))'
+	git grep -n -E '((http|https)://[a-zA-Z0-9\._/-]+|([A-Z]+\.md)|([a-zA-Z][a-zA-Z0-9_-]+\([0-9]+\)))'
 
 # List all TODOs and FIXMEs in the git repo
 .PHONY: todo
 todo:
-	git grep -E '(TODO|FIXME):'
+	git grep -n -E '(TODO|FIXME):'
 
 
 ########################################################################
