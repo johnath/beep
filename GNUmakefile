@@ -342,8 +342,8 @@ refs:
 	git grep -n -E '((http|https)://[a-zA-Z0-9\._/-]+|([A-Z]+\.md)|([a-zA-Z][a-zA-Z0-9_-]+\([0-9]+\)))'
 
 # List all TODOs and FIXMEs in the git repo
-.PHONY: todo
-todo:
+.PHONY: todo fixme
+todo fixme:
 	git grep -n -E '(TODO|FIXME):'
 
 
