@@ -1,3 +1,9 @@
+1.4.x
+-----
+- Fix newline escaping when generating beep-usage.c
+- By default, use plain -g instead of -gstabs
+- Ensure the gcc used actually supports the default flags in CFLAGS_gcc
+
 1.4.3
 -----
 - Only use -fcf-protection CFLAGS_gcc if actually supported on this platform
