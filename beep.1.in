@@ -249,8 +249,8 @@ will produce first two 1000Hz beeps, then 5 beeps at the default tone, but only 
 .\" ====================================================================
 .\"
 .SH SEE ALSO
-.\" .BR fixme (1),
-.\" .BR andme (1),
+.\" Distro packages might want to replace the next line with their README
+.\" .BR @pkgdocdir@/README.Distro ,
 .BR @pkgdocdir@/README.md ,
 .BR @pkgdocdir@/PERMISSIONS.md ,
 .UR "https://github.com/spkr\-beep/beep"

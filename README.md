@@ -6,12 +6,12 @@ beep - beep the PC loudspeaker on Linux
 `beep` allows you to have the PC speaker issue beeps and beep patterns
 with given frequencies, durations, and spacing.
 
-Beginning in 2019, this version of beep can be found at
+Beginning in 2019, this version of `beep` can be found at
 [github.com/spkr-beep/beep/](https://github.com/spkr-beep/beep/). Please
 report bugs and other problems at
 [github.com/spkr-beep/beep/issues](https://github.com/spkr-beep/beep/issues).
 
-This version of`beep` is based on Johnathan Nightingales' original
+This version of `beep` is based on Johnathan Nightingales' original
 `beep` from
 [github.com/johnath/beep/](https://github.com/johnath/beep/) and
 [johnath.com/beep/](http://johnath.com/beep/) which was maintained
@@ -48,7 +48,10 @@ The evdev API uses `write(2)` to write `EV_SND`/`SND_TONE` input_event
 data to the `/dev/input/by-path/platform-pcspkr-event-spkr` device
 file.  The system administrator can set up normal file permissions on
 the device file to allow beeping access for certain users and
-groups. See `INSTALL.md` for more detailed elaborations.
+groups.
+
+See [`PERMISSIONS.md`](PERMISSIONS.md) for more details on permission
+setup.
 
 
 The console API
@@ -58,6 +61,44 @@ In order to be allowed to run the `KIOCSOUND` `ioctl(2)` of the
 classical console API, the Linux kernel insists you must either be
 root or own the current TTY (e.g. non-root user logged in on
 `/dev/tty4`).
+
+`beep` only uses this as a fallback.
+
+
+Documentation
+=============
+
+The documentation files shipped with the `beep` source tree, sorted
+alphabetically:
+
+  * [`CHANGELOG`](CHANGELOG)  
+    Usually called `NEWS` but not renamed for historical reasons, this
+    file contains a list of the high level changes between `beep`
+    releases.
+
+  * [`COPYING`](COPYING)  
+    The licensing text.
+
+  * [`CREDITS`](CREDITS)  
+    Giving credit where credit is due.
+
+  * [`DEVELOPMENT.md`](DEVELOPMENT.md)  
+    Information for developers working on improving beep.
+
+  * [`INSTALL.md`](INSTALL.md)  
+    How to build and install `beep` from source tree.
+
+  * [`PACKAGING.md`](PACKAGING.md)  
+    How to package `beep` for a Linux distribution.
+
+  * [`PERMISSIONS.md`](PERMISSIONS.md)  
+    How to set up the permissions to allow non-root users to run
+    `beep`. Covers installing from source tree, and distro package
+    following and not following the beep suggested udev rule setup.
+
+  * [`README.md`](README.md)  
+    This basic overview on `beep` including the history kept over from
+    the old `README` file.
 
 
 The history of beep
