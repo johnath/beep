@@ -44,4 +44,4 @@ fixing CVE-2018-0492, CVE-2018-1000532, and the help fixing the fixes.
 
 Thanks to Hanno Böck for the report on possible integer overflows.
 
-Thanks to Stefan Helmert for the sig_atomic_t.
+Thanks to Stefan Helmert for the sig_atomic_t idea.
