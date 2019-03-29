@@ -1,5 +1,9 @@
 1.4.x
 -----
+- Remove udev/rules.d/ and modprobe.d/ example files to force packagers
+  to re-read PACKAGING.md and PERMISSIONS.md
+- Rewritten PERMISSIONS.md and INSTALL.md, adapting README.md and
+  PACKAGING.md and beep.1 for consistency
 - Fix newline escaping when generating beep-usage.c
 - By default, use plain -g instead of -gstabs
 - Ensure the gcc used actually supports the default flags in CFLAGS_gcc

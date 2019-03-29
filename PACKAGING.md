@@ -4,6 +4,9 @@ Packaging beep for Linux distributions
 This file contains a number of ideas and suggestions which might come
 in helpful in case you are packaging `beep` for a Linux distribution.
 
+In addition, to a packager of `beep`, [`INSTALL.md`](INSTALL.md) might
+also be interesting.
+
 
 Building and installing
 -----------------------
@@ -17,7 +20,7 @@ If you want to replace the compiler flags, run `make` like e.g.
 
     make CFLAGS_gcc="-O -gstabs,foo" CFLAGS_clang=""
 
-You can also keep `beep`'s default flags and just add your own with
+You can also keep `beep`'s default flags and just add your own by setting
 `CFLAGS`. The same principle applies for `CPPFLAGS`, `LDFLAGS`, and
 `LIBS`.
 
@@ -32,6 +35,11 @@ Or you can specifically disable one of the compilers to only build one
 variant:
 
     make COMPILER_gcc=no
+
+Or you can specifically specify gcc compiler and linker executables
+and avoid the clang build:
+
+    make COMPILER_gcc=/path/to/aarch64-linux-gnu-gcc LINKER_gcc='$(COMPILER_gcc)' COMPILER_clang=no
 
 If you need to set any of the `*dir` variables like `mandir` on the
 `make` command line, please set them both for the build step (`make`)
@@ -50,17 +58,26 @@ Files to install for beep
     The `beep` executable.
 
   * `/usr/share/man/man1/beep1.gz`  
+
     Man page for the `beep` executable.
 
+    If your distribution package ships a special `README.Distro` file
+    (such as `README.Debian` or `README.fedora`), you might want to
+    add a reference to that file in the man page's __SEE ALSO__
+    section instead of the commented out placeholder reference to
+    `README.Distro`.
 
 ### Documentation files
 
   * `/usr/share/doc/beep/README.md`  
+    General description of `beep`.
 
   * `/usr/share/doc/beep/PERMISSIONS.md`  
-    Change or replace this file as necessary for your distribution to
-    give package users and system administrators the information
-    they need to successfully set up device permissions.
+    Gives package users and system administrators the information they
+    need to successfully set up device permissions for non-root users.
+
+    Covers installing from source tree, and distro package following
+    and not following the beep suggested udev rule setup.
 
   * `/usr/share/doc/beep/CHANGELOG`  
 
@@ -68,50 +85,65 @@ Files to install for beep
 
   * `/usr/share/doc/beep/CREDITS`  
 
-The files `INSTALL.md`, `DEVELOPMENT.md`, `PACKAGING.md` are not
-useful for binary packages.  They make most sense for source trees.
+The files [`INSTALL.md`](INSTALL.md),
+[`DEVELOPMENT.md`](DEVELOPMENT.md), [`PACKAGING.md`](PACKAGING.md) are
+not useful for binary packages.  They only make sense for source
+trees.
 
 
 ### System setup including permissions
 
   * `/etc/modprobe.d/pcspkr-beep.conf`  
     When the system administrator uncomments the `alias` line, this
-    tells the system to load the `pcspkr.ko` kernel module.
+    tells the system to load the `pcspkr.ko` kernel module:
 
-    Without `pcspkr.ko`, there will be no sound from the PC speaker
-    at all.
+        alias platform:pcspkr pcspkr
 
-    Use, change, replace as is fitting for your distribution.
-
-If you want to use the default permission setup with a `beep` group
-and the system administrator adding users to the `beep` group, install
-and do the following:
-
-  * `/etc/udev/rules.d/90-pcspkr-beep.rules`  
-    Sets up write access to the PC speaker device for group `beep` or
-    whatever else the system administrator has set it up to do.
-
-    Requires the `pcspkr.ko` kernel module to be loaded.
+    Without `pcspkr.ko` loaded, there will be no sound from the PC
+    speaker at all.
 
     Use, change, replace as is fitting for your distribution.
 
-  * Upon installing the package, a `beep` user group needs to be
-    created with something like
+  * `/usr/lib/udev/rules.d/70-pcspkr-beep.rules` or `/lib/udev/rules.d/70-pcspkr-beep.rules` (location depends on distribution)  
+
+    If you want to use the suggested permission setup, ship this
+    file. For the contents, cf. [`PERMISSIONS.md`](PERMISSIONS.md).
+
+    Use, change, replace as is fitting for your distribution.
+
+  * `/usr/lib/udev/rules.d/90-pcspkr-beep.rules` or `/lib/udev/rules.d/90-pcspkr-beep.rules` (location depends on distribution)  
+
+    If you want to use the suggested permission setup, ship this
+    file. For the contents, cf. [`PERMISSIONS.md`](PERMISSIONS.md).
+
+    Use, change, replace as is fitting for your distribution.
+
+  * Add a `beep` system user group
+  
+    If you want to use the suggested permission setup
+    (cf. [`PERMISSIONS.md`](PERMISSIONS.md)), have the package run
+    something like
 
         # getent group beep >/dev/null || groupadd -r beep
 
     inside the package installation scripts.
 
   * `/usr/share/doc/beep/PERMISSIONS.md`  
-    This describes to system administrators how to add
-    users to the `beep` group and to users how to check
-    they actually are members of the `beep` group.
 
-    Use, change, replace as is fitting for your distribution.
+    The [`PERMISSIONS.md`](PERMISSIONS.md) file describes to system
+    administrators how to give users permissions to actually beep the
+    PC speaker, both with the suggested udev rules, and generally.
+
+	If your distribution ships a different set of udev rules, you
+    should describe those in some distribution specific README file
+    (like e.g. `README.Debian` or `README.fedora`).
 
 All files installed into `/etc` are config files which the system
 administrator may change and expect to not be overwritten with
 package updates.
+
+The sysadmin may add their own udev rules to `/etc/udev/rules.d/`
+which should not be touched by the `beep` package.
 
 
 Architectures
