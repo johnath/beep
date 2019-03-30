@@ -1,8 +1,9 @@
 Packaging beep for Linux distributions
 ======================================
 
-This file contains a number of ideas and suggestions which might come
-in helpful in case you are packaging `beep` for a Linux distribution.
+This file contains a number of ideas and suggestions and references to
+other documentation which might come in helpful in case you are
+packaging `beep` for a Linux distribution.
 
 In addition, to a packager of `beep`, [`INSTALL.md`](INSTALL.md) might
 also be interesting.
