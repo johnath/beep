@@ -38,6 +38,20 @@ What beep does
         through the pipe until said pipe is finished.
 
 
+What beep does not do
+---------------------
+
+  * `beep` does not serialize or multiplex access to the one PC
+    speaker hardware.  The sound from a `beep` process playing a very
+    long note will be silenced as soon as another short `beep` process
+    starts its note, and after the short `beep` finishes, the PC
+    speaker will remain silent for the remainder of the long note's
+    duration.
+
+  * `beep` does not work on platforms and systems without a PC speaker
+    or compatible hardware.
+
+
 How beep works internally
 =========================
 
