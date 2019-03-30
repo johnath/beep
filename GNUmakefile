@@ -346,6 +346,12 @@ refs:
 todo fixme:
 	git grep -n -E '(TODO|FIXME):'
 
+# Generate a kind of dist tarball to help with preparing for release
+PACKAGE_TARBASE := $(PACKAGE_TARNAME)-$(shell git describe)
+.PHONY: dist
+dist:
+	git archive --format=tar.gz --verbose --prefix=$(PACKAGE_TARBASE)/ --output=$(PACKAGE_TARBASE).tar.gz HEAD
+
 
 ########################################################################
 # End of GNUmakefile
