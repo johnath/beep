@@ -49,3 +49,7 @@ Thanks to Stefan Helmert for the sig_atomic_t idea.
 Thanks to Dan Jacobson (jidanni on github) and kanliot for suggesting
 documentation improvements especially for but not restricted to the
 permissions setup (https://github.com/spkr-beep/beep/issues/4).
+
+Thanks to Daniel Kamil Kozar (xavery on github) for reporting and
+helping with fixing the sudo check when beep runs as non-root user
+(https://github.com/spkr-beep/beep/issues/5).

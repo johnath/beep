@@ -4,6 +4,7 @@
   to re-read PACKAGING.md and PERMISSIONS.md
 - Rewritten PERMISSIONS.md and INSTALL.md, adapting README.md and
   PACKAGING.md and beep.1 for consistency
+- Allow beep to run as non-root, even if `SUDO_*` env variables are present
 - Fix newline escaping when generating beep-usage.c
 - By default, use plain -g instead of -gstabs
 - Ensure the gcc used actually supports the default flags in CFLAGS_gcc
