@@ -125,16 +125,22 @@ void log_data(const void *const buf, const size_t start_ofs, const size_t size)
 
 
 void log_init(const int argc, char *const argv[]) {
-    /* if argv[0] is "./foo/bar/beep", set progname to "beep" */
+    /* If argv[0] is "/foo/bar/beep", set progname to "beep".
+     * Otherwise, set progname to argv[0] (if it does not contain a
+     * slash) or keep the default progname value which points to a
+     * constant string.
+     */
     if (argc >= 1) {
-        const char *last_slash = strrchr(argv[0], '/');
-        if (last_slash) {
-            const char *post_last_slash = last_slash+1;
-            if (post_last_slash) {
-                progname = post_last_slash;
+        if ('\0' != *argv[0]) {
+            const char *last_slash = strrchr(argv[0], '/');
+            if (NULL != last_slash) {
+                const char *post_last_slash = last_slash+1;
+                if ('\0' != *post_last_slash) {
+                    progname = post_last_slash;
+                }
+            } else {
+                progname = argv[0];
             }
-        } else {
-            progname = argv[0];
         }
     }
 }
