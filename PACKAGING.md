@@ -123,9 +123,13 @@ trees.
   
     If you want to use the suggested permission setup
     (cf. [`PERMISSIONS.md`](PERMISSIONS.md)), have the package run
-    something like
+    something like e.g.
 
-        # getent group beep >/dev/null || groupadd -r beep
+        # Fedora, RHEL, etc.
+        getent group beep >/dev/null || groupadd --system beep
+
+        # Debian, Ubuntu, etc.
+        getent group beep >/dev/null || addgroup --system beep
 
     inside the package installation scripts.
 

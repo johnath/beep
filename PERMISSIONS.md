@@ -92,8 +92,12 @@ currently active virtual console session, the best way is to set up a
 system user group `beep` and give that group write access to the
 device special file.
 
-    [root@host ~]# groupadd -r beep
-    [root@host ~]# 
+The exact command to add the group varies from system to
+system. Choose whatever works on your system:
+
+    [root@host ~]# addgroup --system beep    # Debian, Ubuntu, etc.
+
+    [root@host ~]# groupadd --system beep    # Fedora, RHEL, etc.
 
 Now to allow writing to the device special file for members of the
 `beep` user group, you have the choice between the following two udev
