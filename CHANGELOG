@@ -1,3 +1,6 @@
+1.4.x
+-----
+
 1.4.4
 -----
 - Remove udev/rules.d/ and modprobe.d/ example files to force packagers
