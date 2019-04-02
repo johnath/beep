@@ -108,3 +108,15 @@ Post-1.4.0:
   * TODO: Go through all github.com forks of johnath/beep
   * TODO: Read up on signal(2).
   * TODO: Implement the uinput based beep-daemon for Raspberry Pi.
+
+
+Release checklist
+=================
+
+  * `make clean && make check` runs?
+  * [`CHANGELOG`](CHANGELOG) up to date?
+  * [`CHANGELOG`](CHANGELOG) version number current?
+  * [`GNUmakefile`](GNUmakefile) `PACKAGE_VERSION` up to date?
+  * `make clean && make check` runs?
+  * `git push`
+  * enjoy the [github releases web interface](https://github.com/spkr-beep/beep/releases)
