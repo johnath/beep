@@ -298,7 +298,7 @@ clean:
 	rm -f $(foreach comp,$(COMPILERS),*.$(comp) *.$(comp)-o)
 	rm -f *.dep
 	rm -f *.lst *.gcc-lst
-	rm -f tests/*.new tests/*.output.actual
+	rm -f tests/*.new tests/*.actual
 	rm -rf html
 	rm -f *.o *.i *.s
 
