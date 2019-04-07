@@ -76,7 +76,7 @@ classical console API, the Linux kernel insists you must either be
 root or own the current TTY (e.g. non-root user logged in on
 `/dev/tty4`).
 
-`beep` only uses this as a fallback.
+`beep` only uses this API as a fallback.
 
 
 Documentation
