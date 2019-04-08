@@ -191,25 +191,36 @@ Packages
 This is a list of links to distribution packages:
 
   * [archlinux](https://www.archlinux.org/)  
-    https://www.archlinux.org/packages/extra/x86_64/beep/
-    https://git.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/beep
+    [overview](https://www.archlinux.org/packages/extra/x86_64/beep/)
+    [sources](https://git.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/beep)
+    [bugs](https://bugs.archlinux.org/?project=1&string=beep)
 
   * [Debian](https://www.debian.org/)  
-    https://sources.debian.org/src/beep/
+    [overview](https://packages.debian.org/search?keywords=beep)
+    [tracker](https://tracker.debian.org/pkg/beep)
+    [sources](https://sources.debian.org/src/beep/)
+    [bugs](https://bugs.debian.org/cgi-bin/pkgreport.cgi?package=beep)
+    [unstable bugs](https://bugs.debian.org/cgi-bin/pkgreport.cgi?dist=unstable;package=beep)
 
   * [Fedora](https://getfedora.org/)  
-    https://src.fedoraproject.org/rpms/beep
+    [overview](https://apps.fedoraproject.org/packages/beep)
+    [bugs](https://apps.fedoraproject.org/packages/beep/bugs/)
+    [sources](https://src.fedoraproject.org/rpms/beep)
 
   * [Gentoo](https://www.gentoo.org/)  
-    https://packages.gentoo.org/packages/app-misc/beep
-    https://gitweb.gentoo.org/repo/gentoo.git/tree/app-misc/beep
+    [overview](https://packages.gentoo.org/packages/app-misc/beep)
+    [sources](https://gitweb.gentoo.org/repo/gentoo.git/tree/app-misc/beep)
+    [bugs](https://bugs.gentoo.org/buglist.cgi?quicksearch=app-misc%2Fbeep)
 
   * [OpenWRT](https://openwrt.org/)  
-    https://github.com/openwrt/packages/tree/master/utils/beep
+    [overview](https://openwrt.org/packages/pkgdata/beep)
+    [bugs](https://github.com/openwrt/packages/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+beep)
+    [sources](https://github.com/openwrt/packages/tree/master/utils/beep)
+    [sources openwrt-18.06](https://github.com/openwrt/packages/tree/openwrt-18.06/utils/beep)
 
   * [openSUSE](https://www.opensuse.org/)  
-    https://software.opensuse.org/package/beep
-    https://build.opensuse.org/package/show/home%3AChristianMauderer%3Aopensuse-installations/beep
+    [overview](https://software.opensuse.org/package/beep)
+    [overview](https://build.opensuse.org/package/show/home%3AChristianMauderer%3Aopensuse-installations/beep)
 
   * [Raspbian](https://www.raspbian.org/)  
     Sources: See Debian.
