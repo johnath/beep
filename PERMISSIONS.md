@@ -171,12 +171,12 @@ A few __bad ideas__ to __avoid__ you want to change the permissions setup:
     including keyboards and mice which are none of their business
     (think keyloggers or reprogramming programmable keyboards).
 
-  * Running `beep` setuid root or via sudo  
+  * Running `beep` setuid root or via sudo-root  
     There have been a few serious security issues for `beep` in 2018,
-    mainly when `beep` was run setuid root or via sudo.
+    mainly when `beep` was run setuid root or via sudo-root.
 
     Therefore, `beep` now checks whether it is being run setuid root
-    or via sudo, and if so, `beep` aborts without doing anything
+    or via sudo-root, and if so, `beep` aborts without doing anything
     potentially harmful or useful.
 
 
