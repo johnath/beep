@@ -128,7 +128,16 @@ device so that the new rule is invoked:
     [root@host ~]# modprobe -r pcspkr; sleep 2; modprobe pcspkr
     [root@host ~]# 
 
-Check that the device has the desired permissions with
+Check that the device has the desired permissions with `ls` and/or
+`getfacl` (`getfacl` only if you are using ACLs).
+
+A working non-ACL setup might look something like
+
+    [root@host ~]# ls -lH /dev/input/by-path/platform-pcspkr-event-spkr
+    crw-rw----+ 1 jane beep 13, 84 29. Dez 07:35 /dev/input/by-path/platform-pcspkr-event-spkr
+    [root@host ~]# 
+
+and a working ACL setup might look something like
 
     [root@host ~]# ls -lH /dev/input/by-path/platform-pcspkr-event-spkr
     crw-rw----+ 1 root input 13, 84 29. Dez 07:35 /dev/input/by-path/platform-pcspkr-event-spkr
@@ -138,6 +147,7 @@ Check that the device has the desired permissions with
     # owner: root
     # group: input
     user::rw-
+    user:jane:rw-
     group::rw-
     group:beep:-w-
     group:wheel:-w-
