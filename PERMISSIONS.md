@@ -105,15 +105,19 @@ rules for `/usr/lib/udev/rules.d/90-pcspkr-beep.rules` or
 `/lib/udev/rules.d/90-pcspkr-beep.rules` (the exact location depends
 on your distribution).
 
-  * The following ACL based rule adds access for the `beep` group
-    without changing the standard group access granted by the default
-    system setup, by using the `setfacl(1)` command:
+  * This rule uses `setfacl(1)` to add an ACL entry to grant write
+    access for the `beep` group without changing the standard
+    user/group access granted by the default system setup:
 
         # Add write access to the PC speaker for the "beep" group
         ACTION=="add", SUBSYSTEM=="input", ATTRS{name}=="PC Speaker", ENV{DEVNAME}!="", RUN+="/usr/bin/setfacl -m g:beep:w '$env{DEVNAME}'"
 
+    This ACL based rule requires installing the `acl` package on those
+    distributions which do not install it by default yet.
+
   * The following non-ACL rule grants access to the `beep` group by
-    removing access for the default group `input`:
+    changing the owning group, removing access for the default group
+    `input`:
 
         # Give write access to the PC speaker only to the "beep" group
         ACTION=="add", SUBSYSTEM=="input", ATTRS{name}=="PC Speaker", ENV{DEVNAME}!="", GROUP="beep", MODE="0620"
@@ -134,13 +138,13 @@ Check that the device has the desired permissions with `ls` and/or
 A working non-ACL setup might look something like
 
     [root@host ~]# ls -lH /dev/input/by-path/platform-pcspkr-event-spkr
-    crw-rw----+ 1 jane beep 13, 84 29. Dez 07:35 /dev/input/by-path/platform-pcspkr-event-spkr
+    crw-rw----. 1 jane beep 13, 84 Apr  8 07:35 /dev/input/by-path/platform-pcspkr-event-spkr
     [root@host ~]# 
 
 and a working ACL setup might look something like
 
     [root@host ~]# ls -lH /dev/input/by-path/platform-pcspkr-event-spkr
-    crw-rw----+ 1 root input 13, 84 29. Dez 07:35 /dev/input/by-path/platform-pcspkr-event-spkr
+    crw-rw----+ 1 root input 13, 84 Apr  8 07:35 /dev/input/by-path/platform-pcspkr-event-spkr
     [root@host ~]# getfacl /dev/input/by-path/platform-pcspkr-event-spkr
     getfacl: Removing leading '/' from absolute path names
     # file: dev/input/by-path/platform-pcspkr-event-spkr
@@ -150,7 +154,6 @@ and a working ACL setup might look something like
     user:jane:rw-
     group::rw-
     group:beep:-w-
-    group:wheel:-w-
     mask::rw-
     other::---
 
@@ -164,20 +167,25 @@ To keep your system secure, try to keep your permissions as
 restrictive as possible, while allowing for what you want. Give access
 to a single user. Give access to a special group of users.
 
-A few __bad ideas__ to __avoid__ you want to change the permissions setup:
+Here are a few __bad ideas__ you should __avoid__ when you change the
+permissions setup:
 
-  * Add users to the `input` group  
-    This would allows those users access to all input devices,
-    including keyboards and mice which are none of their business
-    (think keyloggers or reprogramming programmable keyboards).
+  * DO NOT add users to the `input` group  
+    This would allow the users from the `input` group access to
+    __all__ input devices.  This includes keyboards and mice which are
+    none of their business (think keyloggers or reprogramming
+    programmable keyboards).
 
-  * Running `beep` setuid root or via sudo-root  
-    There have been a few serious security issues for `beep` in 2018,
-    mainly when `beep` was run setuid root or via sudo-root.
+  * DO NOT run `beep` setuid root or via sudo-root  
+    There have been a few serious security issues for `beep` in 2018
+    (CVE-2018-0492 and CVE-2018-1000532). Both had their impact when
+    `beep` was run setuid root or via sudo-root.
 
     Therefore, `beep` now checks whether it is being run setuid root
     or via sudo-root, and if so, `beep` aborts without doing anything
-    potentially harmful or useful.
+    else, because that something else might turn out to be harmful.
+    Also, this reminds people still using setuid-root or sudo-root
+    setups to switch to the new more granular permission setup.
 
 
 Add users to `beep` group
@@ -195,7 +203,7 @@ to run a command like
 After having user `jane` log out (and after killing user `jane`'s
 running `tmux` instances, killing `system --user` sessions for user
 `jane`, or just plain rebooting), user `jane` can log back in and
-check whether she now a `beep` group member:
+check whether she now is a `beep` group member:
 
     [jane@host ~]$ id
     uid=1000(jane) gid=1000(jane) groups=1000(jane),10(wheel),942(beep) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
