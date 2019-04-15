@@ -96,7 +96,7 @@ When successful,
 .B beep
 returns with exit code 0.
 .PP
-Any non\-0 exit means
+Any non\-0 exit code means
 .B beep
 has encountered an error and has bailed out.
 .\"
