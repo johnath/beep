@@ -100,8 +100,18 @@ Options:
         uinput device.
 
 
+Architecture
+============
+
+  * We use `__attribute__((constructor))` for some initialization in
+    the respective `beep-driver-*.c` and `beep-log.c`.
+
+  * If we can get rid of the old console API, we can also get rid of
+    the `beep-driver*.[ch]`.
+
+
 TODO list
----------
+=========
 
 Post-1.4.0:
 
