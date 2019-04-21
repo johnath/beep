@@ -44,7 +44,6 @@
 #include <linux/input.h>
 
 #include "beep-drivers.h"
-#include "beep-drivers.h"
 #include "beep-library.h"
 #include "beep-log.h"
 #include "beep-usage.h"
