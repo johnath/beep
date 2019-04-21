@@ -45,9 +45,6 @@
 
 #include "beep-drivers.h"
 #include "beep-drivers.h"
-#include "beep-driver-console.h"
-#include "beep-driver-evdev.h"
-#include "beep-driver-noop.h"
 #include "beep-library.h"
 #include "beep-log.h"
 #include "beep-usage.h"
@@ -415,15 +412,6 @@ int main(const int argc, char *const argv[])
     parms->next       = NULL;
 
     parse_command_line(argc, argv, parms);
-
-    /* Register drivers.  If we do that after parse_command_line, we may
-     * have set the logging verbosity.  If we do that before
-     * parse_command_line, parse_command_line might use some driver
-     * functions.  Not sure yet which option we prefer.
-     */
-    /* beep_drivers_register(&noop_driver); */
-    beep_drivers_register(&console_driver);
-    beep_drivers_register(&evdev_driver);
 
     beep_driver *driver = NULL;
 

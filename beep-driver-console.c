@@ -25,7 +25,7 @@
 #include <linux/kd.h>
 #include <sys/ioctl.h>
 
-#include "beep-driver-console.h"
+#include "beep-drivers.h"
 
 #include "beep-library.h"
 #include "beep-log.h"
@@ -129,7 +129,8 @@ void driver_end_tone(beep_driver *driver)
 }
 
 
-beep_driver console_driver =
+static
+beep_driver driver =
     {
      "console",
      NULL,
@@ -141,6 +142,18 @@ beep_driver console_driver =
      0,
      NULL
     };
+
+
+static
+void beep_driver_console_constructor(void)
+    __attribute__((constructor));
+
+static
+void beep_driver_console_constructor(void)
+{
+    log_verbose("beep_driver_console_constructor");
+    beep_drivers_register(&driver);
+}
 
 
 /*

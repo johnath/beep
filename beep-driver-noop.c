@@ -19,7 +19,8 @@
 
 #include <stddef.h>
 
-#include "beep-driver-noop.h"
+#include "beep-drivers.h"
+
 #include "beep-log.h"
 
 
@@ -65,7 +66,8 @@ void driver_end_tone(beep_driver *driver)
 }
 
 
-beep_driver noop_driver =
+static
+beep_driver driver =
     {
      "noop",
      NULL,
@@ -77,6 +79,18 @@ beep_driver noop_driver =
      0,
      NULL
     };
+
+
+static
+void beep_driver_noop_constructor(void)
+    __attribute__((constructor));
+
+static
+void beep_driver_noop_constructor(void)
+{
+    log_verbose("beep_driver_noop_constructor");
+    beep_drivers_register(&driver);
+}
 
 
 /*

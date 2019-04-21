@@ -138,9 +138,17 @@ beep_OBJS += beep-main.o
 beep_OBJS += beep-library.o
 beep_OBJS += beep-usage.o
 beep_OBJS += beep-drivers.o
+
+# The drivers here use `__attribute__((constructor))` functions to
+# register themselves with `beep_drivers_register()`, so the last one
+# listed here will be linked last and have its constructor called at
+# the latest time, and thus will have its `driver_detect()` function
+# called first.
+
+# beep_OBJS += beep-driver-noop.o
 beep_OBJS += beep-driver-console.o
 beep_OBJS += beep-driver-evdev.o
-# beep_OBJS += beep-driver-noop.o
+
 beep_LIBS =
 
 beep-log.clang-o : CFLAGS_clang += -D_GNU_SOURCE

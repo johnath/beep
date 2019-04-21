@@ -31,7 +31,7 @@
 
 #include <linux/input.h>
 
-#include "beep-driver-evdev.h"
+#include "beep-drivers.h"
 
 #include "beep-library.h"
 #include "beep-log.h"
@@ -137,7 +137,8 @@ void driver_end_tone(beep_driver *driver)
 }
 
 
-beep_driver evdev_driver =
+static
+beep_driver driver =
     {
      "evdev",
      NULL,
@@ -149,6 +150,18 @@ beep_driver evdev_driver =
      0,
      NULL
     };
+
+
+static
+void beep_driver_evdev_constructor(void)
+    __attribute__((constructor));
+
+static
+void beep_driver_evdev_constructor(void)
+{
+    log_verbose("beep_driver_evdev_constructor");
+    beep_drivers_register(&driver);
+}
 
 
 /*
