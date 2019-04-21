@@ -102,6 +102,15 @@ has encountered an error and has bailed out.
 .\"
 .\" ====================================================================
 .\"
+.SH ENVIRONMENT
+.TP
+.BR BEEP_LOG_LEVEL
+When set to a number between -999 and 999,
+.B BEEP_LOG_LEVEL
+will be used as the default loglevel until overridden by a command line parameter.
+.\"
+.\" ====================================================================
+.\"
 .SH FILES
 The device files
 .B beep

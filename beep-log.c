@@ -18,6 +18,7 @@
 
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "beep-log.h"
@@ -72,6 +73,7 @@ void log_warning(const char *const format, ...)
     log_internal_vf("Warning", format, args);
     va_end(args);
 }
+
 
 void log_verbose(const char *const format, ...)
 {
@@ -143,6 +145,32 @@ void log_init(const int argc, char *const argv[]) {
             }
         }
     }
+}
+
+
+static
+void log_constructor(void)
+    __attribute__((constructor));
+
+static
+void log_constructor(void)
+{
+    const char *beep_log_level = secure_getenv("BEEP_LOG_LEVEL");
+    /* silently ignore all errors, keeping the default log_level */
+    if (beep_log_level) {
+        if (*beep_log_level) {
+            char *endptr = NULL;
+            const long int i = strtol(beep_log_level, &endptr, 10);
+            if (beep_log_level != endptr) {
+                if (*endptr == '\0') {
+                    if ((-999<=i) && (i<=999)) {
+                        log_level = (int) i;
+                    }
+                }
+            }
+        }
+    }
+    log_verbose("log_constructor");
 }
 
 

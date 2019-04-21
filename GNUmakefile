@@ -133,9 +133,9 @@ endif
 
 bin_PROGRAMS += beep
 beep_OBJS =
+beep_OBJS += beep-log.o
 beep_OBJS += beep-main.o
 beep_OBJS += beep-library.o
-beep_OBJS += beep-log.o
 beep_OBJS += beep-usage.o
 beep_OBJS += beep-drivers.o
 beep_OBJS += beep-driver-console.o
@@ -143,12 +143,15 @@ beep_OBJS += beep-driver-evdev.o
 # beep_OBJS += beep-driver-noop.o
 beep_LIBS =
 
+beep-log.clang-o : CFLAGS_clang += -D_GNU_SOURCE
+beep-log.gcc-o   : CFLAGS_gcc   += -D_GNU_SOURCE
+
 beep-log.clang-o : CFLAGS_clang += -Wno-format-nonliteral
 
 # sbin_PROGRAMS += beep-foo
 # beep_foo_OBJS =
-# beep_foo_OBJS += beep.o
 # beep_foo_OBJS += beep-log.o
+# beep_foo_OBJS += beep.o
 # beep_foo_LIBS =
 # beep_foo_LIBS += -lm
 
