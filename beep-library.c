@@ -80,23 +80,23 @@ void safe_error_exit(const char *const msg)
     if (ret != 0) {
         if (write(STDERR_FILENO, "strerror_r error\n",
                   0+0+0+0+strlen("strerror_r error\n"))) {
-            /* ignore al write errors */
+            /* ignore all write errors */
         }
         _exit(EXIT_FAILURE);
     }
     const size_t msglen = strlen(msg);
-    const size_t errlen = strlen(strerr_buf);
     if (write(STDERR_FILENO, msg, msglen)) {
-        /* ignore al write errors */
+        /* ignore all write errors */
     }
     if (write(STDERR_FILENO, ": ", 2)) {
-        /* ignore al write errors */
+        /* ignore all write errors */
     }
+    const size_t errlen = strlen(strerr_buf);
     if (write(STDERR_FILENO, strerr_buf, errlen)) {
-        /* ignore al write errors */
+        /* ignore all write errors */
     }
     if (write(STDERR_FILENO, "\n", 1)) {
-        /* ignore al write errors */
+        /* ignore all write errors */
     }
     _exit(EXIT_FAILURE);
 }
