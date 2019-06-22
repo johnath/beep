@@ -32,6 +32,7 @@ CC = false
 
 GZIP = $(call pathsearch,gzip)
 INSTALL = $(call pathsearch,install)
+MKDIR_P = mkdir -p
 PANDOC = $(call pathsearch,pandoc)
 SED = $(call pathsearch,sed)
 SLOCCOUNT = $(call pathsearch,sloccount)
@@ -43,6 +44,10 @@ SLOCCOUNT = $(call pathsearch,sloccount)
 
 .PHONY: all
 all: all-local
+
+
+# Have make forget rules for known suffixes
+.SUFFIXES:
 
 
 ########################################################################
@@ -181,6 +186,9 @@ beep-usage.c: beep-usage.txt
 
 ########################################################################
 # Compile and Link rules including automatic dependency generation
+#
+# For details on the automatic dependency generation, see
+# http://make.mad-scientist.net/papers/advanced-auto-dependency-generation/
 ########################################################################
 
 # CALL: LINK_RULE <compiler> <executable> <executable_as_varname_part>
@@ -191,22 +199,23 @@ $(2).$(1): $(patsubst %.o,%.$(1)-o,$($(3)_OBJS))
 	@: echo "LINK_RULE $$@: $$^"
 	$(LINKER_$(1)) $(CFLAGS) $(CFLAGS_$(1)) $(LDFLAGS) $(LDFLAGS_$(1)) -o $$@ $$^ $($(3)_LIBS) $(LIBS_$(1)) $(LIBS)
 
--include $$(patsubst %.o,%.$(1)-o.dep,$($(3)_OBJS))
+$$(patsubst %.o,.deps/%.$(1)-o.dep,$($(3)_OBJS))):
+
+-include $$(wildcard $$(patsubst %.o,.deps/%.$(1)-o.dep,$($(3)_OBJS)))
 endef
 
 # CALL: PER_COMPILER <compiler>
 define PER_COMPILER
 $(foreach exec,$(bin_PROGRAMS) $(sbin_PROGRAMS),$(eval $(call LINK_RULE,$(1),$(exec),$(subst -,_,$(exec)))))
 
-%.$(1)-o: %.c
-	$$(COMPILER_$(1)) $$(CPPFLAGS) $$(CPPFLAGS_COMMON) $$(CPPFLAGS_$(1)) $$(CFLAGS_COMMON) $$(CFLAGS) $$(CFLAGS_$(1)) -o $$@ -c $$<
-
-%.$(1)-o.dep: %.c
-	$$(COMPILER_$(1)) $$(CPPFLAGS) $$(CPPFLAGS_COMMON) $$(CPPFLAGS_$(1)) $$(CFLAGS_COMMON) $$(CFLAGS) $$(CFLAGS_$(1)) -MM -MT "$$*.$(1)-o $$@ " $$< > $$@.tmp
-	mv -f $$@.tmp $$@
+%.$(1)-o: %.c | .deps
+	$$(COMPILER_$(1)) -MT $$@ -MMD -MP -MF .deps/$$*.$(1)-o.dep $$(CPPFLAGS) $$(CPPFLAGS_COMMON) $$(CPPFLAGS_$(1)) $$(CFLAGS_COMMON) $$(CFLAGS) $$(CFLAGS_$(1)) -o $$@ -c $$<
 endef
 
 $(foreach compiler,$(COMPILERS),$(eval $(call PER_COMPILER,$(compiler))))
+
+.deps:
+	@$(MKDIR_P) $@
 
 # For each executable, take the first from COMPILERS to use
 %: $(firstword $(foreach comp,$(COMPILERS),%.$(comp)))
@@ -308,6 +317,7 @@ clean:
 	rm -f $(CLEANFILES)
 	rm -f $(foreach comp,$(COMPILERS),*.$(comp) *.$(comp)-o)
 	rm -f *.dep
+	rm -rf .deps
 	rm -f *.lst *.gcc-lst
 	rm -f tests/*.new tests/*.actual
 	rm -rf html
