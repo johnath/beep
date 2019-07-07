@@ -30,6 +30,10 @@ pathsearch = $(firstword $(wildcard $(addsuffix /$(1),$(subst :, ,$(PATH)))))
 # Avoid running GNU make builtin rules based on $(CC) by mistake
 CC = false
 
+DOT = $(call pathsearch,dot)
+DOXYGEN = $(call pathsearch,doxygen)
+EGREP = $(GREP) -E
+GREP = $(call pathsearch,grep)
 GZIP = $(call pathsearch,gzip)
 INSTALL = $(call pathsearch,install)
 MKDIR_P = mkdir -p
@@ -257,6 +261,28 @@ html/%.html: %.md
 		echo "You need to install pandoc to generate the HTML files."; \
 		exit 1; \
 	fi
+
+REPLACEMENTS =
+REPLACEMENTS += -e s/@PACKAGE_TARNAME@/$(PACKAGE_TARNAME)/g
+REPLACEMENTS += -e s/@PACKAGE_VERSION@/$(PACKAGE_VERSION)/g
+
+CLEANFILES += Doxyfile
+CLEANFILES += Doxyfile.new
+Doxyfile: Doxyfile.in GNUmakefile
+	$(SED) $(REPLACEMENTS) < $< > $@.new
+	@if $(EGREP) '@([A-Za-z][A-Za-z0-9_]*)@' $@.new; then \
+		echo "Error: GNUmakefile fails to substitute some of the variables in \`$<'."; \
+		exit 1; \
+	fi
+	mv -f $@.new $@
+
+CLEANFILES += doxygen.stamp
+.PHONY: doxygen.stamp
+doxygen.stamp: Doxyfile $(wildcard *.c) $(wildcard *.h)
+	$(DOXYGEN) $<
+	echo > $@
+
+html: doxygen.stamp
 
 pkgdoc_DATA += CHANGELOG
 pkgdoc_DATA += COPYING

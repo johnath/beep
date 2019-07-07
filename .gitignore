@@ -38,3 +38,5 @@
 
 # Misc results
 *.strace
+/Doxyfile
+/doxygen.stamp
