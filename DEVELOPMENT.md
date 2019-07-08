@@ -39,12 +39,12 @@ The Linux kernel implements the console API in
 `KIOCSOUND` to be `0x4B2F`.
 
 
-Fallback TTY '\a' API
----------------------
+Fallback TTY BEL API
+--------------------
 
-If you print a '\a' (BEL) character to a TTY device stdout, that can
-sound some type of beep. Not with the desired frequency or duration or
-sequence, but at least there is a beep.
+If you print a ``'\a'`` (`BEL`) character to a TTY device stdout, that
+can sound some type of beep. Not with the desired frequency or
+duration or sequence, but at least there is a beep.
 
 
 Raspberry Pi
@@ -107,7 +107,9 @@ Architecture
     the respective `beep-driver-*.c` and `beep-log.c`.
 
   * If we can get rid of the old console API, we can also get rid of
-    the `beep-driver*.[ch]`.
+    the `beep-driver*.[ch]`.  Unless we go cross-platform and want to
+    keep the flexibility of supporting more than one API for one
+    executable.
 
 
 TODO list
