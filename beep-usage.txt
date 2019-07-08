@@ -33,11 +33,11 @@ Options:
 
     -s            read text from stdin and write it through to stdout,
                   beeping the last defined tone for every newline in the text,
-		  until EOF in stdin
+                  until EOF in stdin
     -c            like -s, but beep for every character in the text
 
 Exit status:
-  0      if OK
-  non-0  if any problems occured
+    0             if OK
+    non-0         if any problems occured
 
 More documentation is available in the beep(1) man page via:  man 1 beep
