@@ -1,7 +1,8 @@
-/* beep - beep the pc speaker any number of ways
- * Copyright (C) 2000-2010 Johnathan Nightingale
- * Copyright (C) 2010-2013 Gerfried Fuchs
- * Copyright (C) 2013-2018 Hans Ulrich Niedermann
+/** \file beep-main.c
+ * \brief main program to beep the pc speaker any number of ways
+ * \author Copyright (C) 2000-2010 Johnathan Nightingale
+ * \author Copyright (C) 2010-2013 Gerfried Fuchs
+ * \author Copyright (C) 2013-2018 Hans Ulrich Niedermann
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,11 +18,14 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- */
-
-/*
+ *
+ * \defgroup beep_main The main program
+ *
  * For more documentation on beep, see the beep-usage.txt and
  * beep.1.in files.
+ *
+ * @{
+ *
  */
 
 
@@ -43,12 +47,15 @@
 #include <linux/kd.h>
 #include <linux/input.h>
 
+
+#include "beep-compiler.h"
 #include "beep-drivers.h"
 #include "beep-library.h"
 #include "beep-log.h"
 #include "beep-usage.h"
 
 
+/** Version message to be printed for "beep --version" */
 static
 const char version_message[] =
     PACKAGE_TARNAME " " PACKAGE_VERSION "\n"
@@ -58,12 +65,15 @@ const char version_message[] =
     "For information: http://www.gnu.org/copyleft/.\n";
 
 
+/** Whether to to delay after the current repetition set of tones. */
 typedef enum
     {
      END_DELAY_NO = 0,
      END_DELAY_YES = 1,
     } end_delay_E;
 
+
+/** Whether to and how to react to data from stdin */
 typedef enum
     {
      STDIN_BEEP_NONE = 0,
@@ -71,32 +81,54 @@ typedef enum
      STDIN_BEEP_CHAR = 2,
     } stdin_beep_E;
 
+
+/** Per note parameter set */
 typedef struct _beep_parms_T beep_parms_T;
 
+
 /* Meaningful Defaults */
-#define DEFAULT_FREQ       440   /* Middle A */
-#define DEFAULT_LENGTH     200   /* milliseconds */
+
+/** default value: tone pitch Middle A */
+#define DEFAULT_FREQ       440
+
+/** default value: tone length in milliseconds */
+#define DEFAULT_LENGTH     200
+
+/** default value: one repetition of tone */
 #define DEFAULT_REPS       1
-#define DEFAULT_DELAY      100   /* milliseconds */
+
+/** default value: delay between repeated tones in milliseconds */
+#define DEFAULT_DELAY      100
+
+/** default value: delay after the last of the tones */
 #define DEFAULT_END_DELAY  END_DELAY_NO
+
+/** default value: whether to beep on receiving data on stdin */
 #define DEFAULT_STDIN_BEEP STDIN_BEEP_NONE
 
+
+/** Per note parameter set (including heritage information and linked list pointer) */
 struct _beep_parms_T
 {
-    unsigned int freq; /* tone frequency (Hz)      */
-    unsigned int length;     /* tone length    (ms)      */
-    unsigned int reps;       /* # of repetitions         */
-    unsigned int delay;      /* delay between reps  (ms) */
-    end_delay_E  end_delay;  /* do we delay after last rep? */
-    stdin_beep_E stdin_beep; /* are we using stdin triggers?  We have three options:
-		     - just beep and terminate (default)
-		     - beep after a line of input
-		     - beep after a character of input
-		     In the latter two cases, pass the text back out again,
-		     so that beep can be tucked appropriately into a text-
-		     processing pipe.
-		  */
-    beep_parms_T *next;  /* in case -n/--new is used. */
+    unsigned int freq;       /**< tone frequency (Hz)         */
+    unsigned int length;     /**< tone length    (ms)         */
+    unsigned int reps;       /**< number of repetitions       */
+    unsigned int delay;      /**< delay between reps  (ms)    */
+    end_delay_E  end_delay;  /**< do we delay after last rep? */
+
+    /** Are we using stdin triggers?
+     *
+     * We have three options:
+     *   - just beep and terminate (default)
+     *   - beep after a line of input
+     *   - beep after a character of input
+     * In the latter two cases, pass the text back out again,
+     * so that beep can be tucked appropriately into a text-
+     * processing pipe.
+     */
+    stdin_beep_E stdin_beep;
+
+    beep_parms_T *next;      /**< in case -n/--new is used. */
 };
 
 
@@ -105,7 +137,9 @@ struct _beep_parms_T
 static volatile sig_atomic_t global_abort = false;
 
 
-/* If we get interrupted, it would be nice to not leave the speaker
+/** Signal handler for signals like SIGINT and SIGTERM
+ *
+ * If we get interrupted, it would be nice to not leave the speaker
  * beeping in perpetuity.
  *
  * Everything called from this signal handler must be thread-safe,
@@ -122,9 +156,9 @@ static volatile sig_atomic_t global_abort = false;
  *   * strerror_r(3): MT-safe
  *   * strlen(3):     MT-safe
  */
-void handle_signal(int unused_signum);
+void handle_signal(int unused_signum UNUSED_PARAM);
 
-void handle_signal(int unused_signum __attribute__(( unused )))
+void handle_signal(int unused_signum UNUSED_PARAM)
 {
     global_abort = true;
 }
@@ -357,6 +391,7 @@ void fallback_beep(void)
 }
 
 
+/** The main function. */
 int main(const int argc, char *const argv[])
 {
     log_init(argc, argv);
@@ -519,6 +554,9 @@ int main(const int argc, char *const argv[])
         return EXIT_SUCCESS;
     }
 }
+
+
+/** @} */
 
 
 /*

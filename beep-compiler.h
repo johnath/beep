@@ -1,6 +1,6 @@
-/** \file beep-library.h
- * \brief library of miscellaneous macros and functions
- * \author Copyright (C) 2019 Hans Ulrich Niedermann
+/** \file beep-compiler.h
+ * \brief compiler convenience definitions
+ * \author Copyright (C) 2018-2019 Hans Ulrich Niedermann
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,36 +17,42 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  *
- * \addtogroup beep_library
+ * \defgroup beep_compiler Compiler convenience definitions
  *
  * @{
  *
  */
 
+#ifndef BEEP_COMPILER_H
+#define BEEP_COMPILER_H
 
-#ifndef BEEP_LIBRARY_H
-#define BEEP_LIBRARY_H
 
-
-/** Open the named character device special file.
+/** Mark an unused function parameter.
  *
- * This makes certain that the returned file descriptor is actually
- * for a character device special file.
- */
-int open_checked_char_device(const char *const device_name)
-    __attribute__(( nonnull(1) ));
-
-
-/** Safely exit the program with error message.
+ * Usage:
  *
- * The "safety" aspect refers to multithreading/signals/etc.
+ *     void foo(int unused UNUSED_PARAM)
+ *     {
+ *         ...
+ *     }
  */
-void safe_error_exit(const char *const msg)
-    __attribute__(( nonnull(1) ))
-    __attribute__(( noreturn ));
+#define UNUSED_PARAM __attribute__((unused))
 
 
-#endif /* BEEP_LIBRARY_H */
+/** Mark a constructor function to be executed once on program startup.
+ *
+ * Usage:
+ *
+ *     static void foo(void) CONSTRUCTOR_FUNCTION;
+ *     static void foo(void)
+ *     {
+ *         ...
+ *     }
+ */
+#define CONSTRUCTOR_FUNCTION __attribute__((constructor))
+
+
+#endif /* BEEP_COMPILER_H */
 
 
 /** @} */

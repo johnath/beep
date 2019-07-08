@@ -1,5 +1,6 @@
-/* beep-log.h - interface to logging and message output
- * Copyright (C) 2018-2019 Hans Ulrich Niedermann
+/** \file beep-log.h
+ * \brief interface to logging and message output
+ * \author Copyright (C) 2018-2019 Hans Ulrich Niedermann
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +15,14 @@
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ *
+ * \addtogroup beep_log
+ *
+ * @{
+ *
  */
+
 
 #ifndef BEEP_LOG_H
 #define BEEP_LOG_H
@@ -70,6 +78,9 @@ void log_init(const int argc, char *const argv[])
 
 
 #endif /* BEEP_LOG_H */
+
+
+/** @} */
 
 
 /*

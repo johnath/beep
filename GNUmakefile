@@ -179,7 +179,7 @@ beep-log.clang-o : CFLAGS_clang += -Wno-format-nonliteral
 
 CLEANFILES += beep-usage.c
 beep-usage.c: beep-usage.txt
-	echo '/* Auto-generated from beep-usage.txt. Modify that file instead. */' > $@
+	echo '/* Auto-generated from `$<`. Modify that file instead. */' > $@
 	echo '#include "beep-usage.h"' >> $@
 	echo 'char beep_usage[] =' >> $@
 	set -e; IFS=""; while read line; do \
@@ -195,7 +195,9 @@ beep-usage.c: beep-usage.txt
 # http://make.mad-scientist.net/papers/advanced-auto-dependency-generation/
 ########################################################################
 
+
 # CALL: LINK_RULE <compiler> <executable> <executable_as_varname_part>
+# To be called from PER_COMPILER. Defines the per-executable rules.
 define LINK_RULE
 ALL_PROGRAMS += $(2).$(1)
 
@@ -208,7 +210,9 @@ $$(patsubst %.o,.deps/%.$(1)-o.dep,$($(3)_OBJS))):
 -include $$(wildcard $$(patsubst %.o,.deps/%.$(1)-o.dep,$($(3)_OBJS)))
 endef
 
+
 # CALL: PER_COMPILER <compiler>
+# To be called for each compiler. Defines the per-compiler rules for each executable.
 define PER_COMPILER
 $(foreach exec,$(bin_PROGRAMS) $(sbin_PROGRAMS),$(eval $(call LINK_RULE,$(1),$(exec),$(subst -,_,$(exec)))))
 
@@ -221,7 +225,9 @@ $(foreach compiler,$(COMPILERS),$(eval $(call PER_COMPILER,$(compiler))))
 .deps:
 	@$(MKDIR_P) $@
 
-# For each executable, take the first from COMPILERS to use
+
+# For each executable, take the first from COMPILERS to determine the
+# variant to use as the default executables.
 %: $(firstword $(foreach comp,$(COMPILERS),%.$(comp)))
 	cp -f $< $@
 
