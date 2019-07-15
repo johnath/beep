@@ -1,5 +1,6 @@
-/* beep-driver-noop.c - implement the beep noop driver
- * Copyright (C) 2019 Hans Ulrich Niedermann
+/** \file beep-driver-noop.c
+ * \brief implement the beep noop driver
+ * \author Copyright (C) 2019 Hans Ulrich Niedermann
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +15,21 @@
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ *
+ * \defgroup beep_driver_noop noop driver
+ * \ingroup beep_driver
+ *
+ * @{
+ *
  */
 
 
 #include <stddef.h>
 
-#include "beep-drivers.h"
 
+#include "beep-compiler.h"
+#include "beep-drivers.h"
 #include "beep-log.h"
 
 
@@ -67,7 +76,7 @@ void driver_end_tone(beep_driver *driver)
 
 
 static
-beep_driver driver =
+beep_driver driver_data =
     {
      "noop",
      NULL,
@@ -83,14 +92,17 @@ beep_driver driver =
 
 static
 void beep_driver_noop_constructor(void)
-    __attribute__((constructor));
+    CONSTRUCTOR_FUNCTION;
 
 static
 void beep_driver_noop_constructor(void)
 {
     log_verbose("beep_driver_noop_constructor");
-    beep_drivers_register(&driver);
+    beep_drivers_register(&driver_data);
 }
+
+
+/** @} */
 
 
 /*

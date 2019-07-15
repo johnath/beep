@@ -1,5 +1,6 @@
-/* beep-library.c - library of miscellaneous functions
- * Copyright (C) 2019 Hans Ulrich Niedermann
+/** \file beep-library.c
+ * \brief library of miscellaneous functions
+ * \author Copyright (C) 2019 Hans Ulrich Niedermann
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +15,12 @@
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ *
+ * \defgroup beep_library Library of miscellaneous functions
+ *
+ * @{
+ *
  */
 
 #include <errno.h>
@@ -69,8 +76,9 @@ int open_checked_char_device(const char *const device_name)
 }
 
 
-/* We do not know for certain whether perror does strange things with
- * global variables or malloc/free inside its code.
+/* We do not know for certain whether perror(3) does strange things with
+ * global variables or malloc(3)/free(3) inside its code, so we use
+ * strerror_r(3) and write(2) to STDERR_FILENO instead.
  */
 void safe_error_exit(const char *const msg)
 {
@@ -100,6 +108,9 @@ void safe_error_exit(const char *const msg)
     }
     _exit(EXIT_FAILURE);
 }
+
+
+/** @} */
 
 
 /*

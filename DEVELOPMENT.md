@@ -4,6 +4,10 @@ beep development notes
 This file contains a number of notes, links and remarks which can be
 useful if you need to change `beep`.
 
+You can also run `make html` and have `pandoc` and `doxygen` generate
+[HTML versions of the `*.md` files at `html/`](html/) and
+[HTML documentation from the code comments at `html/dox/html/index.html`](html/dox/html/index.html).
+
 
 Testing
 =======

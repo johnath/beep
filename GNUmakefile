@@ -30,6 +30,10 @@ pathsearch = $(firstword $(wildcard $(addsuffix /$(1),$(subst :, ,$(PATH)))))
 # Avoid running GNU make builtin rules based on $(CC) by mistake
 CC = false
 
+DOT = $(call pathsearch,dot)
+DOXYGEN = $(call pathsearch,doxygen)
+EGREP = $(GREP) -E
+GREP = $(call pathsearch,grep)
 GZIP = $(call pathsearch,gzip)
 INSTALL = $(call pathsearch,install)
 MKDIR_P = mkdir -p
@@ -175,7 +179,7 @@ beep-log.clang-o : CFLAGS_clang += -Wno-format-nonliteral
 
 CLEANFILES += beep-usage.c
 beep-usage.c: beep-usage.txt
-	echo '/* Auto-generated from beep-usage.txt. Modify that file instead. */' > $@
+	echo '/* Auto-generated from `$<`. Modify that file instead. */' > $@
 	echo '#include "beep-usage.h"' >> $@
 	echo 'char beep_usage[] =' >> $@
 	set -e; IFS=""; while read line; do \
@@ -191,7 +195,9 @@ beep-usage.c: beep-usage.txt
 # http://make.mad-scientist.net/papers/advanced-auto-dependency-generation/
 ########################################################################
 
+
 # CALL: LINK_RULE <compiler> <executable> <executable_as_varname_part>
+# To be called from PER_COMPILER. Defines the per-executable rules.
 define LINK_RULE
 ALL_PROGRAMS += $(2).$(1)
 
@@ -204,7 +210,9 @@ $$(patsubst %.o,.deps/%.$(1)-o.dep,$($(3)_OBJS))):
 -include $$(wildcard $$(patsubst %.o,.deps/%.$(1)-o.dep,$($(3)_OBJS)))
 endef
 
+
 # CALL: PER_COMPILER <compiler>
+# To be called for each compiler. Defines the per-compiler rules for each executable.
 define PER_COMPILER
 $(foreach exec,$(bin_PROGRAMS) $(sbin_PROGRAMS),$(eval $(call LINK_RULE,$(1),$(exec),$(subst -,_,$(exec)))))
 
@@ -217,7 +225,9 @@ $(foreach compiler,$(COMPILERS),$(eval $(call PER_COMPILER,$(compiler))))
 .deps:
 	@$(MKDIR_P) $@
 
-# For each executable, take the first from COMPILERS to use
+
+# For each executable, take the first from COMPILERS to determine the
+# variant to use as the default executables.
 %: $(firstword $(foreach comp,$(COMPILERS),%.$(comp)))
 	cp -f $< $@
 
@@ -257,6 +267,28 @@ html/%.html: %.md
 		echo "You need to install pandoc to generate the HTML files."; \
 		exit 1; \
 	fi
+
+REPLACEMENTS =
+REPLACEMENTS += -e s/@PACKAGE_TARNAME@/$(PACKAGE_TARNAME)/g
+REPLACEMENTS += -e s/@PACKAGE_VERSION@/$(PACKAGE_VERSION)/g
+
+CLEANFILES += Doxyfile
+CLEANFILES += Doxyfile.new
+Doxyfile: Doxyfile.in GNUmakefile
+	$(SED) $(REPLACEMENTS) < $< > $@.new
+	@if $(EGREP) '@([A-Za-z][A-Za-z0-9_]*)@' $@.new; then \
+		echo "Error: GNUmakefile fails to substitute some of the variables in \`$<'."; \
+		exit 1; \
+	fi
+	mv -f $@.new $@
+
+CLEANFILES += doxygen.stamp
+.PHONY: doxygen.stamp
+doxygen.stamp: Doxyfile $(wildcard *.c) $(wildcard *.h)
+	$(DOXYGEN) $<
+	echo > $@
+
+html: doxygen.stamp
 
 pkgdoc_DATA += CHANGELOG
 pkgdoc_DATA += COPYING

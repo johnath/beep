@@ -1,7 +1,8 @@
-/* beep-driver-evdev.c - implement the beep console driver
- * Copyright (C) 2000-2010 Johnathan Nightingale
- * Copyright (C) 2010-2013 Gerfried Fuchs
- * Copyright (C) 2019 Hans Ulrich Niedermann
+/** \file beep-driver-console.c
+ * \brief implement the beep console driver
+ * \author Copyright (C) 2000-2010 Johnathan Nightingale
+ * \author Copyright (C) 2010-2013 Gerfried Fuchs
+ * \author Copyright (C) 2019 Hans Ulrich Niedermann
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +17,13 @@
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ *
+ * \defgroup beep_driver_console Linux console API driver
+ * \ingroup beep_driver
+ *
+ * @{
+ *
  */
 
 
@@ -25,14 +33,19 @@
 #include <linux/kd.h>
 #include <sys/ioctl.h>
 
+
+#include "beep-compiler.h"
 #include "beep-drivers.h"
 
 #include "beep-library.h"
 #include "beep-log.h"
 
 
-/* Use PIT_TICK_RATE value from the kernel. */
 #ifndef CLOCK_TICK_RATE
+/** The clock tick rate for calculating the PWM counter for the PIT from the frequency.
+ *
+ * Using the PIT_TICK_RATE value from the kernel.
+ */
 #define CLOCK_TICK_RATE 1193182UL
 #endif
 
@@ -130,7 +143,7 @@ void driver_end_tone(beep_driver *driver)
 
 
 static
-beep_driver driver =
+beep_driver driver_data =
     {
      "console",
      NULL,
@@ -146,14 +159,17 @@ beep_driver driver =
 
 static
 void beep_driver_console_constructor(void)
-    __attribute__((constructor));
+    CONSTRUCTOR_FUNCTION;
 
 static
 void beep_driver_console_constructor(void)
 {
     log_verbose("beep_driver_console_constructor");
-    beep_drivers_register(&driver);
+    beep_drivers_register(&driver_data);
 }
+
+
+/** @} */
 
 
 /*
