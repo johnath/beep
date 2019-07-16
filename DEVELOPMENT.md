@@ -71,15 +71,17 @@ resistors, transistors where required), one has the hardware to
 produce beeps.
 
 This leaves one to sort out the software side of it, which gets us
-back to the issue that only root is allowed to touch the GPIO pins,
-but `beep` should also run as a non-root user without the potential
-for setuid or sudo facilitated security holes.
+back to the issue that only root is allowed to touch the Raspberry
+Pi GPIO pins, but `beep` should also run as a non-root user without
+the potential for setuid or sudo facilitated security holes.
 
 Options:
 
   * Leave beeps to the root user only who can access the GPIO pins.
 
-  * Add a priviledge `beep-daemon` to handle the beeping, and have a
+    Not realistic.
+
+  * Add a priviledged `beep-daemon` to handle the beeping, and have a
     non-priviledge `beep` contact the beep daemon in some manner to do
     the actual beeping.
 
@@ -90,7 +92,7 @@ Options:
         a `beep-daemon` can set up user and group access to the
         `AF_UNIX` socket.
 
-      * Implementing a userspace input device driver ("uinput")
+      * Implement a userspace input device driver ("uinput")
         compatible with the `EV_SND`/`SND_TONE` interface used by
         `/dev/input/by-path/platform-pcspkr-event-spkr`.
 
