@@ -1,11 +1,3 @@
-os:
-  - linux
-
-dist:
-  - bionic
-  - xenial
-  - trusty
-
 language:
   - C
 
@@ -19,3 +11,12 @@ script:
   - diff -u beep-usage.txt beep-usage.from--help
   - ls -l
   - ls -lR _i/
+
+matrix:
+  include:
+    - os: linux
+      dist: bionic
+    - os: linux
+      dist: xenial
+    - os: linux
+      dist: trusty
