@@ -117,7 +117,7 @@ void driver_begin_tone(beep_driver *driver, const uint16_t freq)
 
     struct input_event e;
 
-    bzero(&e, sizeof(e));
+    memset(&e, 0, sizeof(e));
     e.type = EV_SND;
     e.code = SND_TONE;
     e.value = freq;
@@ -136,7 +136,7 @@ void driver_end_tone(beep_driver *driver)
 
     struct input_event e;
 
-    bzero(&e, sizeof(e));
+    memset(&e, 0, sizeof(e));
     e.type = EV_SND;
     e.code = SND_TONE;
     e.value = 0;
