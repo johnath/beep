@@ -1,6 +1,11 @@
 language:
   - C
 
+arch:
+  - amd64
+  - arm64
+  - ppc64le
+
 script:
   - make -j 2 DESTDIR="$PWD/_i"
   - make -j 2 DESTDIR="$PWD/_i" install
