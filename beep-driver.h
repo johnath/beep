@@ -32,28 +32,43 @@
 #include <stdint.h>
 
 
+/**
+ * Abstract declaration of beep_driver.
+ */
 typedef struct _beep_driver beep_driver;
 
 
-/** Driver function to detect whether the driver can actually work */
+/**
+ * Driver function to detect whether the driver can actually work.
+ */
 typedef bool (*beep_driver_detect_func)     (beep_driver *driver,
                                              const char *console_device);
 
-/** Driver function to initialize the driver */
+/**
+ * Driver function to initialize the driver.
+ */
 typedef void (*beep_driver_init_func)       (beep_driver *driver);
 
-/** Driver function to destroy and clean up the driver */
+/**
+ * Driver function to destroy and clean up the driver.
+ */
 typedef void (*beep_driver_fini_func)       (beep_driver *driver);
 
-/** Driver function to have the driver begin a tone */
+/**
+ * Driver function to have the driver begin a tone.
+ */
 typedef void (*beep_driver_begin_tone_func) (beep_driver *driver,
                                              const uint16_t freq);
 
-/** Driver function to have the driver end a tone */
+/**
+ * Driver function to have the driver end a tone.
+ */
 typedef void (*beep_driver_end_tone_func)   (beep_driver *driver);
 
 
-/** Internal beep driver data structure */
+/**
+ * Internal beep driver data structure.
+ */
 struct _beep_driver {
     /** Unique name for the driver */
     char        *name;

@@ -31,16 +31,21 @@
 #include "beep-log.h"
 
 
+/* documented in header file */
 int log_level = 0;
 
 
+/* documented in header file */
 const char *progname = "beep-log";
 
 
-/** beep-log internal function to actually print a message */
+/**
+ * beep-log internal function to actually do the printing of a message
+ */
+
 static
 void log_internal_vf(const char *levelstr, const char *const format, va_list args)
-    __attribute__ ((nonnull (1,2)));
+    __attribute__(( nonnull(1,2) ));
 
 
 static
@@ -52,6 +57,7 @@ void log_internal_vf(const char *levelstr, const char *const format, va_list arg
 }
 
 
+/* documented in header file */
 void log_output(const char *const format, ...)
 {
     va_list args;
@@ -62,6 +68,7 @@ void log_output(const char *const format, ...)
 }
 
 
+/* documented in header file */
 void log_error(const char *const format, ...)
 {
     va_list args;
@@ -72,6 +79,7 @@ void log_error(const char *const format, ...)
 }
 
 
+/* documented in header file */
 void log_warning(const char *const format, ...)
 {
     va_list args;
@@ -82,6 +90,7 @@ void log_warning(const char *const format, ...)
 }
 
 
+/* documented in header file */
 void log_verbose(const char *const format, ...)
 {
     va_list args;
@@ -94,7 +103,7 @@ void log_verbose(const char *const format, ...)
 }
 
 
-/** Log a range of data */
+/* documented in header file */
 void log_data(const void *const buf, const size_t start_ofs, const size_t size)
 {
     if (log_level <= 1) {
@@ -133,6 +142,7 @@ void log_data(const void *const buf, const size_t start_ofs, const size_t size)
 }
 
 
+/* documented in header file */
 void log_init(const int argc, char *const argv[]) {
     /* If argv[0] is "/foo/bar/beep", set progname to "beep".
      * Otherwise, set progname to argv[0] (if it does not contain a
@@ -155,9 +165,14 @@ void log_init(const int argc, char *const argv[]) {
 }
 
 
+/**
+ * beep-log internal function to initialize the log subsystem.
+ *
+ */
+
 static
 void log_constructor(void)
-    __attribute__((constructor));
+    __attribute__(( constructor ));
 
 static
 void log_constructor(void)

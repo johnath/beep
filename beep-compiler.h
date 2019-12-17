@@ -36,7 +36,7 @@
  *         ...
  *     }
  */
-#define UNUSED_PARAM __attribute__((unused))
+#define UNUSED_PARAM __attribute__(( unused ))
 
 
 /** Mark a constructor function to be executed once on program startup.
@@ -49,7 +49,7 @@
  *         ...
  *     }
  */
-#define CONSTRUCTOR_FUNCTION __attribute__((constructor))
+#define CONSTRUCTOR_FUNCTION __attribute__(( constructor ))
 
 
 #endif /* BEEP_COMPILER_H */

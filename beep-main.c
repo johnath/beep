@@ -55,7 +55,9 @@
 #include "beep-usage.h"
 
 
-/** Version message to be printed for "beep --version" */
+/**
+ * Version message to be printed for "beep --version".
+ */
 static
 const char version_message[] =
     PACKAGE_TARNAME " " PACKAGE_VERSION "\n"
@@ -65,7 +67,9 @@ const char version_message[] =
     "For information: http://www.gnu.org/copyleft/.\n";
 
 
-/** Whether to to delay after the current repetition set of tones. */
+/**
+ * Whether to to delay after the current repetition set of tones.
+ */
 typedef enum
     {
      END_DELAY_NO = 0,
@@ -73,7 +77,9 @@ typedef enum
     } end_delay_E;
 
 
-/** Whether to and how to react to data from stdin */
+/**
+ * Whether to and how to react to data from stdin.
+ */
 typedef enum
     {
      STDIN_BEEP_NONE = 0,
@@ -82,32 +88,36 @@ typedef enum
     } stdin_beep_E;
 
 
-/** Per note parameter set */
+/**
+ * Per note parameter set.
+ */
 typedef struct _beep_parms_T beep_parms_T;
 
 
 /* Meaningful Defaults */
 
-/** default value: tone pitch Middle A */
+/** Default value: tone pitch Middle A. */
 #define DEFAULT_FREQ       440
 
-/** default value: tone length in milliseconds */
+/** Default value: tone length in milliseconds. */
 #define DEFAULT_LENGTH     200
 
-/** default value: one repetition of tone */
+/** Default value: one repetition of tone. */
 #define DEFAULT_REPS       1
 
-/** default value: delay between repeated tones in milliseconds */
+/** Default value: delay between repeated tones in milliseconds. */
 #define DEFAULT_DELAY      100
 
-/** default value: delay after the last of the tones */
+/** Default value: delay after the last of the tones. */
 #define DEFAULT_END_DELAY  END_DELAY_NO
 
-/** default value: whether to beep on receiving data on stdin */
+/** Default value: whether to beep on receiving data on stdin. */
 #define DEFAULT_STDIN_BEEP STDIN_BEEP_NONE
 
 
-/** Per note parameter set (including heritage information and linked list pointer) */
+/**
+ * Per note parameter set (including heritage information and linked list pointer).
+ */
 struct _beep_parms_T
 {
     unsigned int freq;       /**< tone frequency (Hz)         */
@@ -132,12 +142,18 @@ struct _beep_parms_T
 };
 
 
-/* Global. Set to true by the signal handlers, read only by the main
- * thread. */
-static volatile sig_atomic_t global_abort = false;
+/**
+ * Global flag for signalling program abort due to signal handlers.
+ *
+ * Initialized as fales. Written only by the signal handlers (set to
+ * true), read only by the main thread.
+ */
+static
+volatile sig_atomic_t global_abort = false;
 
 
-/** Signal handler for signals like SIGINT and SIGTERM
+/**
+ * Signal handler for signals like SIGINT and SIGTERM.
  *
  * If we get interrupted, it would be nice to not leave the speaker
  * beeping in perpetuity.
@@ -155,7 +171,12 @@ static volatile sig_atomic_t global_abort = false;
  *   * write(2):      safe
  *   * strerror_r(3): MT-safe
  *   * strlen(3):     MT-safe
+ *
+ * Just setting a global flag is MT-safe.
+ *
+ * @param unused_signum The signal number being handled. Unused.
  */
+
 void handle_signal(int unused_signum UNUSED_PARAM);
 
 void handle_signal(int unused_signum UNUSED_PARAM)
@@ -164,7 +185,9 @@ void handle_signal(int unused_signum UNUSED_PARAM)
 }
 
 
-/* print usage and leave exit code up to the caller */
+/**
+ * Print usage message, but leave exit code up to the caller.
+ */
 static
 void print_usage(void)
 {
@@ -172,7 +195,10 @@ void print_usage(void)
 }
 
 
-/* print usage and exit */
+/**
+ * Print usage message and exit.
+ */
+
 static
 void usage_bail(void)
     __attribute__(( noreturn ));
@@ -185,12 +211,19 @@ void usage_bail(void)
 }
 
 
-/* Global. Written by parse_command_line(), read by main() initialization. */
+/**
+ * Global device name parameter.
+ *
+ * Written by parse_command_line(), read by main() initialization.
+ */
 static char *param_device_name = NULL;
 
 
-/* Parse the command line.  argv should be untampered, as passed to main.
- * Beep parameters returned in result, subsequent parameters in argv will over-
+/**
+ * Parse the command line.
+ *
+ * argv should be untampered, as passed to main().  Beep parameters
+ * are returned in result, subsequent parameters in `argv` will over-
  * ride previous ones.
  *
  * Currently valid parameters:
@@ -206,8 +239,13 @@ static char *param_device_name = NULL;
  *  "-v/-V/--version"
  *  "-n/--new"
  *
- * March 29, 2002 - Daniel Eisenbud points out that ch should be int, not char,
- * for correctness on platforms with unsigned chars.
+ * March 29, 2002 - Daniel Eisenbud points out that `ch` should be
+ * `int`, not `char`, for correctness on platforms with unsigned
+ * chars.
+ *
+ * @param argc   Argument counter passed from main().
+ * @param argv   Argument string array passed from main().
+ * @param result Linked list to be built by parse_command_line().
  */
 static
 void parse_command_line(const int argc, char *const argv[], beep_parms_T *result)
@@ -342,6 +380,19 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_T *result
 }
 
 
+/**
+ * Sleep for a number of milliseconds.
+ *
+ * @param driver       The driver to close in case of #global_abort.
+ * @param milliseconds The number of milliseconds to sleep.
+ *
+ * @return The nanosleep(2) result (0 if successful, -1 on signal handler or error)
+ */
+
+static
+int sleep_ms(beep_driver *driver, unsigned int milliseconds)
+    __attribute__(( nonnull(1) ));
+
 static
 int sleep_ms(beep_driver *driver, unsigned int milliseconds)
 {
@@ -359,6 +410,17 @@ int sleep_ms(beep_driver *driver, unsigned int milliseconds)
     return retcode;
 }
 
+
+/**
+ * Play one (possibly repeated) note.
+ *
+ * @param driver The driver to run the note on.
+ * @param parms  The note parameters.
+ */
+
+static
+void play_beep(beep_driver *driver, beep_parms_T parms)
+    __attribute__(( nonnull(1) ));
 
 static
 void play_beep(beep_driver *driver, beep_parms_T parms)
@@ -380,7 +442,9 @@ void play_beep(beep_driver *driver, beep_parms_T parms)
 }
 
 
-/* If stdout is a TTY, print a bell character to stdout as a fallback. */
+/**
+ * If stdout is a TTY, print a bell character to stdout as a fallback.
+ */
 static
 void fallback_beep(void)
 {
@@ -391,7 +455,15 @@ void fallback_beep(void)
 }
 
 
-/** The main function. */
+/**
+ * Main program for `beep(1)`.
+ *
+ * @param argc Length of the `argv` string array.
+ * @param argv Command line argument string array.
+ *
+ * @return EXIT_FAILURE in case of any error
+ * @return EXIT_SUCCESS otherwise
+ */
 int main(const int argc, char *const argv[])
 {
     log_init(argc, argv);

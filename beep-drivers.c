@@ -32,10 +32,14 @@
 #include "beep-log.h"
 
 
+/**
+ * The beginning of the linked list of drivers.
+ */
 static
 beep_driver *first_driver = NULL;
 
 
+/* documented in header file */
 void beep_drivers_register(beep_driver *driver)
 {
     log_verbose("beep_drivers_register %p (%s)",
@@ -50,10 +54,11 @@ void beep_drivers_register(beep_driver *driver)
 }
 
 
-beep_driver *beep_drivers_detect(const char *const console_device)
+/* documented in header file */
+beep_driver *beep_drivers_detect(const char *const device_name)
 {
     for (beep_driver *driver = first_driver; driver; driver=driver->next) {
-        if (driver->detect(driver, console_device)) {
+        if (driver->detect(driver, device_name)) {
             return driver;
         }
     }
@@ -61,24 +66,28 @@ beep_driver *beep_drivers_detect(const char *const console_device)
 }
 
 
+/* documented in header file */
 void beep_drivers_init(beep_driver *driver)
 {
     driver->init(driver);
 }
 
 
+/* documented in header file */
 void beep_drivers_fini(beep_driver *driver)
 {
     driver->fini(driver);
 }
 
 
+/* documented in header file */
 void beep_drivers_begin_tone(beep_driver *driver, const uint16_t freq)
 {
     driver->begin_tone(driver, freq);
 }
 
 
+/* documented in header file */
 void beep_drivers_end_tone(beep_driver *driver)
 {
     driver->end_tone(driver);

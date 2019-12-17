@@ -28,18 +28,24 @@
 #define BEEP_LIBRARY_H
 
 
-/** Open the named character device special file.
+/**
+ * Open the named character device special file.
  *
  * This makes certain that the returned file descriptor is actually
  * for a character device special file.
+ *
+ * @param device_name The device name.
  */
 int open_checked_char_device(const char *const device_name)
     __attribute__(( nonnull(1) ));
 
 
-/** Safely exit the program with error message.
+/**
+ * Safely exit the program with error message.
  *
  * The "safety" aspect refers to multithreading/signals/etc.
+ *
+ * @param msg The message to print before exiting.
  */
 void safe_error_exit(const char *const msg)
     __attribute__(( nonnull(1) ))

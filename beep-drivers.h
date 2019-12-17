@@ -32,35 +32,62 @@
 #include "beep-driver.h"
 
 
-/** Register a beep driver with the beep driver infrastructure.
+/**
+ * Register a beep driver with the beep driver infrastructure.
  *
  * To be called from driver's CONSTRUCTOR function which means once
  * per program invocation.
+ *
+ * @param driver The driver to register.
  */
 void beep_drivers_register(beep_driver *driver)
     __attribute__(( nonnull(1) ));
 
 
-/** Call a beep driver's detect() function. */
-beep_driver *beep_drivers_detect(const char *const console_device);
+/**
+ * Return the first driver whose detect() function returns true.
+ *
+ * @param device_name The device name.
+ *
+ * @return NULL if no driver has been detected.
+ * @return Otherwise, the detected driver.
+ */
+beep_driver *beep_drivers_detect(const char *const device_name);
 
 
-/** Call a beep driver's init() function. */
+/**
+ * Initialize the beep driver via driver's init() function.
+ *
+ * @param driver The beep driver.
+ */
 void beep_drivers_init(beep_driver *driver)
     __attribute__(( nonnull(1) ));
 
 
-/** Call a beep driver's fini() function. */
+/**
+ * Deinitialize the beep driver via driver's fini() function.
+ *
+ * @param driver The beep driver.
+ */
 void beep_drivers_fini(beep_driver *driver)
     __attribute__(( nonnull(1) ));
 
 
-/** Call a beep driver's begin_tone() function. */
+/**
+ * Call the beep driver's begin_tone() function.
+ *
+ * @param driver The beep driver.
+ * @param freq   The frequency to play.
+ */
 void beep_drivers_begin_tone(beep_driver *driver, const uint16_t freq)
     __attribute__(( nonnull(1) ));
 
 
-/** Call a beep driver's end_tone() function. */
+/**
+ * Call the beep driver's end_tone() function.
+ *
+ * @param driver The beep driver.
+ */
 void beep_drivers_end_tone(beep_driver *driver)
     __attribute__(( nonnull(1) ));
 

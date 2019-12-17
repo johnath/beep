@@ -37,6 +37,7 @@
 #include "beep-log.h"
 
 
+/* documented in header file */
 int open_checked_char_device(const char *const device_name)
 {
     struct stat sb;
@@ -76,7 +77,9 @@ int open_checked_char_device(const char *const device_name)
 }
 
 
-/* We do not know for certain whether perror(3) does strange things with
+/* documented in header file
+ *
+ * We do not know for certain whether perror(3) does strange things with
  * global variables or malloc(3)/free(3) inside its code, so we use
  * strerror_r(3) and write(2) to STDERR_FILENO instead.
  */

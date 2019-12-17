@@ -27,6 +27,7 @@
 #ifndef BEEP_LOG_H
 #define BEEP_LOG_H
 
+
 /** Currently active log level.
  *
  * Default is 0. Values greater than 0 are for verbose output.
@@ -45,36 +46,36 @@ extern const char *progname;
 
 /** Write a standard message */
 void log_output(const char *const format, ...)
-    __attribute__ ((nonnull (1)))
-    __attribute__ ((format (printf, 1, 2)));
+    __attribute__(( nonnull(1) ))
+    __attribute__(( format(printf, 1, 2) ));
 
 
 /** Log an error message */
 void log_error(const char *const format, ...)
-    __attribute__ ((nonnull (1)))
-    __attribute__ ((format (printf, 1, 2)));
+    __attribute__(( nonnull(1) ))
+    __attribute__(( format(printf, 1, 2) ));
 
 
 /** Log a warning message */
 void log_warning(const char *const format, ...)
-    __attribute__ ((nonnull (1)))
-    __attribute__ ((format (printf, 1, 2)));
+    __attribute__(( nonnull(1) ))
+    __attribute__(( format(printf, 1, 2) ));
 
 
 /** Log a verbose message */
 void log_verbose(const char *const format, ...)
-    __attribute__ ((nonnull (1)))
-    __attribute__ ((format (printf, 1, 2)));
+    __attribute__(( nonnull(1) ))
+    __attribute__(( format(printf, 1, 2) ));
 
 
 /** Log a range of data */
 void log_data(const void *const buf, const size_t start_ofs, const size_t size)
-    __attribute__ ((nonnull (1)));
+    __attribute__(( nonnull(1) ));
 
 
 /** Initialize the log message prefix from the non-path part of argv[0]. */
 void log_init(const int argc, char *const argv[])
-    __attribute__ ((nonnull (2)));
+    __attribute__(( nonnull(2) ));
 
 
 #endif /* BEEP_LOG_H */
