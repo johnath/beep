@@ -38,6 +38,7 @@ GZIP = $(call pathsearch,gzip)
 INSTALL = $(call pathsearch,install)
 MKDIR_P = mkdir -p
 PANDOC = $(call pathsearch,pandoc)
+PYTHON3 = $(call pathsearch,python3)
 SED = $(call pathsearch,sed)
 SLOCCOUNT = $(call pathsearch,sloccount)
 
@@ -289,6 +290,10 @@ doxygen.stamp: Doxyfile $(wildcard *.c) $(wildcard *.h)
 	echo > $@
 
 html: doxygen.stamp
+
+.PHONY: serve-html
+serve-html: html
+	$(PYTHON3) -m http.server --directory html/dox/html
 
 pkgdoc_DATA += CHANGELOG
 pkgdoc_DATA += COPYING
