@@ -152,12 +152,26 @@ Uses the input event device driver, which means running
 .BR "write" "(2)"
 on
 .BR /dev/input/by\-path/platform\-pcspkr\-event\-spkr .
+.IP
+The permissions to this device file can be set up such that beep can be run by any non-root user the system administrator wants to.
+.IP
+Opening this device takes on the order of magnitude of 20ms in the Linux kernel for every time you start the
+.B beep
+command. Therefore, if you need to play multiple notes in a rhythmical sequence for a melody, use one
+.B beep
+command invocation with multiple notes, not several
+.B beep
+invocations playing one note each.
 .IP "console" 4
 Uses the ancient console API, which means running the
 .B "KIOCSOUND"
 .BR "ioctl" "(2)"
 on a tty device like
 .BR /dev/tty0\  or\  /dev/vc/0.
+.IP
+This requires being root, unless the non-root user happens be logged into the virtual console and uses that specific device like e.g. \fB/dev/tty0\fR. This makes it useless for non-root users logged in via ssh or X11 or Wayland.
+.IP
+Use the evdev API instead.
 .\"
 .SS "Concurrent Invocations"
 Concurrent invocations of
