@@ -33,6 +33,7 @@ CC = false
 DOT = $(call pathsearch,dot)
 DOXYGEN = $(call pathsearch,doxygen)
 EGREP = $(GREP) -E
+GIT = $(call pathsearch,git)
 GREP = $(call pathsearch,grep)
 GZIP = $(call pathsearch,gzip)
 INSTALL = $(call pathsearch,install)
@@ -416,18 +417,18 @@ uninstall:
 # List all references to documentation in the git repo
 .PHONY: refs
 refs:
-	git grep -n -E '((http|https)://[a-zA-Z0-9\._/-]+|([A-Z]+\.md)|([a-zA-Z][a-zA-Z0-9_-]+\([0-9]+\)))'
+	$(GIT) grep -n -E '((http|https)://[a-zA-Z0-9\._/-]+|([A-Z]+\.md)|([a-zA-Z][a-zA-Z0-9_-]+\([0-9]+\)))'
 
 # List all TODOs and FIXMEs in the git repo
 .PHONY: todo fixme
 todo fixme:
-	git grep -n -E '(TODO|FIXME):'
+	$(GIT) grep -n -E '(TODO|FIXME):'
 
 # Generate a kind of dist tarball to help with preparing for release
-PACKAGE_TARBASE := $(PACKAGE_TARNAME)-$(shell git describe)
+PACKAGE_TARBASE := $(PACKAGE_TARNAME)-$(shell $(GIT) describe)
 .PHONY: dist
 dist:
-	git archive --format=tar.gz --verbose --prefix=$(PACKAGE_TARBASE)/ --output=$(PACKAGE_TARBASE).tar.gz HEAD
+	$(GIT) archive --format=tar.gz --verbose --prefix=$(PACKAGE_TARBASE)/ --output=$(PACKAGE_TARBASE).tar.gz HEAD
 
 
 ########################################################################
