@@ -51,9 +51,14 @@ void log_internal_vf(const char *levelstr, const char *const format, va_list arg
 static
 void log_internal_vf(const char *levelstr, const char *const format, va_list args)
 {
+    va_list copied_args;
+    va_copy(copied_args, args);
+
     fprintf(stdout, "%s: %s: ", progname, levelstr);
-    vfprintf(stdout, format, args);
+    vfprintf(stdout, format, copied_args);
     fputc('\n', stdout);
+
+    va_end(copied_args);
 }
 
 

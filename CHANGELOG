@@ -1,5 +1,6 @@
 1.4.x
 -----
+- Use va_copy() macro in function with va_list parameter to avoid possible bug
 
 1.4.4
 -----
