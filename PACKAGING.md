@@ -58,7 +58,7 @@ Files to install for beep
   * `/usr/bin/beep`  
     The `beep` executable.
 
-  * `/usr/share/man/man1/beep1.gz`  
+  * `/usr/share/man/man1/beep.1.gz`  
 
     Man page for the `beep` executable.
 
