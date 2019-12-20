@@ -59,8 +59,14 @@ all: all-local
 # Variables to add to later
 ########################################################################
 
-ALL_PROGRAMS =
+# targets to build for the "all" target
+all_TARGETS =
+
+# targets to build for the "check" target
+check_TARGETS =
+
 bin_PROGRAMS =
+check_PROGRAMS =
 sbin_PROGRAMS =
 CLEANFILES =
 HTML_DATA =
@@ -195,10 +201,10 @@ beep-usage.c: beep-usage.txt
 ########################################################################
 
 
-# CALL: LINK_RULE <compiler> <executable> <executable_as_varname_part>
+# CALL: LINK_RULE <compiler> <executable> <executable_as_varname_part> <dircomponent>
 # To be called from PER_COMPILER. Defines the per-executable rules.
 define LINK_RULE
-ALL_PROGRAMS += $(2).$(1)
+$(4)_ALL_PROGRAMS += $(2).$(1)
 
 $(2).$(1): $(patsubst %.o,%.$(1)-o,$($(3)_OBJS))
 	@: echo "LINK_RULE $$@: $$^"
@@ -213,7 +219,9 @@ endef
 # CALL: PER_COMPILER <compiler>
 # To be called for each compiler. Defines the per-compiler rules for each executable.
 define PER_COMPILER
-$(foreach exec,$(bin_PROGRAMS) $(sbin_PROGRAMS),$(eval $(call LINK_RULE,$(1),$(exec),$(subst -,_,$(exec)))))
+$(foreach exec,$(bin_PROGRAMS),$(eval $(call LINK_RULE,$(1),$(exec),$(subst -,_,$(exec)),bin)))
+$(foreach exec,$(check_PROGRAMS),$(eval $(call LINK_RULE,$(1),$(exec),$(subst -,_,$(exec)),check)))
+$(foreach exec,$(sbin_PROGRAMS),$(eval $(call LINK_RULE,$(1),$(exec),$(subst -,_,$(exec)),sbin)))
 
 %.$(1)-o: %.c | .deps
 	$$(COMPILER_$(1)) -MT $$@ -MMD -MP -MF .deps/$$*.$(1)-o.dep $$(CPPFLAGS) $$(CPPFLAGS_COMMON) $$(CPPFLAGS_$(1)) $$(CFLAGS_COMMON) $$(CFLAGS) $$(CFLAGS_$(1)) -o $$@ -c $$<
@@ -304,8 +312,12 @@ pkgdoc_DATA += PERMISSIONS.md
 # Generic targets
 ########################################################################
 
+all_TARGETS += $(bin_PROGRAMS) $(bin_ALL_PROGRAMS)
+all_TARGETS += $(sbin_PROGRAMS) $(sbin_ALL_PROGRAMS)
+all_TARGETS += $(man1_DATA)
+
 .PHONY: all-local
-all-local: $(bin_PROGRAMS) $(sbin_PROGRAMS) $(ALL_PROGRAMS) $(man1_DATA)
+all-local: $(all_TARGETS)
 
 SLOC_SOURCES =
 SLOC_SOURCES += beep*.[ch]
@@ -338,19 +350,24 @@ SPLINT_FLAGS += $(CPPFLAGS_COMMON)
 lint:
 	$(SPLINT) $(SPLINT_FLAGS) beep*.c beep*.h
 
+check_TARGETS += $(all_TARGETS)
+check_TARGETS += $(check_PROGRAMS) $(check_ALL_PROGRAMS)
+
 .PHONY: check-targets
-check-targets: $(TARGETS) $(CHECK_TARGETS)
+check-targets: $(check_TARGETS)
 
 .PHONY: check
-check: $(foreach compiler,$(COMPILERS),beep.$(compiler)) $(ALL_PROGRAMS)
+check: $(foreach compiler,$(COMPILERS),beep.$(compiler)) $(check_TARGETS)
 	env PACKAGE_VERSION="${PACKAGE_VERSION}" \
 	/bin/bash tests/run-tests tests $(foreach compiler,$(COMPILERS),beep.$(compiler))
 
 .PHONY: clean
 clean:
-	rm -f $(bin_PROGRAMS) $(sbin_PROGRAMS)
+	rm -f $(bin_PROGRAMS) $(bin_ALL_PROGRAMS)
+	rm -f $(check_PROGRAMS) $(check_ALL_PROGRAMS)
+	rm -f $(sbin_PROGRAMS) $(sbin_ALL_PROGRAMS)
 	rm -f $(CLEANFILES)
-	rm -f $(foreach comp,$(COMPILERS),*.$(comp) *.$(comp)-o)
+	rm -f $(foreach comp,$(COMPILERS),*.$(comp)-o)
 	rm -f *.dep
 	rm -rf .deps
 	rm -f *.lst *.gcc-lst
