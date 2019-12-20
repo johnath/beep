@@ -59,8 +59,6 @@ all: all-local
 # Variables to add to later
 ########################################################################
 
-pkgdoc_DATA =
-
 ALL_PROGRAMS =
 bin_PROGRAMS =
 sbin_PROGRAMS =
