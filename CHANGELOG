@@ -1,6 +1,7 @@
-1.4.x
+1.4.5
 -----
 - Use va_copy() macro in function with va_list parameter to avoid possible bug
+- Use BEEP_LOG_LEVEL environment variable for default log level
 
 1.4.4
 -----

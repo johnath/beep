@@ -7,7 +7,7 @@
 # default installation location for beep.
 
 PACKAGE_TARNAME = beep
-PACKAGE_VERSION = 1.4.4
+PACKAGE_VERSION = 1.4.5
 
 DESTDIR=
 prefix=/usr
