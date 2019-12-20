@@ -570,25 +570,7 @@ int main3(const int argc, const char *const argv[])
     }
     /* device_str considered valid now */
 
-    unsigned long counters[2] = {0, 0};
-    for (unsigned long u=repeats; u>0; u--) {
-        const int fd = open(device_str, O_WRONLY);
-        counters[(fd >= 0)]++;
-        close(fd);
-    }
-
-    printf("device_name    = %s\n"
-           "counters[succ] = %lu\n"
-           "counters[fail] = %lu\n",
-           device_str,
-           counters[true],
-           counters[false]);
-
-    if (counters[false] > 0) {
-        return EXIT_FAILURE;
-    } else {
-        return EXIT_SUCCESS;
-    }
+    return open_and_close_repeatedly(repeats, device_str);
 }
 
 
