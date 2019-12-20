@@ -169,10 +169,10 @@ beep_OBJS += beep-driver-evdev.o
 
 beep_LIBS =
 
-beep-log.clang-o : CFLAGS_clang += -D_GNU_SOURCE
-beep-log.gcc-o   : CFLAGS_gcc   += -D_GNU_SOURCE
+beep-log.clang-o : override CFLAGS_clang += -D_GNU_SOURCE
+beep-log.gcc-o   : override CFLAGS_gcc   += -D_GNU_SOURCE
 
-beep-log.clang-o : CFLAGS_clang += -Wno-format-nonliteral
+beep-log.clang-o : override CFLAGS_clang += -Wno-format-nonliteral
 
 # sbin_PROGRAMS += beep-foo
 # beep_foo_OBJS =

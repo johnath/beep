@@ -1,5 +1,6 @@
 1.4.x
 -----
+- Let user define CFLAGS_* during "make" time while internal appends still work
 
 1.4.5
 -----
