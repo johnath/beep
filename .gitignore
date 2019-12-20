@@ -4,6 +4,7 @@
 /beep
 /*.clang
 /*.gcc
+/issue-6-benchmark
 
 # Built sources
 /beep-usage.c

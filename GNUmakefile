@@ -153,6 +153,10 @@ beep_OBJS += beep-library.o
 beep_OBJS += beep-usage.o
 beep_OBJS += beep-drivers.o
 
+check_PROGRAMS        += issue-6-benchmark
+issue_6_benchmark_OBJS = issue-6-benchmark.o
+issue_6_benchmark_LIBS = -lm
+
 # The drivers here use `__attribute__((constructor))` functions to
 # register themselves with `beep_drivers_register()`, so the last one
 # listed here will be linked last and have its constructor called at
