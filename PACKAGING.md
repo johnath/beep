@@ -188,7 +188,7 @@ platforms.
 Packages
 ========
 
-This is a list of links to distribution packages:
+This is a list of links to some distributions' packages of `beep`:
 
   * [archlinux](https://www.archlinux.org/)  
     [overview](https://www.archlinux.org/packages/extra/x86_64/beep/)
