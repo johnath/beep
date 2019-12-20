@@ -270,7 +270,7 @@ int benchmarks_and_report(const char *const argv0,
     printf("\n"
            "Summary:\n");
 
-    if (console_device_str) {
+    if (console_device_str && (cycle_time_console > 0.0)) {
         printf("    console device: %s\n"
                "        time per open(2)-and-close(2): %g us\n"
                "        open(2)-and-close(2) rate:     %g / s\n",
@@ -281,7 +281,7 @@ int benchmarks_and_report(const char *const argv0,
         printf("    console device: no writable TTY device found\n");
     }
 
-    if (true) {
+    if (cycle_time_evdev > 0.0) {
         printf("    evdev device:   %s\n"
                "        time per open(2)-and-close(2): %g ms\n"
                "        open(2)-and-close(2) rate:     %g / s\n",
@@ -290,29 +290,35 @@ int benchmarks_and_report(const char *const argv0,
                );
     }
 
-    printf("\n"
-           "So opening an evdev device takes %g times as long as opening a console device.\n"
-           "\n"
-           "Note that any of those numbers can only be relied on when run on an otherwise idle machine.\n",
-           cycle_time_evdev/cycle_time_console);
-
-    printf("\n"
-           "For more details, you can run\n"
-           "\n");
-
-    if (console_device_str) {
-        const double reliable_repeats =
-            ((double)MINIMUM_RELIABLE_PERIOD)/cycle_time_console;
-        printf("    /usr/bin/time -v %s %lu %s\n", argv0,
-               (unsigned long)lrint(0.5+reliable_repeats),
-               console_device_str);
+    if ((cycle_time_evdev > 0.0) && (cycle_time_console > 0.0)) {
+        printf("\n"
+               "So opening an evdev device takes %g times as long as opening\n"
+               "a console device.\n",
+               cycle_time_evdev/cycle_time_console);
     }
-    if (true) {
-        const double reliable_repeats =
-            ((double)MINIMUM_RELIABLE_PERIOD)/cycle_time_evdev;
-        printf("    /usr/bin/time -v %s %lu %s\n", argv0,
-               (unsigned long)lrint(0.5+reliable_repeats),
-               evdev_device_str);
+
+    printf("\n"
+           "Note that any of those numbers can only be relied on when run on an\n"
+           "otherwise idle machine.\n");
+
+    if ((cycle_time_console > 0.0) || (cycle_time_evdev > 0.0)) {
+        printf("\n"
+               "For more details, you can run the following commands:\n");
+
+        if (console_device_str && (cycle_time_console > 0.0)) {
+            const double reliable_repeats = 1.10 *
+                ((double)MINIMUM_RELIABLE_PERIOD)/cycle_time_console;
+            printf("    /usr/bin/time -v %s %lu %s\n", argv0,
+                   (unsigned long)lrint(0.5+reliable_repeats),
+                   console_device_str);
+        }
+        if (cycle_time_evdev > 0.0) {
+            const double reliable_repeats = 1.10 *
+                ((double)MINIMUM_RELIABLE_PERIOD)/cycle_time_evdev;
+            printf("    /usr/bin/time -v %s %lu %s\n", argv0,
+                   (unsigned long)lrint(0.5+reliable_repeats),
+                   evdev_device_str);
+        }
     }
 
     return EXIT_SUCCESS;
@@ -575,6 +581,7 @@ int main3(const int argc, const char *const argv[])
 
 
 /**
+ * The main() function.
  *
  * @param argc Length of the `argv` string array.
  * @param argv Command line argument string array.
