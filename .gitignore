@@ -26,6 +26,8 @@
 
 # Built stuff
 /html/
+/beep-*.tar.gz
+/beep-*.tar.xz
 
 # Test results
 /tests/*.actual.output.new
