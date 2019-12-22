@@ -19,6 +19,7 @@ mandir=$(datarootdir)/man
 man1dir=$(mandir)/man1
 docdir=$(datarootdir)/doc
 pkgdocdir=$(docdir)/$(PACKAGE_TARNAME)
+contribdir=$(pkgdocdir)/contrib
 
 
 ########################################################################
@@ -68,6 +69,8 @@ check_TARGETS =
 
 bin_PROGRAMS =
 check_PROGRAMS =
+contrib_DATA =
+contrib_SCRIPTS =
 sbin_PROGRAMS =
 CLEANFILES =
 HTML_DATA =
@@ -315,6 +318,8 @@ pkgdoc_DATA += CREDITS
 pkgdoc_DATA += README.md
 pkgdoc_DATA += PERMISSIONS.md
 
+contrib_SCRIPTS += contrib/failure-beeps
+contrib_SCRIPTS += contrib/success-beeps
 
 ########################################################################
 # Generic targets
@@ -404,6 +409,15 @@ endif
 ifneq (,$(pkgdoc_DATA))
 	$(INSTALL) -m 0755 -d                $(DESTDIR)$(pkgdocdir)
 	$(INSTALL) -m 0644 -p $(pkgdoc_DATA) $(DESTDIR)$(pkgdocdir)/
+endif
+ifneq (,$(contrib_DATA)$(contrib_SCRIPTS))
+	$(INSTALL) -m 0755 -d                    $(DESTDIR)$(contribdir)
+endif
+ifneq (,$(contrib_DATA))
+	$(INSTALL) -m 0644 -p $(contrib_DATA)    $(DESTDIR)$(contribdir)/
+endif
+ifneq (,$(contrib_SCRIPTS))
+	$(INSTALL) -m 0755 -p $(contrib_SCRIPTS) $(DESTDIR)$(contribdir)/
 endif
 
 .PHONY: uninstall

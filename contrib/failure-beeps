@@ -1,0 +1,3 @@
+#!/bin/sh
+# failing sounding A minor-whatever arpeggio
+beep -f 880 -l 200  -n -f 659  -n -f 523  -n -f 370 -l 400

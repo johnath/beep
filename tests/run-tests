@@ -54,6 +54,14 @@ canonicalize_output() {
     ${SED} -e "s|${BEEP}|BEEP_EXECUTABLE|g" -e "s|^${BEEP##*/}:|BEEP_EXECUTABLE:|g" -e "s|$(echo "${PACKAGE_VERSION}" | ${SED} 's/\./\\./g')|PACKAGE_VERSION|g"
 }
 
+# taken from contrib/
+failure_beeps() {
+    if test -e "beep"; then
+	./beep -f 880 -l 200  -n -f 659  -n -f 523  -n -f 370 -l 400
+    fi
+}
+
+# taken from contrib/
 success_beeps() {
     if test -e "beep"; then
 	./beep -f 220 -l 100 -n -f 275  -l 100 -n -f 330 -l 100  -n -f 440  -l 100 -n -f 550  -l 100 -n -f 660  -l 100 -n -f 880
@@ -124,6 +132,7 @@ done
 echo "${pass} passed, ${fail} failed, $(expr "${pass}" + "${fail}") total."
 
 if test "${fail}" -gt 0; then \
+    failure_beeps
     exit 1
 else
     success_beeps
