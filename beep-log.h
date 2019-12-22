@@ -28,6 +28,9 @@
 #define BEEP_LOG_H
 
 
+#include <stdlib.h>
+
+
 /** Currently active log level.
  *
  * Default is 0. Values greater than 0 are for verbose output.
