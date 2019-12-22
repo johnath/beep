@@ -236,6 +236,40 @@ double average_cycle_time(const unsigned long initial_repeats,
 
 
 /**
+ * Print and execute external '/usr/bin/time' command if we know how.
+ *
+ * @param argv0      The argv0 which issue-6-benchmark has been and will be called
+ * @param cycle_time The average cycle time for the given `device`
+ * @param device     The device to run cycles on.
+ */
+static
+void conditional_command(const char *const argv0,
+                         const double cycle_time,
+                         const char *const device)
+    __attribute__(( nonnull(1) ));
+
+static
+void conditional_command(const char *const argv0,
+                         const double cycle_time,
+                         const char *const device)
+{
+    if (device == NULL) {
+        /* skip this */
+        return;
+    }
+    if (cycle_time < 0.0) {
+        /* skip this */
+        return;
+    }
+
+    const double reliable_repeats = 1.10 *
+        ((double)MINIMUM_RELIABLE_PERIOD)/cycle_time;
+    unsigned long cmd_repeats = (unsigned long)lrint(0.5+reliable_repeats);
+    printf("  /usr/bin/time -v %s %lu %s\n", argv0, cmd_repeats, device);
+}
+
+
+/**
  * Well-known name for the evdev device.
  */
 static
@@ -307,20 +341,8 @@ int benchmark_and_report(const char *const argv0,
         printf("\n"
                "For more details, you can run the following commands:\n");
 
-        if (console_device_str && (cycle_time_console > 0.0)) {
-            const double reliable_repeats = 1.10 *
-                ((double)MINIMUM_RELIABLE_PERIOD)/cycle_time_console;
-            printf("    /usr/bin/time -v %s %lu %s\n", argv0,
-                   (unsigned long)lrint(0.5+reliable_repeats),
-                   console_device_str);
-        }
-        if (cycle_time_evdev > 0.0) {
-            const double reliable_repeats = 1.10 *
-                ((double)MINIMUM_RELIABLE_PERIOD)/cycle_time_evdev;
-            printf("    /usr/bin/time -v %s %lu %s\n", argv0,
-                   (unsigned long)lrint(0.5+reliable_repeats),
-                   evdev_device_str);
-        }
+        conditional_command(argv0, cycle_time_console, console_device_str);
+        conditional_command(argv0, cycle_time_evdev, evdev_device_str);
     }
 
     return EXIT_SUCCESS;
