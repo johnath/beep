@@ -273,7 +273,8 @@ void conditional_command(const char *const argv0,
  * Well-known name for the evdev device.
  */
 static
-const char *const evdev_device_str = "/dev/input/by-path/platform-pcspkr-event-spkr";
+const char *const evdev_device_str =
+    "/dev/input/by-path/platform-pcspkr-event-spkr";
 
 
 /**
@@ -328,8 +329,8 @@ int benchmark_and_report(const char *const argv0,
 
     if ((cycle_time_evdev > 0.0) && (cycle_time_console > 0.0)) {
         printf("\n"
-               "So opening an evdev device takes %g times as long as opening\n"
-               "a console device.\n",
+               "So opening an evdev device takes about %g times as long\n"
+               "as opening a console device.\n",
                cycle_time_evdev/cycle_time_console);
     }
 
