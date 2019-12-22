@@ -39,6 +39,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <sys/wait.h>
 
 #include "beep-compiler.h"
 
@@ -236,6 +237,81 @@ double average_cycle_time(const unsigned long initial_repeats,
 
 
 /**
+ * Run externally timed main3() process via fork(2), execv(3), and waitpid(2).
+ *
+ * This runs a separate instance of `issue-6-benchmark` via
+ * `/usr/bin/time -v`. This gives a lot more information about the
+ * system resources used than want to reasonably determine ourselves.
+ *
+ * @param argv0   The name issue-6-benchmark has been called which
+ *                `/usr/bin/time` will now run.
+ *
+ * @param repeats The number of repeats to time.
+ *
+ * @param device  The device to run the repeats on.
+ *
+ * @return EXIT_FAILURE in case of any error
+ * @return EXIT_SUCCESS otherwise
+ *
+ */
+
+static
+int execute_time(const char *const argv0,
+                 const unsigned long repeats,
+                 const char *const device)
+    __attribute__(( nonnull(1,3) ));
+
+static
+int execute_time(const char *const argv0,
+                 const unsigned long repeats,
+                 const char *const device)
+{
+    const pid_t pid = fork();
+    if (pid == -1) {
+        /* we are the parent process, and fork(2) has failed */
+        return EXIT_FAILURE;
+    } else if (pid == 0) {
+        /* we are the child process */
+        char repeat_buf[20];
+        snprintf(repeat_buf, sizeof(repeat_buf), "%lu", repeats);
+        char *dup_argv0  = strdup(argv0);
+        char *dup_device = strdup(device);
+        char *argv[10] = { "/usr/bin/time", "-v",
+                           dup_argv0, repeat_buf, dup_device,
+                           NULL
+        };
+        execv("/usr/bin/time", argv);
+        perror("execv(3)");
+        free(dup_device);
+        free(dup_argv0);
+        return EXIT_FAILURE;
+    } else {
+        /* we are the parent process, and now wait for child <pid> to finish */
+        int wstatus = -1;
+        const pid_t w = waitpid(pid, &wstatus, 0);
+        if (w != pid) {
+            fprintf(stderr, "some error in waitpid(2)\n");
+            return EXIT_FAILURE;
+        } else {
+            if (WIFEXITED(wstatus)) {
+                /* printf("Child has exited properly.\n"); */
+                const int child_exit_code = WEXITSTATUS(wstatus);
+                /* printf("Child has exit code %d\n", child_exit_code); */
+                if (child_exit_code == 0) {
+                    return EXIT_SUCCESS;
+                } else {
+                    return EXIT_FAILURE;
+                }
+            } else {
+                printf("Child has not exited, which is a weird error.\n");
+                return EXIT_FAILURE;
+            }
+        }
+    }
+}
+
+
+/**
  * Print and execute external '/usr/bin/time' command if we know how.
  *
  * @param argv0      The argv0 which issue-6-benchmark has been and will be called
@@ -266,6 +342,7 @@ void conditional_command(const char *const argv0,
         ((double)MINIMUM_RELIABLE_PERIOD)/cycle_time;
     unsigned long cmd_repeats = (unsigned long)lrint(0.5+reliable_repeats);
     printf("  /usr/bin/time -v %s %lu %s\n", argv0, cmd_repeats, device);
+    execute_time(argv0, cmd_repeats, device);
 }
 
 
