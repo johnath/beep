@@ -230,6 +230,9 @@ $(foreach exec,$(sbin_PROGRAMS),$(eval $(call LINK_RULE,$(1),$(exec),$(subst -,_
 
 %.$(1)-o: %.c | .deps
 	$$(COMPILER_$(1)) -MT $$@ -MMD -MP -MF .deps/$$*.$(1)-o.dep $$(CPPFLAGS) $$(CPPFLAGS_COMMON) $$(CPPFLAGS_$(1)) $$(CFLAGS_COMMON) $$(CFLAGS) $$(CFLAGS_$(1)) -o $$@ -c $$<
+
+%.h-check.$(1)-o: %.h | .deps
+	$$(COMPILER_$(1)) -MT $$@ -MMD -MP -MF .deps/$$*.h-check.$(1)-o.dep $$(CPPFLAGS) $$(CPPFLAGS_COMMON) $$(CPPFLAGS_$(1)) $$(CFLAGS_COMMON) $$(CFLAGS) $$(CFLAGS_$(1)) -o $$@ -c $$<
 endef
 
 $(foreach compiler,$(COMPILERS),$(eval $(call PER_COMPILER,$(compiler))))
@@ -357,6 +360,7 @@ lint:
 
 check_TARGETS += $(all_TARGETS)
 check_TARGETS += $(check_PROGRAMS) $(check_ALL_PROGRAMS)
+check_TARGETS += $(foreach compiler,$(COMPILERS),$(foreach header,$(wildcard beep-*.h),$(basename $(header)).h-check.$(compiler)-o))
 
 .PHONY: check-targets
 check-targets: $(check_TARGETS)

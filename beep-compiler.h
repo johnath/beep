@@ -52,6 +52,14 @@
 #define CONSTRUCTOR_FUNCTION __attribute__(( constructor ))
 
 
+/**
+ * Dummy declaration to avoid empty compilation unit when checking
+ * headers compile by themselves.
+ *
+ */
+extern char do_not_use_this_dummy[];
+
+
 #endif /* BEEP_COMPILER_H */
 
 
