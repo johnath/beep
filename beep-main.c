@@ -21,8 +21,15 @@
  *
  * \defgroup beep_main The main program
  *
- * For more documentation on beep, see the beep-usage.txt and
- * beep.1.in files.
+ * For more documentation on using `beep`, see the `beep-usage.txt` and
+ * `beep.1.in` files.
+ *
+ * More general information can be found in the `README.md`,
+ * `PERMISSIONS.md`, `INSTALL.md`, and if you want to create a binary
+ * distribution package, `PACKAGING.md` file.
+ *
+ * In case you want to start developing `beep` itself,
+ * `DEVELOPMENT.md` may be of interest to you.
  *
  * @{
  *
@@ -270,7 +277,7 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_T *result
 
     while ((ch = getopt_long(argc, argv, "f:l:r:d:D:schvVne:", opt_list, NULL))
            != EOF) {
-        /* handle parsed numbers for various arguments */
+        /* Temporary storage for parsing numbers for various arguments */
         int          argval_i = -1;
         unsigned int argval_u = ~0U;
         float        argval_f = -1.0f;
@@ -574,16 +581,19 @@ int main(const int argc, char *const argv[])
 
     /* After all the initialization has happened and the global
      * variables used to communicate with the signal handlers have
-     * actually been set up properly, we can finally install the signal
-     * handlers. As we do not start making any noises, there is no need
-     * to install the signal handlers any earlier.
+     * actually been set up properly, we can finally install the
+     * signal handlers. As we do not start making any noises until
+     * later, there is no need to install the signal handlers any
+     * earlier.
      */
     signal(SIGINT,  handle_signal);
     signal(SIGTERM, handle_signal);
 
-    /* this outermost while loop handles the possibility that -n/--new
-       has been used, i.e. that we have multiple beeps specified. Each
-       iteration will play, then free() one parms instance. */
+    /* This outermost while loop handles the possibility that -n/--new
+     * has been used, i.e. that we have a sequence of multiple beeps
+     * specified.  Each loop iteration will play, then free() one parms
+     * instance.
+     */
     while ((!global_abort) && parms) {
         beep_parms_T *next = parms->next;
 
