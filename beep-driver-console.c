@@ -85,7 +85,8 @@ bool driver_detect(beep_driver *driver, const char *console_device)
             return true;
         }
     } else {
-        static const char *const console_device_list[] =
+        static
+            const char *const console_device_list[] =
             {
              "/dev/tty0",
              "/dev/vc/0",

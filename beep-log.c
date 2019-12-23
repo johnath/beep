@@ -115,7 +115,8 @@ void log_data(const void *const buf, const size_t start_ofs, const size_t size)
         return;
     }
     const unsigned char *const ucbuf = buf;
-    static const char hexchar[] = "0123456789abcdef";
+    static
+        const char hexchar[] = "0123456789abcdef";
     char linebuf[80] =
         "0000  __ __ __ __ __ __ __ __-__ __ __ __ __ __ __ __  ........-........";
     for (size_t line_ofs=0, remaining=size; line_ofs<size; line_ofs+=16, remaining-=16) {

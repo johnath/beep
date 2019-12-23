@@ -216,7 +216,8 @@ void usage_bail(void)
  *
  * Written by parse_command_line(), read by main() initialization.
  */
-static char *param_device_name = NULL;
+static
+char *param_device_name = NULL;
 
 
 /**
@@ -252,8 +253,8 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_T *result
 {
     int ch;
 
-    static const
-        struct option opt_list[] =
+    static
+        const struct option opt_list[] =
         { {"help",    no_argument,       NULL, 'h'},
           {"version", no_argument,       NULL, 'V'},
           {"new",     no_argument,       NULL, 'n'},

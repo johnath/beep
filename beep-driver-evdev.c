@@ -82,7 +82,9 @@ bool driver_detect(beep_driver *driver, const char *console_device)
             return true;
         }
     } else {
-        static const char *const default_name = "/dev/input/by-path/platform-pcspkr-event-spkr";
+        static
+            const char *const default_name =
+            "/dev/input/by-path/platform-pcspkr-event-spkr";
         const int fd = open_checked_device(default_name);
         if (fd >= 0) {
             driver->device_fd = fd;
