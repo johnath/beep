@@ -435,7 +435,7 @@ refs:
 # List all TODOs and FIXMEs in the git repo
 .PHONY: todo fixme
 todo fixme:
-	$(GIT) grep -n -E '(TODO|FIXME):'
+	$(GIT) grep -n -E '(TODO:|FIXME:|\\todo\s|@todo\s)'
 
 # Generate a kind of dist tarball to help with preparing for release
 PACKAGE_TARBASE := $(PACKAGE_TARNAME)-$(shell $(GIT) describe --tags | $(SED) 's/^v\([0-9]\)/\1/')
