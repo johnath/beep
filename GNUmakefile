@@ -36,7 +36,6 @@ DOXYGEN = $(call pathsearch,doxygen)
 EGREP = $(GREP) -E
 GIT = $(call pathsearch,git)
 GREP = $(call pathsearch,grep)
-GZIP = $(call pathsearch,gzip)
 INSTALL = $(call pathsearch,install)
 MKDIR_P = mkdir -p
 PANDOC = $(call pathsearch,pandoc)
@@ -254,16 +253,12 @@ $(foreach compiler,$(COMPILERS),$(eval $(call PER_COMPILER,$(compiler))))
 # Generate doc and similar files
 ########################################################################
 
-man1_DATA  += beep.1.gz
-CLEANFILES += beep.1.gz
+man1_DATA  += beep.1
 CLEANFILES += beep.1
 
 %.1: %.1.in
 	$(SED) -e "s|[@]pkgdocdir@|$(pkgdocdir)|g" < $< > $@.tmp
 	mv -f $@.tmp $@
-
-%.1.gz: %.1
-	$(GZIP) --best --no-name -c < $< > $@
 
 HTML_DATA += html/README.html
 HTML_DATA += html/INSTALL.html

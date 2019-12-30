@@ -1,6 +1,8 @@
 1.4.x
 -----
 - Install contrib scripts for both successfully and failing sounding beeps.
+- Install man page uncompressed, so packagers can use their favoured
+  compression format.
 
 1.4.6
 -----
