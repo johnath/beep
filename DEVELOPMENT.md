@@ -131,10 +131,27 @@ Post-1.4.0:
 Release checklist
 =================
 
-  * `make clean && make check` runs?
-  * [`CHANGELOG`](CHANGELOG) up to date?
-  * [`CHANGELOG`](CHANGELOG) version number current?
-  * [`GNUmakefile`](GNUmakefile) `PACKAGE_VERSION` up to date?
-  * `make clean && make check` runs?
-  * `git push`
-  * enjoy the [github releases web interface](https://github.com/spkr-beep/beep/releases)
+  * Does `make clean && make check` run?
+
+  * Is [`CHANGELOG`](CHANGELOG) up to date?
+
+  * Does [`CHANGELOG`](CHANGELOG) start with the proper version
+    number?
+
+  * Does [`GNUmakefile`](GNUmakefile) define `PACKAGE_VERSION` as the
+    proper number?
+
+  * Does `make clean && make check` run?
+
+  * Do the `git push` to github.
+
+  * Wait for travis CI to finish building successfully. If it fails,
+    investigate and fix the problem.
+
+  * Enjoy the [github releases web
+    interface](https://github.com/spkr-beep/beep/releases):
+
+      * Tag beep version 1.2.3 as "v1.2.3".
+
+	  * Summarize the `CHANGELOG` in the release notes while properly
+        formatting it using github flavoured Markdown.
