@@ -263,7 +263,7 @@ CLEANFILES += beep.1
 	mv -f $@.tmp $@
 
 %.1.gz: %.1
-	$(GZIP) --best -c < $< > $@
+	$(GZIP) --best --no-name -c < $< > $@
 
 HTML_DATA += html/README.html
 HTML_DATA += html/INSTALL.html
