@@ -266,6 +266,8 @@ int execute_time(const char *const argv0,
                  const unsigned long repeats,
                  const char *const device)
 {
+    fflush(stdout);
+    fflush(stderr);
     const pid_t pid = fork();
     if (pid == -1) {
         /* we are the parent process, and fork(2) has failed */
