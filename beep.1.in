@@ -80,7 +80,19 @@ The \fB\-\-new\fR option allows you to chain multiple beeps together on a single
 would produce a sequence of three beeps, the first with a frequency of 1000Hz (and otherwise default values), then a second beep with a frequency of 2000Hz (again, with things like delay and reps being set to their defaults), then a third beep, at 1500Hz.  This is different from specifying a \fB\-r\fR value, since \fB\-r\fR repeats the same beep multiple times, whereas \fB\-\-new\fR allows you to specify different beeps.  After a \fB\-\-new\fR, the new beep is created with all the default values, and any of these can be specified without altering values for preceding (or later) beeps.  See the \fBEXAMPLES\fR section if this managed to confuse you.
 .TP
 .BR \-s ,\  \-c
-Both the \fB\-s\fR and the \fB\-c\fR option put \fBbeep\fR into input processing mode.  \fB\-s\fR tells \fBbeep\fR to read from \fIstdin\fR, and beep after each newline.  \fB\-c\fR tells \fBbeep\fR to beep after every character.  In both cases, the \fBbeep\fR will also echo the input back out to stdout, which makes it easy to slip \fBbeep\fR into a text processing pipeline.  See the \fBEXAMPLES\fR section.
+Both the \fB\-s\fR and the \fB\-c\fR option put \fBbeep\fR into input processing mode, reading from \fIstdin\fR and copying all received data to \fIstdout\fR.  This makes it easy to slip \fBbeep\fR into a text processing pipeline to acoustically monitor the data flow within that pipeline.  See the \fBEXAMPLES\fR section.
+.RS
+.TP
+.BR \-c
+Beep after every character received.
+.TP
+.BR \-s
+Beep after every set of data received.  Usually, this means after newlines occur in text processing pipes.
+.PP
+In a sequence of notes specified with one or more occurrences of \fB\-n\fR or \fB\-\-new\fR, it only makes sense to have one single note marked with either \fB\-s\fR or \fB\-c\fR attached to it.  Then \fBbeep\fR will beep all notes until it reaches that marked note, then repeat the marked note according to the input it receives, and once the input has reached EOF, \fBbeep\fR will continue with the remainder of the note sequence.
+.PP
+The behaviour of \fBbeep\fR with more than one note marked with \fB\-s\fR or \fB\-c\fR is undefined.
+.RE
 .SS "Other Actions"
 .BR \-h ,\  \-\-help
 Display \fBbeep\fR usage info and exit.
@@ -169,7 +181,7 @@ Uses the ancient console API, which means running the
 on a tty device like
 .BR /dev/tty0\  or\  /dev/vc/0.
 .IP
-This requires being root, unless the non-root user happens be logged into the virtual console and uses that specific device like e.g. \fB/dev/tty0\fR. This makes it useless for non-root users logged in via ssh or X11 or Wayland.
+This requires being root, unless the non-root user happens be logged into the virtual console and be using that specific virtual console device like e.g. \fB/dev/tty4\fR. This makes the console driver useless for non-root users logged in via ssh, and often X11 or Wayland.
 .IP
 Use the evdev API instead.
 .\"
