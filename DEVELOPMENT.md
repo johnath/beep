@@ -138,6 +138,8 @@ Release checklist
   * Does [`CHANGELOG`](CHANGELOG) start with the proper version
     number?
 
+  * Does `beep --version` contain the current year?
+
   * Does [`GNUmakefile`](GNUmakefile) define `PACKAGE_VERSION` as the
     proper number?
 
