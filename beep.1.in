@@ -186,19 +186,11 @@ This requires being root, unless the non-root user happens be logged into the vi
 Use the evdev API instead.
 .\"
 .SS "Concurrent Invocations"
-Concurrent invocations of
-.B beep
-are not supported. There is only one tone generator in the PC hardware, and we do not manage access to that shared resource in any way.  So if a first
+Concurrent invocations of \fBbeep\fR are not supported. There is only one tone generator in the PC hardware, and we do not manage access to that shared resource in any way.  So if a first
 .B "beep \-f 1000 \-l 10000"
 process starts a long 10 second beep with 1000Hz, and 2 seconds later a second quick
 .B "beep \-f 2050 \-l 100"
-with 2050Hz comes in, you will hear that 2050Hz beep for 100ms, and then silence as the quick beep silences the tone generator. Now you will not hear that the first
-.B "beep"
-process is still running after having waited for the first 2100ms of 10000ms. You will also not that the first
-.B "beep"
-process will silence the already silent speaker 7900ms later, i.e. 10000ms after the first
-.B "beep"
-started.
+with 2050Hz comes in, you will hear that 2050Hz beep for 100ms, and then silence as the quick beep silences the tone generator. Now you will not hear that the first \fBbeep\fR process is still running after having waited for the first 2100ms of its 10000ms. You will also not hear that the first \fBbeep\fR process will silence the already silent speaker 7900ms later, i.e. 10000ms after the first \fBbeep\fR started.
 .\"
 .SS "Sound Volume"
 .PP
