@@ -372,7 +372,7 @@ static
 int benchmark_and_report(const char *const argv0,
                          const char *const console_device_str)
 {
-    printf("Running benchmarks:\n");
+    printf("Running benchmarks (this will take a minute or two):\n");
 
     double cycle_time_console = -1.0;
     if (console_device_str) {
