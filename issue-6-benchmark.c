@@ -36,6 +36,8 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <sys/time.h>
+#include <sys/resource.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -44,8 +46,12 @@
 #include "beep-compiler.h"
 
 
+/** The minimum measurement period considered to create a reliable result. */
+#define MINIMUM_RELIABLE_PERIOD (23.0)
+
+
 /**
- * Print usage message.
+ * Print usage message for the issue-6-benchmark program.
  */
 static
 void print_usage(FILE *file, const char *const argv0)
@@ -78,6 +84,108 @@ void print_usage(FILE *file, const char *const argv0)
 
 
 /**
+ * Print the counter array.
+ *
+ * @param counters The array of two counters to print.
+ *
+ */
+
+static
+void print_counters(unsigned long *counters)
+    __attribute__(( nonnull(1) ));
+
+static
+void print_counters(unsigned long *counters)
+{
+    printf("      counters[succ] = %lu\n"
+           "      counters[fail] = %lu\n",
+           counters[true],
+           counters[false]);
+}
+
+
+/**
+ * Record all resource and time usage data for repeats on device.
+ */
+struct i6usage {
+    /** The device name for which resource and time usage are recorded. */
+    const char *device;
+    /** The number of repeats for which resource and time usage are recorded. */
+    unsigned long repeats;
+
+    /** The counters which have been recorded during the benchmark. */
+    unsigned long counters[2];
+
+    /** The recorded usr time converted to a double */
+    double time_usr;
+
+    /** The recorded sys time converted to a double */
+    double time_sys;
+
+    /** The recorded elapsed wall clock time converted to a double */
+    double time_wall;
+
+    /** The difference between getrusage() before and after the
+     *  repeats, except for the usr and sys times which need to be
+     *  looked at in the above doubles. */
+    struct rusage rusage;
+};
+
+
+/**
+ * Print the given struct i6usage in human readable form.
+ */
+
+static
+void print_i6usage(const struct i6usage *const usage)
+    __attribute__(( nonnull(1) ));
+
+static
+void print_i6usage(const struct i6usage *const usage)
+{
+    if (usage->repeats <= 0) {
+        return;
+    }
+    if (usage->device == NULL) {
+        return;
+    }
+
+    const double time_unaccounted =
+        usage->time_wall - usage->time_usr - usage->time_sys;
+    const double time_unaccounted_rel =
+        time_unaccounted / usage->time_wall;
+
+    /*
+    printf("  %lu repeats on device %s\n",
+           usage->repeats,
+           usage->device);
+    */
+
+    printf("    Time and resource usage (according to getrusage(2) and clock_gettime(2)):\n"
+           "      usr time (seconds):             %12.6f\n"
+           "      sys time (seconds):             %12.6f\n"
+           "      wall clock time (seconds):      %12.6f\n"
+           "      voluntary context switches:     %5ld\n"
+           "      involuntary context switches:   %5ld\n"
+           "      major (I/O) page faults:        %5ld\n"
+           "      minor (reclaim) page faults:    %5ld\n"
+           "    Time unaccounted for (wall clock - usr - sys):\n"
+           "      in seconds                      %12.6f\n"
+           "      as fraction of wall clock time    %6.2f%%\n"
+           "\n",
+           usage->time_usr,
+           usage->time_sys,
+           usage->time_wall,
+           usage->rusage.ru_nvcsw,
+           usage->rusage.ru_nivcsw,
+           usage->rusage.ru_majflt,
+           usage->rusage.ru_minflt,
+           time_unaccounted,
+           100.0 * time_unaccounted_rel);
+}
+
+
+/**
  * Repeatedly open(2) (O_WRONLY) and close(2) a given device.
  *
  * Repeatedly open(2)s with O_WRONLY and close(2)s a given device for
@@ -85,8 +193,11 @@ void print_usage(FILE *file, const char *const argv0)
  * call succeeds, so that the compiler cannot do any shortcut
  * optimizations for this loop.
  *
+ * Timing the run and printing the results are left to the caller.
+ *
  * @param repeats  The number of times to repeat the open(2)-and-close(2) sequence.
  * @param device   The name of the device file.
+ * @param counters The counters this run generates.
  *
  * @return EXIT_FAILURE if some error occured
  * @return EXIT_SUCCESS otherwise
@@ -94,26 +205,20 @@ void print_usage(FILE *file, const char *const argv0)
 
 static
 int run_cycles(const unsigned long repeats,
-               const char *const device)
-    __attribute__(( nonnull(2), warn_unused_result ));
+               const char *const device,
+               unsigned long *counters)
+    __attribute__(( nonnull(2,3), warn_unused_result ));
 
 static
 int run_cycles(const unsigned long repeats,
-               const char *const device)
+               const char *const device,
+               unsigned long *counters)
 {
-    unsigned long counters[2] = {0, 0};
     for (unsigned long u=repeats; u>0; u--) {
         const int fd = open(device, O_WRONLY);
         counters[(fd >= 0)]++;
         close(fd);
     }
-
-    printf("    device_name    = %s\n"
-           "    counters[succ] = %lu\n"
-           "    counters[fail] = %lu\n",
-           device,
-           counters[true],
-           counters[false]);
 
     if (counters[false] > 0) {
         return EXIT_FAILURE;
@@ -124,130 +229,196 @@ int run_cycles(const unsigned long repeats,
 
 
 /**
- * Time run_cycles() for given repeats on given device.
+ * Measure running the given number of cycles on given device.
  *
- * @param repeats    Number of repeats to time.
- * @param device_str Device to time the open-and-close cycles of.
+ * @param repeats The number of repeats to time.
+ * @param device  The device to run the repeats on.
+ * @param usage   The struct i6usage to store resource and time required.
+ * @param verbose Whether to call print_i6usage() after the cycles.
  *
- * @return Negative value in case of any errors
- * @return Duration in seconds otherwise
+ * @return Negative value in case of any error
+ * @return average cycle time otherwise
  */
 
 static
-double time_cycles(const unsigned long repeats,
-                   const char *const device_str)
-    __attribute__(( nonnull(2), warn_unused_result ));
+double measure_cycles(const unsigned long repeats,
+                      const char *const device,
+                      struct i6usage *usage,
+                      const bool verbose)
+    __attribute__(( nonnull(3) ));
 
 static
-double time_cycles(const unsigned long repeats,
-                   const char *const device_str)
+double measure_cycles(const unsigned long repeats,
+                      const char *const device,
+                      struct i6usage *usage,
+                      const bool verbose)
 {
+    if (repeats == 0) {
+        return -1.0;
+    }
+    if (device == NULL) {
+        return -1.0;
+    }
+
+    printf("  Measuring %lu repeats for device %s\n",
+           repeats, device);
+    usage->repeats = repeats;
+    usage->device  = device;
+
     struct timespec time_begin;
     struct timespec time_end;
-    const int gettime_ret_begin = clock_gettime(CLOCK_BOOTTIME, &time_begin);
-    const int retval = run_cycles(repeats, device_str);
-    const int gettime_ret_end   = clock_gettime(CLOCK_BOOTTIME, &time_end);
-    if (gettime_ret_begin != 0 || gettime_ret_end != 0) {
-        fprintf(stderr, "error running clock_gettime\n");
+    memset(&time_begin, 0, sizeof(time_begin));
+    memset(&time_end,   0, sizeof(time_end));
+
+    struct rusage usage_begin;
+    struct rusage usage_end;
+    memset(&usage_begin, 0, sizeof(usage_begin));
+    memset(&usage_end,   0, sizeof(usage_end));
+
+    const int getrusage_ret_begin =
+        getrusage(RUSAGE_SELF, &usage_begin);
+    const int gettime_ret_begin =
+        clock_gettime(CLOCK_BOOTTIME, &time_begin);
+
+    const int run_cycles_retval =
+        run_cycles(repeats, device, usage->counters);
+
+    const int getrusage_ret_end =
+        getrusage(RUSAGE_SELF, &usage_end);
+    const int gettime_ret_end =
+        clock_gettime(CLOCK_BOOTTIME, &time_end);
+
+    print_counters(usage->counters);
+
+    if ((getrusage_ret_begin != 0) ||
+        (getrusage_ret_end   != 0)) {
+        fprintf(stderr, "error running getrusage(2)\n");
         return -1.0;
     }
-    if (retval == EXIT_FAILURE) {
-        fprintf(stderr, "Aborting due to error(s) in run_cycles()\n");
+
+    if ((gettime_ret_begin   != 0) ||
+        (gettime_ret_end     != 0)) {
+        fprintf(stderr, "error running clock_gettime(2)\n");
         return -1.0;
     }
-    const double d_begin = time_begin.tv_sec + 0.000000001 * time_begin.tv_nsec;
-    const double d_end   = time_end.tv_sec   + 0.000000001 * time_end.tv_nsec;
-    const double d_delta = d_end - d_begin;
-    return d_delta;
+
+    const double wtime_delta = 0.0
+        + 1.000000000 * ((double)time_end.tv_sec)
+        + 0.000000001 * ((double)time_end.tv_nsec)
+        - 1.000000000 * ((double)time_begin.tv_sec)
+        - 0.000000001 * ((double)time_begin.tv_nsec);
+    usage->time_wall = wtime_delta;
+
+    const double utime_delta = 0.0
+        + 1.000000 * ((double)usage_end.ru_utime.tv_sec)
+        + 0.000001 * ((double)usage_end.ru_utime.tv_usec)
+        - 1.000000 * ((double)usage_begin.ru_utime.tv_sec)
+        - 0.000001 * ((double)usage_begin.ru_utime.tv_usec);
+    usage->time_usr = utime_delta;
+
+    const double stime_delta = 0.0
+        + 1.000000 * ((double)usage_end.ru_stime.tv_sec)
+        + 0.000001 * ((double)usage_end.ru_stime.tv_usec)
+        - 1.000000 * ((double)usage_begin.ru_stime.tv_sec)
+        - 0.000001 * ((double)usage_begin.ru_stime.tv_usec);
+    usage->time_sys = stime_delta;
+
+    /* all documented fields of struct rusage except the two struct timeval */
+    usage->rusage.ru_maxrss   = usage_end.ru_maxrss   - usage_begin.ru_maxrss;
+    usage->rusage.ru_ixrss    = usage_end.ru_ixrss    - usage_begin.ru_ixrss;
+    usage->rusage.ru_idrss    = usage_end.ru_idrss    - usage_begin.ru_idrss;
+    usage->rusage.ru_isrss    = usage_end.ru_isrss    - usage_begin.ru_isrss;
+    usage->rusage.ru_minflt   = usage_end.ru_minflt   - usage_begin.ru_minflt;
+    usage->rusage.ru_majflt   = usage_end.ru_majflt   - usage_begin.ru_majflt;
+    usage->rusage.ru_nswap    = usage_end.ru_nswap    - usage_begin.ru_nswap;
+    usage->rusage.ru_inblock  = usage_end.ru_inblock  - usage_begin.ru_inblock;
+    usage->rusage.ru_oublock  = usage_end.ru_oublock  - usage_begin.ru_oublock;
+    usage->rusage.ru_msgsnd   = usage_end.ru_msgsnd   - usage_begin.ru_msgsnd;
+    usage->rusage.ru_msgrcv   = usage_end.ru_msgrcv   - usage_begin.ru_msgrcv;
+    usage->rusage.ru_nsignals = usage_end.ru_nsignals - usage_begin.ru_nsignals;
+    usage->rusage.ru_nvcsw    = usage_end.ru_nvcsw    - usage_begin.ru_nvcsw;
+    usage->rusage.ru_nivcsw   = usage_end.ru_nivcsw   - usage_begin.ru_nivcsw;
+
+    if (verbose) {
+        print_i6usage(usage);
+    }
+
+    if ((run_cycles_retval == 0) && (usage->repeats > 0)) {
+        const double avg_cycle_time =
+            usage->time_wall / ((double)usage->repeats);
+        return avg_cycle_time;
+    } else {
+        return -1.0;
+    }
 }
 
 
-/** The minimum measurement period considered to create a reliable result. */
-#define MINIMUM_RELIABLE_PERIOD (15.0)
-
-
 /**
- * Get reliable cycle time by running time_cycles() for longer than #MINIMUM_RELIABLE_PERIOD.
+ * Determine number of repeats required for a reliable measurement.
  *
- * This increases the number of repeats until it certainly takes more
+ * This determines the number of repeats needed to certainly take more
  * than #MINIMUM_RELIABLE_PERIOD seconds on the wall clock. Then we
- * consider the measurement reliable enough and can return the average
+ * consider the measurement reliable enough and calculate the average
  * measured cycle time.
  *
- * @param initial_repeats Initial number of repeats, which will then
- *                        used as a baseline for increasing the
- *                        repeats such that they will take more than
- *                        #MINIMUM_RELIABLE_PERIOD seconds.
+ * @param repeats Number of repeats on which basis to calculate
+ *                the number of repeats needed for a proper measurement.
+ * @param device  Name of the device to measure the
+ *                open(2)-and-close(2) cycle duration on.
  *
- * @param device_str Name of the device to measure the
- *                   open(2)-and-close(2) cycle duration on.
- *
- * @return negative value if some error occurred
- * @return the duration of a single open(2)-and-close(2) cycle otherwise
+ * @return 0 if some error occurred
+ * @return the repeats to run on the given device for reliable measurement
  *
  */
 
 static
-double average_cycle_time(const unsigned long initial_repeats,
-                          const char *const device_str)
-    __attribute__(( nonnull(2), warn_unused_result ));
+unsigned long repeats_for_measurement(const unsigned long repeats,
+                                      const char *const device)
+    __attribute__(( warn_unused_result ));
 
 static
-double average_cycle_time(const unsigned long initial_repeats,
-                          const char *const device_str)
+unsigned long repeats_for_measurement(const unsigned long repeats,
+                                      const char *const device)
 {
-    struct timespec time_test;
-    const int gettime_ret_test = clock_gettime(CLOCK_BOOTTIME, &time_test);
-    if (gettime_ret_test != 0) {
-        perror("clock_gettime(CLOCK_BOOTTIME, ...)");
-        return -1.0;
+    if (device == NULL) {
+        return 0;
     }
 
-    double d_delta = 0.0;
-    unsigned long repeats = initial_repeats;
-    while (true) {
-        if (repeats < initial_repeats) {
-            return -1.0;
-        }
+    /* printf("  Trying %lu repeats for device %s\n", repeats, device); */
 
-        printf("  Trying %lu repeats for device %s\n", repeats, device_str);
+    struct i6usage i6usage;
+    memset(&i6usage, 0, sizeof(i6usage));
 
-        d_delta = time_cycles(repeats, device_str);
-        if (d_delta < 0) {
-            fprintf(stderr, "Error in time_cycles()\n");
-            return -1.0;
-        }
-        printf("  Time spent: %g s\n", d_delta);
-        if (d_delta >= MINIMUM_RELIABLE_PERIOD) {
-            return (d_delta / ((double)repeats));
-        }
+    const double retval = measure_cycles(repeats, device, &i6usage, false);
 
-        /* product of positive numbers must be positive */
-        const double add_repeats =
-            1.10 *
-            ((double)repeats) *
-            (((double)(MINIMUM_RELIABLE_PERIOD))/d_delta);
-
-        const unsigned long rounded_add_repeats =
-            (unsigned long)lrint(0.5+add_repeats);
-
-        repeats += rounded_add_repeats;
+    if (retval < 0.0) {
+        fprintf(stderr, "Aborting due to error(s) in measure_cycles()\n");
+        return 0;
     }
+
+    printf("    Time spent: %g s\n", i6usage.time_wall);
+
+    const double d_repeats = (double)i6usage.repeats;
+    const double d_reliable_repeats = 1.10 *
+        ((double)MINIMUM_RELIABLE_PERIOD) * d_repeats / i6usage.time_wall;
+
+    const unsigned long rounded_cycles =
+        (unsigned long)lrint(0.5+d_reliable_repeats);
+
+    return rounded_cycles;
 }
 
 
 /**
- * Run externally timed main3() process via fork(2), execv(3), and waitpid(2).
+ * Run externally timed main_argc3() process via fork(2), execv(3), and waitpid(2).
  *
  * This runs a separate instance of `issue-6-benchmark` via
  * `/usr/bin/time -v`. This gives a lot more information about the
- * system resources used than want to reasonably determine ourselves.
+ * system resources used.
  *
- * @param argv0   The name issue-6-benchmark has been called which
- *                `/usr/bin/time` will now run.
- *
+ * @param argv0   The name issue-6-benchmark has been called, and
+ *                which `/usr/bin/time -v` is going run now.
  * @param repeats The number of repeats to time.
- *
  * @param device  The device to run the repeats on.
  *
  * @return EXIT_FAILURE in case of any error
@@ -256,21 +427,27 @@ double average_cycle_time(const unsigned long initial_repeats,
  */
 
 static
-int execute_time(const char *const argv0,
-                 const unsigned long repeats,
-                 const char *const device)
+int execute_time_ext(const char *const argv0,
+                     const unsigned long repeats,
+                     const char *const device)
     __attribute__(( nonnull(1,3) ));
 
 static
-int execute_time(const char *const argv0,
-                 const unsigned long repeats,
-                 const char *const device)
+int execute_time_ext(const char *const argv0,
+                     const unsigned long repeats,
+                     const char *const device)
 {
+    printf("  /usr/bin/time -v %s %lu %s\n",
+           argv0, repeats, device);
     fflush(stdout);
     fflush(stderr);
+    /* We need to have flushed everything before fork(2). Otherwise
+     * the same unflushed data is present in the buffers of *both*
+     * parent process and child process. */
     const pid_t pid = fork();
     if (pid == -1) {
         /* we are the parent process, and fork(2) has failed */
+        perror("fork(2)");
         return EXIT_FAILURE;
     } else if (pid == 0) {
         /* we are the child process */
@@ -292,9 +469,10 @@ int execute_time(const char *const argv0,
         int wstatus = -1;
         const pid_t w = waitpid(pid, &wstatus, 0);
         if (w != pid) {
-            fprintf(stderr, "some error in waitpid(2)\n");
+            fprintf(stderr, "some error in wait4(2)\n");
             return EXIT_FAILURE;
         } else {
+            printf("\n");
             if (WIFEXITED(wstatus)) {
                 /* printf("Child has exited properly.\n"); */
                 const int child_exit_code = WEXITSTATUS(wstatus);
@@ -314,37 +492,31 @@ int execute_time(const char *const argv0,
 
 
 /**
- * Print and execute external '/usr/bin/time' command if we know how.
+ * Print summary on average time for open-and-close cycle.
  *
- * @param argv0      The argv0 which issue-6-benchmark has been and will be called
- * @param cycle_time The average cycle time for the given `device`
- * @param device     The device to run cycles on.
+ * @param api_str Either "console" or "evdev".
+ * @param i6usage The struct i6usage to print.
  */
-static
-void conditional_command(const char *const argv0,
-                         const double cycle_time,
-                         const char *const device)
-    __attribute__(( nonnull(1) ));
 
 static
-void conditional_command(const char *const argv0,
-                         const double cycle_time,
-                         const char *const device)
+void print_summary(const char *const api_str, struct i6usage *i6usage)
 {
-    if (device == NULL) {
-        /* skip this */
+    if (i6usage->repeats <= 0) {
         return;
     }
-    if (cycle_time < 0.0) {
-        /* skip this */
+    if (i6usage->device == NULL) {
         return;
     }
 
-    const double reliable_repeats = 1.10 *
-        ((double)MINIMUM_RELIABLE_PERIOD)/cycle_time;
-    unsigned long cmd_repeats = (unsigned long)lrint(0.5+reliable_repeats);
-    printf("  /usr/bin/time -v %s %lu %s\n", argv0, cmd_repeats, device);
-    execute_time(argv0, cmd_repeats, device);
+    const double avg_cycle_time =
+        i6usage->time_wall / ((double)i6usage->repeats);
+
+    printf("    %s device: %s\n"
+           "        time per open(2)-and-close(2): %11.3f us\n"
+           "        open(2)-and-close(2) rate:     %11.3f / s\n",
+           api_str, i6usage->device,
+           1000000.0*avg_cycle_time, 1.0/avg_cycle_time
+           );
 }
 
 
@@ -364,7 +536,6 @@ const char *const evdev_device_str =
  * time.
  *
  * @param argv0              The argv[0] from main().
- *
  * @param console_device_str The console device to test. If NULL, skip
  *                           benchmarking the console API device.
  */
@@ -372,57 +543,63 @@ static
 int benchmark_and_report(const char *const argv0,
                          const char *const console_device_str)
 {
-    printf("Running benchmarks (this will take a minute or two):\n");
+    printf("Running benchmarks (this will take a minute or two).\n\n");
 
-    double cycle_time_console = -1.0;
-    if (console_device_str) {
-        cycle_time_console =
-            average_cycle_time(1000000, console_device_str);
-    }
+    printf("Beginning with a quick test run to dimension the actual benchmark.\n");
 
-    const double cycle_time_evdev   =
-        average_cycle_time(200, evdev_device_str);
+    /* These both take around 3 seconds on my system. That should be a
+     * good enough base to extrapolate to MINIMUM_RELIABLE_PERIOD
+     * from. */
+    const unsigned long repeats_console =
+        repeats_for_measurement(1000000, console_device_str);
+    const unsigned long repeats_evdev =
+        repeats_for_measurement(230, evdev_device_str);
 
-    printf("\n"
-           "Summary:\n");
+    printf("\nNow for some actual benchmarks, measured internally:\n");
 
-    if (console_device_str && (cycle_time_console > 0.0)) {
-        printf("    console device: %s\n"
-               "        time per open(2)-and-close(2): %g us\n"
-               "        open(2)-and-close(2) rate:     %g / s\n",
-               console_device_str,
-               1000000.0*cycle_time_console, 1.0/cycle_time_console
-               );
-    } else {
-        printf("    console device: no writable TTY device found\n");
-    }
+    struct i6usage i6usage_console;
+    memset(&i6usage_console, 0, sizeof(i6usage_console));
 
-    if (cycle_time_evdev > 0.0) {
-        printf("    evdev device:   %s\n"
-               "        time per open(2)-and-close(2): %g ms\n"
-               "        open(2)-and-close(2) rate:     %g / s\n",
-               evdev_device_str,
-               1000.0*cycle_time_evdev, 1.0/cycle_time_evdev
-               );
-    }
+    struct i6usage i6usage_evdev;
+    memset(&i6usage_evdev, 0, sizeof(i6usage_evdev));
 
-    if ((cycle_time_evdev > 0.0) && (cycle_time_console > 0.0)) {
+    const double avg_cycle_time_console =
+        measure_cycles(repeats_console, console_device_str,
+                       &i6usage_console, true);
+
+    const double avg_cycle_time_evdev =
+        measure_cycles(repeats_evdev, evdev_device_str,
+                       &i6usage_evdev, true);
+
+    printf("Summary:\n");
+
+    print_summary("console", &i6usage_console);
+    print_summary("evdev",   &i6usage_evdev);
+
+    if ((avg_cycle_time_evdev > 0.0) && (avg_cycle_time_console > 0.0)) {
         printf("\n"
                "So opening an evdev device takes about %g times as long\n"
                "as opening a console device.\n",
-               cycle_time_evdev/cycle_time_console);
+               avg_cycle_time_evdev/avg_cycle_time_console);
     }
 
     printf("\n"
-           "Note that any of those numbers can only be relied on when run on an\n"
-           "otherwise idle machine.\n");
+           "Notes:\n"
+           "  * All measured times can only be relied upon when this benchmark\n"
+           "    is running on an otherwise idle machine.\n"
+           "  * The weird thing is that for the evdev device, almost 100%% of\n"
+           "    the elapsed wall clock time is spent doing something which is\n"
+           "    *neither* system time *nor* user time. What time is it then?\n"
+           );
 
-    if ((cycle_time_console > 0.0) || (cycle_time_evdev > 0.0)) {
+    if ((repeats_console > 0.0) || (repeats_evdev > 0.0)) {
         printf("\n"
-               "For more details, you can run the following commands:\n");
+               "Using the external '/usr/bin/time -v' command for the most details:\n");
 
-        conditional_command(argv0, cycle_time_console, console_device_str);
-        conditional_command(argv0, cycle_time_evdev, evdev_device_str);
+        if (console_device_str) {
+            execute_time_ext(argv0, repeats_console, console_device_str);
+        }
+        execute_time_ext(argv0, repeats_evdev, evdev_device_str);
     }
 
     return EXIT_SUCCESS;
@@ -526,14 +703,14 @@ char *find_writable_tty(void)
  * @return EXIT_SUCCESS otherwise
  */
 static
-int main1(const int argc, const char *const argv[])
+int main_argc1(const int argc, const char *const argv[])
 {
     assert(argc == 1);
     char *console_device = find_writable_tty();
     if (console_device) {
-        printf("Writable TTY device found: %s\n", console_device);
+        printf("Writable TTY device found: %s\n\n", console_device);
     } else {
-        printf("No writable TTY device found.\n");
+        printf("No writable TTY device found.\n\n");
     }
 
     const int retval = benchmark_and_report(argv[0], console_device);
@@ -565,7 +742,7 @@ int main1(const int argc, const char *const argv[])
  * @return EXIT_SUCCESS otherwise
  */
 static
-int main2(const int argc, const char *const argv[])
+int main_argc2(const int argc, const char *const argv[])
 {
     if (argc != 2) {
         fprintf(stderr, "%s: Exactly one argument needed: the console 'device'.\n", argv[0]);
@@ -628,10 +805,12 @@ int main2(const int argc, const char *const argv[])
  * @return EXIT_SUCCESS otherwise
  */
 static
-int main3(const int argc, const char *const argv[])
+int main_argc3(const int argc, const char *const argv[])
 {
     if (argc != 3) {
-        fprintf(stderr, "%s: Exactly two arguments needed: 'repeats' and 'device'.\n", argv[0]);
+        fprintf(stderr,
+                "%s: Exactly two arguments needed: 'repeats' and 'device'.\n",
+                argv[0]);
         return EXIT_FAILURE;
     }
 
@@ -652,35 +831,43 @@ int main3(const int argc, const char *const argv[])
     }
     /* repeats contains a valid number of repeats now */
 
-    const char *device_str = argv[2];
-    if (*device_str == '\0') {
+    const char *device = argv[2];
+    if (*device == '\0') {
         fprintf(stderr, "%s: 'device' argument must be non-empty string\n", argv[0]);
         return EXIT_FAILURE;
     }
     struct stat sb;
-    const int ret_stat = stat(device_str, &sb);
+    const int ret_stat = stat(device, &sb);
     if (ret_stat == 0) {
         /* successful stat(2) call */
     } else if (ret_stat == -1) {
         const int saved_errno = errno;
-        fprintf(stderr, "%s: stat(2): 'device' argument: %s\n", argv[0],
+        fprintf(stderr,
+                "%s: stat(2): 'device' argument: %s\n", argv[0],
                 strerror(saved_errno));
         return EXIT_FAILURE;
     } else {
-        fprintf(stderr, "%s: stat(2): 'device' argument: undocumented result %d\n", argv[0],
-                ret_stat);
+        fprintf(stderr,
+                "%s: stat(2): 'device' argument: undocumented result %d\n",
+                argv[0], ret_stat);
         return EXIT_FAILURE;
     }
 
     if ((sb.st_mode & S_IFMT) == S_IFCHR) {
         /* character device */
     } else {
-        fprintf(stderr, "%s: stat(2): 'device' argument is not a character device\n", argv[0]);
+        fprintf(stderr,
+                "%s: stat(2): 'device' argument is not a character device\n",
+                argv[0]);
         return EXIT_FAILURE;
     }
-    /* device_str considered valid now */
+    /* device considered valid now */
 
-    return run_cycles(repeats, device_str);
+    unsigned long counters[2];
+    memset(&counters, 0, sizeof(counters));
+    const int run_cycles_retval = run_cycles(repeats, device, counters);
+    print_counters(counters);
+    return run_cycles_retval;
 }
 
 
@@ -695,22 +882,20 @@ int main3(const int argc, const char *const argv[])
  */
 int main(const int argc, const char *const argv[])
 {
-    if (false) {
-        /* do nothing */
-    } else if (argc == 1) {
-        return main1(argc, argv);
-    } else if (argc == 2) {
+    switch (argc) {
+    case 1:
+        return main_argc1(argc, argv);
+    case 2:
         if (strcmp("--help", argv[1]) == 0) {
             print_usage(stdout, argv[0]);
             return EXIT_SUCCESS;
         }
-        return main2(argc, argv);
-    } else if (argc == 3) {
-        return main3(argc, argv);
-    } else {
-        print_usage(stderr, argv[0]);
-        return EXIT_FAILURE;
+        return main_argc2(argc, argv);
+    case 3:
+        return main_argc3(argc, argv);
     }
+    print_usage(stderr, argv[0]);
+    return EXIT_FAILURE;
 }
 
 
