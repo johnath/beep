@@ -25,9 +25,9 @@ What beep does
 
   * Find a suitable device file and API to use on it.
 
-  * Set up signal handlers to silence the beeping in case beep is
-    interrupted or killed before it has a chance to silence the PC
-    speaker again.
+  * Set up signal handlers to silence the beeping in case the `beep`
+    process is interrupted or killed before it has a chance to silence
+    the PC speaker again.
 
   * Depending on the command line arguments, either
 
