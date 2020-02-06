@@ -427,6 +427,12 @@ uninstall:
 # Development helpers
 ########################################################################
 
+# Only have make deal with those variables and rules if this is a git
+# repo, and if the git executable has been found.
+GIT_INFO_EXCLUDE = $(firstword $(wildcard .git/info/exclude))
+ifneq ($(strip $(GIT_INFO_EXCLUDE)),)
+ifdef GIT
+
 # List all references to documentation in the git repo
 .PHONY: refs
 refs:
@@ -442,6 +448,9 @@ PACKAGE_TARBASE := $(PACKAGE_TARNAME)-$(shell $(GIT) describe --tags | $(SED) 's
 .PHONY: dist
 dist:
 	$(GIT) archive --format=tar.gz --verbose --prefix=$(PACKAGE_TARBASE)/ --output=$(PACKAGE_TARBASE).tar.gz HEAD
+
+endif
+endif
 
 
 ########################################################################
