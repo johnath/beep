@@ -1,3 +1,6 @@
+1.4.x
+-----
+
 1.4.9
 -----
 - Mention default values in beep(1) man page and "beep --help" output.
