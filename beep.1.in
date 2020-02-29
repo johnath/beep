@@ -61,16 +61,16 @@ Make the \fBbeep\fR program more verbose.
 .SS "Tone options"
 .TP
 .BI \-f\  FREQ
-Beep with a tone frequency of \fIFREQ\fR Hz, where 0 < \fIFREQ\fR < 20000.  As a general ballpark, the regular terminal beep is around 750Hz.  For backwards compatibility, you can give \fIFREQ\fR as a floating point number, but \fBbeep\fR will round that to integer values as the kernel APIs expect them.
+Beep with a tone frequency of \fIFREQ\fR Hz, where 0 < \fIFREQ\fR < 20000.  As a general ballpark, the regular terminal beep is around 750Hz.  For backwards compatibility, you can give \fIFREQ\fR as a floating point number, but \fBbeep\fR will round that to integer values as the kernel APIs expect them.  Default value: @DEFAULT_FREQ@ Hz.
 .TP
 .BI \-l\  LEN
-Beep for a tone length of \fILEN\fR milliseconds.
+Beep for a tone length of \fILEN\fR milliseconds. Default value: @DEFAULT_LENGTH@ ms.
 .TP
 .BI \-r\  REPEATS
-Repeat the tone including delays \fIREPEATS\fR times (defaults to 1).
+Repeat the tone including delays \fIREPEATS\fR times. Default value: 1 tone, not repeated.
 .TP
 .BI \-d\  DELAY\fR\ |\  \-D\  DELAY
-Specify a delay of \fIDELAY\fR milliseconds between repetitions.  Small letter \fB\-d\fR specifies that this delay should only occur \fIbetween\fR beeps, that is, it should \fInot\fR occur after the last repetition.  Capital letter \fB\-D\fR specifies that the delay should occur after every repetition, \fIincluding\fR the last one.  Normally, \fB\-d\fR is what you want, but if, for example, you are stringing several \fBbeep\fR commands together to play the star wars anthem, you may want control over every delay.
+Specify a delay of \fIDELAY\fR milliseconds between repetitions.  Small letter \fB\-d\fR specifies that this delay should only occur \fIbetween\fR beeps, that is, it should \fInot\fR occur after the last repetition.  Capital letter \fB\-D\fR specifies that the delay should occur after every repetition, \fIincluding\fR after the last one.  Normally, \fB\-d\fR is what you want, but if, for example, you are stringing several \fBbeep\fR commands together to play the star wars anthem, you may want control over every delay. Default value: @DEFAULT_DELAY@ ms delay between beeps with no delay after the last beep.
 .TP
 .BR \-n ,\  \-\-new
 The \fB\-\-new\fR option allows you to chain multiple beeps together on a single command line.  Each time the \fB\-\-new\FR is used, \fBbeep\fR starts treating all further arguments as though they were for a new beep.  So for example:

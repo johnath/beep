@@ -1,0 +1,52 @@
+/** \file beep-config.h
+ * \brief The default values for beeps.
+ *
+ * \author Copyright (C) 2000-2010 Johnathan Nightingale
+ * \author Copyright (C) 2010-2013 Gerfried Fuchs
+ * \author Copyright (C) 2013-2018 Hans Ulrich Niedermann
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ */
+
+#ifndef BEEP_CONFIG_H
+#define BEEP_CONFIG_H
+
+
+#include "beep-types.h"
+
+
+/* Meaningful Defaults */
+
+/** Default value: tone pitch Middle A. */
+#define DEFAULT_FREQ   @DEFAULT_FREQ@
+
+/** Default value: tone length in milliseconds. */
+#define DEFAULT_LENGTH @DEFAULT_LENGTH@
+
+/** Default value: one repetition of tone. */
+#define DEFAULT_REPS   1
+
+/** Default value: delay between repeated tones in milliseconds. */
+#define DEFAULT_DELAY  @DEFAULT_DELAY@
+
+/** Default value: delay after the last of the tones. */
+#define DEFAULT_END_DELAY  END_DELAY_NO
+
+/** Default value: whether to beep on receiving data on stdin. */
+#define DEFAULT_STDIN_BEEP STDIN_BEEP_NONE
+
+
+#endif /* !defined(BEEP_CONFIG_H) */

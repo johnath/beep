@@ -7,7 +7,9 @@
 /issue-6-benchmark
 
 # Built sources
+/beep-config.h
 /beep-usage.c
+/beep-usage.txt
 
 # Build intermediates
 *.dep

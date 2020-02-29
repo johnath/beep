@@ -199,6 +199,8 @@ beep-usage.c: beep-usage.txt
 	done < $<
 	echo '  ;' >> $@
 
+CLEANFILES += beep-usage.txt
+
 
 ########################################################################
 # Compile and Link rules including automatic dependency generation
@@ -256,10 +258,6 @@ $(foreach compiler,$(COMPILERS),$(eval $(call PER_COMPILER,$(compiler))))
 man1_DATA  += beep.1
 CLEANFILES += beep.1
 
-%.1: %.1.in
-	$(SED) -e "s|[@]pkgdocdir@|$(pkgdocdir)|g" < $< > $@.tmp
-	mv -f $@.tmp $@
-
 HTML_DATA += html/README.html
 HTML_DATA += html/INSTALL.html
 HTML_DATA += html/DEVELOPMENT.html
@@ -281,13 +279,29 @@ html/%.html: %.md
 		exit 1; \
 	fi
 
+DEFAULT_FREQ   = 440
+DEFAULT_LENGTH = 200
+DEFAULT_DELAY  = 100
+
 REPLACEMENTS =
 REPLACEMENTS += -e s/@PACKAGE_TARNAME@/$(PACKAGE_TARNAME)/g
 REPLACEMENTS += -e s/@PACKAGE_VERSION@/$(PACKAGE_VERSION)/g
 
+REPLACEMENTS += -e s/@DEFAULT_FREQ@/$(DEFAULT_FREQ)/g
+REPLACEMENTS += -e s/@DEFAULT_LENGTH@/$(DEFAULT_LENGTH)/g
+REPLACEMENTS += -e s/@DEFAULT_DELAY@/$(DEFAULT_DELAY)/g
+
+REPLACEMENTS += -e 's|[@]pkgdocdir@|$(pkgdocdir)|g'
+
+CLEANFILES    += beep-config.h
+BUILT_SOURCES += beep-config.h
+beep-main.clang-o : beep-config.h
+beep-main.gcc-o : beep-config.h
+
 CLEANFILES += Doxyfile
 CLEANFILES += Doxyfile.new
-Doxyfile: Doxyfile.in GNUmakefile
+
+%: %.in GNUmakefile
 	$(SED) $(REPLACEMENTS) < $< > $@.new
 	@if $(EGREP) '@([A-Za-z][A-Za-z0-9_]*)@' $@.new; then \
 		echo "Error: GNUmakefile fails to substitute some of the variables in \`$<'."; \

@@ -55,10 +55,12 @@
 #include <linux/input.h>
 
 
+#include "beep-config.h"
 #include "beep-compiler.h"
 #include "beep-drivers.h"
 #include "beep-library.h"
 #include "beep-log.h"
+#include "beep-types.h"
 #include "beep-usage.h"
 
 
@@ -75,51 +77,12 @@ const char version_message[] =
 
 
 /**
- * Whether to to delay after the current repetition set of tones.
- */
-typedef enum
-    {
-     END_DELAY_NO = 0,
-     END_DELAY_YES = 1,
-    } end_delay_E;
-
-
-/**
- * Whether to and how to react to data from stdin.
- */
-typedef enum
-    {
-     STDIN_BEEP_NONE = 0,
-     STDIN_BEEP_LINE = 1,
-     STDIN_BEEP_CHAR = 2,
-    } stdin_beep_E;
-
-
-/**
  * Per note parameter set.
  */
 typedef struct _beep_parms_T beep_parms_T;
 
 
-/* Meaningful Defaults */
-
-/** Default value: tone pitch Middle A. */
-#define DEFAULT_FREQ       440
-
-/** Default value: tone length in milliseconds. */
-#define DEFAULT_LENGTH     200
-
-/** Default value: one repetition of tone. */
-#define DEFAULT_REPS       1
-
-/** Default value: delay between repeated tones in milliseconds. */
-#define DEFAULT_DELAY      100
-
-/** Default value: delay after the last of the tones. */
-#define DEFAULT_END_DELAY  END_DELAY_NO
-
-/** Default value: whether to beep on receiving data on stdin. */
-#define DEFAULT_STDIN_BEEP STDIN_BEEP_NONE
+/* The default values are defined in beep-config.h */
 
 
 /**

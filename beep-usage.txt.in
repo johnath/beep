@@ -21,13 +21,14 @@ Options:
                   make program output more verbose
 
   Tone options:
-    -f FREQ_Hz    frequency of the tone in Hertz (Hz)
-    -l LENGTH_ms  length of the tone in milliseconds (ms)
-    -d DELAY_ms   delay between repetitions of the tone
-                  *without* delay after last repetition of the tone
-    -D DELAY_ms   delay between repetitions of the tone
-                  *with* delay after last repetition of the tone
+    -f FREQ_Hz    frequency of the tone in Hertz (Hz) (default: @DEFAULT_FREQ@)
+    -l LENGTH_ms  length of the tone in milliseconds (ms) (default: @DEFAULT_LENGTH@)
+    -d DELAY_ms   delay between repetitions of the tone *without* delay after last
+                  repetition of the tone (default: @DEFAULT_DELAY@)
+    -D DELAY_ms   delay between repetitions of the tone *with* delay after last
+                  repetition of the tone (default: no delay after last note)
     -r REPS       number of repetitions of the last tone
+                  (default: 1 note without repeats)
 
     -n, --new     start a new tone
 
