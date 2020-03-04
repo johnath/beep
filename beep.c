@@ -117,6 +117,9 @@ void do_beep(int freq) {
     if(evbit & (1 << SND_TONE)) {
       e.code = SND_TONE;
       e.value = freq;
+    } else if(evbit & (1 << SND_BELL)) {
+      e.code = SND_BELL;
+      e.value = (freq != 0);
     } else {
       perror("no supported event type");
       return;
