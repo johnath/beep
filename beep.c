@@ -106,17 +106,26 @@ void do_beep(int freq) {
       perror("ioctl");
     }
   } else {
-     /* BEEP_TYPE_EVDEV */
-     struct input_event e;
+    /* BEEP_TYPE_EVDEV */
+    struct input_event e;
+    unsigned long evbit = 0;
 
-     e.type = EV_SND;
-     e.code = SND_TONE;
-     e.value = freq;
+    e.type = EV_SND;
 
-     if(write(console_fd, &e, sizeof(struct input_event)) < 0) {
-       putchar('\a'); /* See above */
-       perror("write");
-     }
+    /* check supported events and act accordingly */
+    ioctl(console_fd, EVIOCGBIT(EV_SND, sizeof(evbit)), &evbit);
+    if(evbit & (1 << SND_TONE)) {
+      e.code = SND_TONE;
+      e.value = freq;
+    } else {
+      perror("no supported event type");
+      return;
+    }
+
+    if(write(console_fd, &e, sizeof(struct input_event)) < 0) {
+      putchar('\a'); /* See above */
+      perror("write");
+    }
   }
 }
 
