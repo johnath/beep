@@ -1,9 +1,9 @@
 CC=gcc
 FLAGS=-Wall -O2
 EXEC_NAME=beep
-INSTALL_DIR=/usr/bin
+INSTALL_DIR=${DESTDIR}/usr/bin
 MAN_FILE=beep.1.gz
-MAN_DIR=/usr/share/man/man1
+MAN_DIR=${DESTDIR}/usr/share/man/man1
 
 default : beep
 
