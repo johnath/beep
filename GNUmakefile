@@ -168,7 +168,7 @@ beep_OBJS += beep-drivers.o
 
 beep_OBJS += beep-driver-console.o
 beep_OBJS += beep-driver-evdev.o
-ifeq ($(BEEP_DEBUG_BUILD),)
+ifneq ($(BEEP_DEBUG_BUILD),)
 beep_OBJS += beep-driver-noop.o
 endif
 
