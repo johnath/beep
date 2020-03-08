@@ -47,6 +47,9 @@
 #include "beep-log.h"
 
 
+#define LOG_MODULE "evdev"
+
+
 static
 int open_checked_device(const char *const device_name)
 {
@@ -56,7 +59,7 @@ int open_checked_device(const char *const device_name)
     }
 
     if (-1 == ioctl(fd, EVIOCGSND(0))) {
-        log_verbose("evdev: %d does not implement EV_SND API", fd);
+        LOG_VERBOSE("%d does not implement EV_SND API", fd);
         return -1;
     }
 
@@ -68,10 +71,10 @@ static
 bool driver_detect(beep_driver *driver, const char *console_device)
 {
     if (console_device) {
-        log_verbose("evdev driver_detect %p %s",
+        LOG_VERBOSE("driver_detect %p %s",
                     (void *)driver, console_device);
     } else {
-        log_verbose("evdev driver_detect %p %p",
+        LOG_VERBOSE("driver_detect %p %p",
                     (void *)driver, (const void *)console_device);
     }
     if (console_device) {
@@ -99,14 +102,14 @@ bool driver_detect(beep_driver *driver, const char *console_device)
 static
 void driver_init(beep_driver *driver)
 {
-    log_verbose("evdev driver_init %p", (void *)driver);
+    LOG_VERBOSE("driver_init %p", (void *)driver);
 }
 
 
 static
 void driver_fini(beep_driver *driver)
 {
-    log_verbose("evdev driver_fini %p", (void *)driver);
+    LOG_VERBOSE("driver_fini %p", (void *)driver);
     close(driver->device_fd);
     driver->device_fd = -1;
 }
@@ -115,7 +118,7 @@ void driver_fini(beep_driver *driver)
 static
 void driver_begin_tone(beep_driver *driver, const uint16_t freq)
 {
-    log_verbose("evdev driver_begin_tone %p %u", (void *)driver, freq);
+    LOG_VERBOSE("driver_begin_tone %p %u", (void *)driver, freq);
 
     struct input_event e;
 
@@ -134,7 +137,7 @@ void driver_begin_tone(beep_driver *driver, const uint16_t freq)
 static
 void driver_end_tone(beep_driver *driver)
 {
-    log_verbose("evdev driver_end_tone %p", (void *)driver);
+    LOG_VERBOSE("driver_end_tone %p", (void *)driver);
 
     struct input_event e;
 
@@ -171,7 +174,7 @@ void beep_driver_evdev_constructor(void)
 static
 void beep_driver_evdev_constructor(void)
 {
-    log_verbose("beep_driver_evdev_constructor");
+    LOG_VERBOSE("beep_driver_evdev_constructor");
     beep_drivers_register(&driver_data);
 }
 

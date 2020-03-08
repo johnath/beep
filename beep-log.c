@@ -31,6 +31,9 @@
 #include "beep-log.h"
 
 
+#define LOG_MODULE "log"
+
+
 /* documented in header file */
 int log_level = 0;
 
@@ -44,17 +47,23 @@ const char *progname = "beep-log";
  */
 
 static
-void log_internal_vf(const char *levelstr, const char *const format, va_list args)
-    __attribute__(( nonnull(1,2) ));
+void log_internal_vf(const char *const module, const char *levelstr,
+                     const char *const format, va_list args)
+    __attribute__(( nonnull(2) ));
 
 
 static
-void log_internal_vf(const char *levelstr, const char *const format, va_list args)
+void log_internal_vf(const char *const module, const char *levelstr,
+                     const char *const format, va_list args)
 {
     va_list copied_args;
     va_copy(copied_args, args);
 
-    fprintf(stdout, "%s: %s: ", progname, levelstr);
+    if (module) {
+        fprintf(stdout, "%s: %s: %s: ", progname, levelstr, module);
+    } else {
+        fprintf(stdout, "%s: %s: ", progname, levelstr);
+    }
     vfprintf(stdout, format, copied_args);
     fputc('\n', stdout);
 
@@ -79,30 +88,32 @@ void log_error(const char *const format, ...)
     va_list args;
 
     va_start(args, format);
-    log_internal_vf("Error", format, args);
+    log_internal_vf(NULL, "Error", format, args);
     va_end(args);
 }
 
 
 /* documented in header file */
-void log_warning(const char *const format, ...)
+void log_warning(const char *const module,
+                 const char *const format, ...)
 {
     va_list args;
 
     va_start(args, format);
-    log_internal_vf("Warning", format, args);
+    log_internal_vf(module, "Warning", format, args);
     va_end(args);
 }
 
 
 /* documented in header file */
-void log_verbose(const char *const format, ...)
+void log_verbose(const char *const module,
+                 const char *const format, ...)
 {
     va_list args;
 
     if (log_level > 0) {
         va_start(args, format);
-        log_internal_vf("Verbose", format, args);
+        log_internal_vf(module, "Verbose", format, args);
         va_end(args);
     }
 }
@@ -198,7 +209,7 @@ void log_constructor(void)
             }
         }
     }
-    log_verbose("log_constructor");
+    LOG_VERBOSE("log_constructor");
 }
 
 

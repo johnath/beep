@@ -54,21 +54,32 @@ void log_output(const char *const format, ...)
 
 
 /** Log an error message */
+#define LOG_ERROR(FORMAT, ...) log_error(FORMAT, ##__VA_ARGS__)
+
+/** Log an error message */
 void log_error(const char *const format, ...)
     __attribute__(( nonnull(1) ))
     __attribute__(( format(printf, 1, 2) ));
 
 
 /** Log a warning message */
-void log_warning(const char *const format, ...)
-    __attribute__(( nonnull(1) ))
-    __attribute__(( format(printf, 1, 2) ));
+#define LOG_WARNING(FORMAT, ...) log_warning(LOG_MODULE, FORMAT, ##__VA_ARGS__)
+
+/** Log a warning message */
+void log_warning(const char *const module,
+                 const char *const format, ...)
+    __attribute__(( nonnull(1, 2) ))
+    __attribute__(( format(printf, 2, 3) ));
 
 
 /** Log a verbose message */
-void log_verbose(const char *const format, ...)
-    __attribute__(( nonnull(1) ))
-    __attribute__(( format(printf, 1, 2) ));
+#define LOG_VERBOSE(FORMAT, ...) log_verbose(LOG_MODULE, FORMAT, ##__VA_ARGS__)
+
+/** Log a verbose message */
+void log_verbose(const char *const module,
+                 const char *const format, ...)
+    __attribute__(( nonnull(1, 2) ))
+    __attribute__(( format(printf, 2, 3) ));
 
 
 /** Log a range of data */

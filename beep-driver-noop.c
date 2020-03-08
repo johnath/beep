@@ -33,14 +33,17 @@
 #include "beep-log.h"
 
 
+#define LOG_MODULE "noop"
+
+
 static
 bool driver_detect(beep_driver *driver, const char *const console_device)
 {
     if (console_device) {
-        log_verbose("noop driver_detect %p %s",
+        LOG_VERBOSE("driver_detect %p %s",
                     (void *)driver, console_device);
     } else {
-        log_verbose("noop driver_detect %p %p",
+        LOG_VERBOSE("driver_detect %p %p",
                     (void *)driver, (const void *)console_device);
     }
     return false;
@@ -50,28 +53,28 @@ bool driver_detect(beep_driver *driver, const char *const console_device)
 static
 void driver_init(beep_driver *driver)
 {
-    log_verbose("noop driver_init %p", (void *)driver);
+    LOG_VERBOSE("driver_init %p", (void *)driver);
 }
 
 
 static
 void driver_fini(beep_driver *driver)
 {
-    log_verbose("noop driver_fini %p", (void *)driver);
+    LOG_VERBOSE("driver_fini %p", (void *)driver);
 }
 
 
 static
 void driver_begin_tone(beep_driver *driver, const uint16_t freq)
 {
-    log_verbose("noop driver_begin_tone %p %u", (void *)driver, freq);
+    LOG_VERBOSE("driver_begin_tone %p %u", (void *)driver, freq);
 }
 
 
 static
 void driver_end_tone(beep_driver *driver)
 {
-    log_verbose("noop driver_end_tone %p", (void *)driver);
+    LOG_VERBOSE("driver_end_tone %p", (void *)driver);
 }
 
 
@@ -97,7 +100,7 @@ void beep_driver_noop_constructor(void)
 static
 void beep_driver_noop_constructor(void)
 {
-    log_verbose("beep_driver_noop_constructor");
+    LOG_VERBOSE("beep_driver_noop_constructor");
     beep_drivers_register(&driver_data);
 }
 

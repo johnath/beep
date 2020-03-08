@@ -32,6 +32,9 @@
 #include "beep-log.h"
 
 
+#define LOG_MODULE "drivers"
+
+
 /**
  * The beginning of the linked list of drivers.
  */
@@ -42,7 +45,7 @@ beep_driver *first_driver = NULL;
 /* documented in header file */
 void beep_drivers_register(beep_driver *driver)
 {
-    log_verbose("beep_drivers_register %p (%s)",
+    LOG_VERBOSE("beep_drivers_register %p (%s)",
                 (void *) driver, driver->name);
     if (first_driver) {
         driver->next = first_driver;

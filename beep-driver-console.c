@@ -41,6 +41,9 @@
 #include "beep-log.h"
 
 
+#define LOG_MODULE "console"
+
+
 #ifndef CLOCK_TICK_RATE
 /** The clock tick rate for calculating the PWM counter for the PIT from the frequency.
  *
@@ -59,7 +62,7 @@ int open_checked_device(const char *const device_name)
     }
 
     if (-1 == ioctl(fd, KIOCSOUND, 0)) {
-        log_verbose("console: %d does not implement KIOCSOUND API", fd);
+        LOG_VERBOSE("%d does not implement KIOCSOUND API", fd);
         return -1;
     }
 
@@ -71,10 +74,10 @@ static
 bool driver_detect(beep_driver *driver, const char *console_device)
 {
     if (console_device) {
-        log_verbose("console driver_detect %p %s",
+        LOG_VERBOSE("driver_detect %p %s",
                     (void *)driver, console_device);
     } else {
-        log_verbose("console driver_detect %p %p",
+        LOG_VERBOSE("driver_detect %p %p",
                     (void *)driver, (const void *)console_device);
     }
     if (console_device) {
@@ -115,14 +118,14 @@ bool driver_detect(beep_driver *driver, const char *console_device)
 static
 void driver_init(beep_driver *driver)
 {
-    log_verbose("console driver_init %p", (void *)driver);
+    LOG_VERBOSE("driver_init %p", (void *)driver);
 }
 
 
 static
 void driver_fini(beep_driver *driver)
 {
-    log_verbose("console driver_fini %p", (void *)driver);
+    LOG_VERBOSE("driver_fini %p", (void *)driver);
     close(driver->device_fd);
     driver->device_fd = -1;
 }
@@ -131,7 +134,7 @@ void driver_fini(beep_driver *driver)
 static
 void driver_begin_tone(beep_driver *driver, const uint16_t freq)
 {
-    log_verbose("console driver_begin_tone %p %u", (void *)driver, freq);
+    LOG_VERBOSE("driver_begin_tone %p %u", (void *)driver, freq);
     const uintptr_t argp = ((freq != 0) ? (CLOCK_TICK_RATE/freq) : freq) & 0xffff;
     if (-1 == ioctl(driver->device_fd, KIOCSOUND, argp)) {
 	/* If we cannot use the sound API, we cannot silence the sound either */
@@ -143,7 +146,7 @@ void driver_begin_tone(beep_driver *driver, const uint16_t freq)
 static
 void driver_end_tone(beep_driver *driver)
 {
-    log_verbose("console driver_end_tone %p", (void *)driver);
+    LOG_VERBOSE("driver_end_tone %p", (void *)driver);
     if (-1 == ioctl(driver->device_fd, KIOCSOUND, 0)) {
 	safe_error_exit("ioctl KIOCSOUND");
     }
@@ -172,7 +175,7 @@ void beep_driver_console_constructor(void)
 static
 void beep_driver_console_constructor(void)
 {
-    log_verbose("beep_driver_console_constructor");
+    LOG_VERBOSE("beep_driver_console_constructor");
     beep_drivers_register(&driver_data);
 }
 

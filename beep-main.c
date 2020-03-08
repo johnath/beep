@@ -64,6 +64,9 @@
 #include "beep-usage.h"
 
 
+#define LOG_MODULE "main"
+
+
 /**
  * Version message to be printed for "beep --version".
  */
@@ -256,7 +259,7 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_T *result
             argval_i = (int) (argval_f + 0.5f);
             argval_u = (unsigned int) argval_i;
             if (result->freq != 0) {
-                log_warning("multiple -f values given, only last one is used.");
+                LOG_WARNING("multiple -f values given, only last one is used.");
             }
             result->freq = argval_u;
             break;
@@ -331,7 +334,7 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_T *result
             break;
         case 'e' : /* also --device */
             if (param_device_name) {
-                log_error("You cannot give the --device parameter more than once.");
+                LOG_ERROR("You cannot give the --device parameter more than once.");
                 exit(EXIT_FAILURE);
             }
             param_device_name = optarg;
@@ -346,7 +349,7 @@ void parse_command_line(const int argc, char *const argv[], beep_parms_T *result
         }
     }
     if (optind < argc) {
-        log_error("non-option arguments left on command line");
+        LOG_ERROR("non-option arguments left on command line");
         usage_bail();
     }
     if (result->freq == 0) {
@@ -400,7 +403,7 @@ void play_beep(beep_driver *driver, beep_parms_T parms)
 static
 void play_beep(beep_driver *driver, beep_parms_T parms)
 {
-    log_verbose("%d times %d ms beeps (%d ms delay between, "
+    LOG_VERBOSE("%d times %d ms beeps (%d ms delay between, "
                 "%d ms delay after) @ %d Hz",
                 parms.reps, parms.length, parms.delay, parms.end_delay,
                 parms.freq);
@@ -468,9 +471,9 @@ int main(const int argc, char *const argv[])
     /* Bail out if running setuid or setgid.
      */
     if ((getuid() != geteuid()) || (getgid() != getegid())) {
-        log_error("Running setuid or setgid, "
+        LOG_ERROR("Running setuid or setgid, "
                   "which is not supported for security reasons.");
-        log_error("Set up permissions for the pcspkr evdev device file instead.");
+        LOG_ERROR("Set up permissions for the pcspkr evdev device file instead.");
         exit(EXIT_FAILURE);
     }
 
@@ -478,13 +481,13 @@ int main(const int argc, char *const argv[])
      */
     if ((getuid() == 0) || (geteuid() == 0) ||
         (getgid() == 0) || (getegid() == 0)) {
-        log_verbose("Running with root permissions. "
+        LOG_VERBOSE("Running with root permissions. "
                     "Checking for SUDO_* in environment.");
         if (getenv("SUDO_COMMAND") || getenv("SUDO_USER") ||
             getenv("SUDO_UID") || getenv("SUDO_GID")) {
-            log_error("Running as root under sudo, "
+            LOG_ERROR("Running as root under sudo, "
                       "which is not supported for security reasons.");
-            log_error("Set up permissions for the pcspkr evdev device "
+            LOG_ERROR("Set up permissions for the pcspkr evdev device "
                       "file and run as non-root user instead.");
             exit(EXIT_FAILURE);
         }
@@ -512,22 +515,22 @@ int main(const int argc, char *const argv[])
         driver = beep_drivers_detect(param_device_name);
         if (!driver) {
             const int saved_errno = errno;
-            log_error("Could not open %s for writing: %s",
+            LOG_ERROR("Could not open %s for writing: %s",
                       param_device_name, strerror(saved_errno));
             exit(EXIT_FAILURE);
         }
     } else {
         driver = beep_drivers_detect(NULL);
         if (!driver) {
-            log_error("Could not open any device");
+            LOG_ERROR("Could not open any device");
             /* Output the only beep we can, in an effort to fall back on usefulness */
             fallback_beep();
             exit(EXIT_FAILURE);
         }
     }
 
-    log_verbose("beep: using driver %p (name=%s, fd=%d, dev=%s)",
-                (void *)driver, driver->name,
+    LOG_VERBOSE("using %s driver (fd=%d, dev=%s)",
+                driver->name,
                 driver->device_fd, driver->device_name);
 
     /* At this time, we know what API to use on which device, and we do

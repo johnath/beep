@@ -37,39 +37,42 @@
 #include "beep-log.h"
 
 
+#define LOG_MODULE "lib"
+
+
 /* documented in header file */
 int open_checked_char_device(const char *const device_name)
 {
     struct stat sb;
 
     if (-1 == stat(device_name, &sb)) {
-        log_verbose("b-lib: could not stat(2) %s: %s",
+        LOG_VERBOSE("could not stat(2) %s: %s",
                     device_name, strerror(errno));
         return -1;
     }
 
     if (!S_ISCHR(sb.st_mode)) {
-        log_verbose("b-lib: %s is not a character device",
+        LOG_VERBOSE("%s is not a character device",
                     device_name);
         return -1;
     }
 
     const int fd = open(device_name, O_WRONLY);
     if (fd == -1) {
-        log_verbose("b-lib: could not open(2) %s: %s",
+        LOG_VERBOSE("could not open(2) %s: %s",
                     device_name, strerror(errno));
         return -1;
     }
-    log_verbose("b-lib: opened %s as %d", device_name, fd);
+    LOG_VERBOSE("opened %s as fd=%d", device_name, fd);
 
     if (-1 == fstat(fd, &sb)) {
-        log_verbose("b-lib: could not fstat(2) %d: %s",
+        LOG_VERBOSE("could not fstat(2) %d: %s",
                     fd, strerror(errno));
         return -1;
     }
 
     if (!S_ISCHR(sb.st_mode)) {
-        log_verbose("b-lib: %d is not a character device", fd);
+        LOG_VERBOSE("%d is not a character device", fd);
         return -1;
     }
 
