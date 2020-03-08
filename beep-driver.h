@@ -107,7 +107,7 @@ struct _beep_driver {
 };
 
 
-#endif /* BEEP_DRIVER_H */
+#endif /* !defined(BEEP_DRIVER_H) */
 
 
 /** @} */

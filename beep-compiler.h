@@ -60,7 +60,7 @@
 extern char do_not_use_this_dummy[];
 
 
-#endif /* BEEP_COMPILER_H */
+#endif /* !defined(BEEP_COMPILER_H) */
 
 
 /** @} */

@@ -52,7 +52,7 @@ void safe_error_exit(const char *const msg)
     __attribute__(( noreturn ));
 
 
-#endif /* BEEP_LIBRARY_H */
+#endif /* !defined(BEEP_LIBRARY_H) */
 
 
 /** @} */

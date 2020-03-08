@@ -47,7 +47,7 @@
  * Using the PIT_TICK_RATE value from the kernel.
  */
 #define CLOCK_TICK_RATE 1193182UL
-#endif
+#endif /* !defined(CLOCK_TICK_RATE) */
 
 
 static

@@ -81,7 +81,7 @@ void log_init(const int argc, char *const argv[])
     __attribute__(( nonnull(2) ));
 
 
-#endif /* BEEP_LOG_H */
+#endif /* !defined(BEEP_LOG_H) */
 
 
 /** @} */

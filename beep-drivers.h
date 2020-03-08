@@ -92,7 +92,7 @@ void beep_drivers_end_tone(beep_driver *driver)
     __attribute__(( nonnull(1) ));
 
 
-#endif /* BEEP_DRIVERS_H */
+#endif /* !defined(BEEP_DRIVERS_H) */
 
 
 /** @} */

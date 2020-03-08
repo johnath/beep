@@ -33,7 +33,7 @@
 extern char beep_usage[];
 
 
-#endif /* BEEP_USAGE_H */
+#endif /* !defined(BEEP_USAGE_H) */
 
 
 /** @} */
