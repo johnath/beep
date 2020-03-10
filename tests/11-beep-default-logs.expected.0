@@ -1,0 +1,16 @@
+beep-log: Verbose: log: log_constructor
+beep-log: Verbose: console: beep_driver_console_constructor
+beep-log: Verbose: drivers: beep_drivers_register <DRV0> (console)
+beep-log: Verbose: evdev: beep_driver_evdev_constructor
+beep-log: Verbose: drivers: beep_drivers_register <DRV1> (evdev)
+beep-log: Verbose: noop: beep_driver_noop_constructor
+beep-log: Verbose: drivers: beep_drivers_register <DRV2> (noop)
+BEEP_EXECUTABLE: Verbose: noop: driver_detect <DRV2> (nil)
+BEEP_EXECUTABLE: Verbose: evdev: driver_detect <DRV1> (nil)
+BEEP_EXECUTABLE: Verbose: lib: opened /dev/input/by-path/platform-pcspkr-event-spkr as fd=<FD0>
+BEEP_EXECUTABLE: Verbose: main: using evdev driver (fd=<FD0>, dev=/dev/input/by-path/platform-pcspkr-event-spkr)
+BEEP_EXECUTABLE: Verbose: main: 1 times 200 ms beeps (100 ms delay between, 0 ms delay after) @ 440 Hz
+BEEP_EXECUTABLE: Verbose: evdev: driver_begin_tone <DRV1> 440
+BEEP_EXECUTABLE: Verbose: evdev: driver_end_tone <DRV1>
+BEEP_EXECUTABLE: Verbose: evdev: driver_end_tone <DRV1>
+BEEP_EXECUTABLE: Verbose: evdev: driver_fini <DRV1>
