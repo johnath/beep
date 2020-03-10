@@ -333,6 +333,7 @@ pkgdoc_DATA += PERMISSIONS.md
 contrib_SCRIPTS += contrib/failure-beeps
 contrib_SCRIPTS += contrib/success-beeps
 
+
 ########################################################################
 # Generic targets
 ########################################################################
