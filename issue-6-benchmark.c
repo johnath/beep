@@ -109,6 +109,7 @@ void print_counters(unsigned long *counters)
 struct issue6_rusage {
     /** The device name for which resource and time usage are recorded. */
     const char *device;
+
     /** The number of repeats for which resource and time usage are recorded. */
     unsigned long repeats;
 
@@ -187,9 +188,9 @@ void print_issue6_rusage(const struct issue6_rusage *const usage)
 /**
  * Repeatedly open(2) (O_WRONLY) and close(2) a given device.
  *
- * Repeatedly open(2)s with O_WRONLY and close(2)s a given device for
- * a given number of times.  Counts the number of times the open(2)
- * call succeeds, so that the compiler cannot do any shortcut
+ * Repeatedly open(2) with O_WRONLY and close(2) a given device for a
+ * given number of times.  Count the number of times the open(2) call
+ * succeed and fails, so that the compiler cannot do any shortcut
  * optimizations for this loop.
  *
  * Timing the run and printing the results are left to the caller.
@@ -259,7 +260,7 @@ double measure_cycles(const unsigned long repeats,
         return -1.0;
     }
 
-    printf("  Measuring %lu repeats for device %s\n",
+    printf("  Measuring %lu repeats for %s\n",
            repeats, device);
     usage->repeats = repeats;
     usage->device  = device;
@@ -542,7 +543,7 @@ static
 int benchmark_and_report(const char *const argv0,
                          const char *const console_device_str)
 {
-    printf("Running benchmarks (this will take a minute or two).\n\n");
+    printf("Running benchmark(s). This will literally take a minute or two.\n\n");
 
     printf("Beginning with a quick test run to dimension the actual benchmark.\n");
 
@@ -593,7 +594,7 @@ int benchmark_and_report(const char *const argv0,
 
     if ((repeats_console > 0) || (repeats_evdev > 0)) {
         printf("\n"
-               "Using the external '%s' command for the most details:\n",
+               "Using the external command '%s' for the most details:\n",
                "/usr/bin/time -v");
 
         if (console_device_str) {
@@ -607,7 +608,7 @@ int benchmark_and_report(const char *const argv0,
 
 
 /**
- * Take a look at all /dev/ttyN devices and find a writable console tty device.
+ * Examine all /dev/ttyN devices until we find a writable tty device.
  *
  * @return Name of a writeable /dev/ttyN virtual console device.
  * @return NULL if no writable device has been found, or if an error occured.
@@ -695,10 +696,14 @@ char *find_writable_tty(void)
 
 
 /**
- * Run open-and-close-benchmark of console API (using the first writable /dev/ttyN) versus evdev API (0 cmdline arguments).
+ * Run benchmarks of console (autodetected /dev/ttyN) versus evdev.
  *
- * @param argc Length of the `argv` string array.
- * @param argv Command line argument string array.
+ * Implement issue-6-benchmark when called with zero command line
+ * parameters: Compare performances of the autodetected /dev/ttyN
+ * device and the well-known evdev device.
+ *
+ * @param argc Copied from main(): Length of the `argv` string array.
+ * @param argv Copied from main(): Command line argument string array.
  *
  * @return EXIT_FAILURE in case of any error
  * @return EXIT_SUCCESS otherwise
@@ -717,7 +722,14 @@ int main_argc1(const int argc, const char *const argv[])
     if (console_device) {
         printf("Writable TTY device found: %s\n\n", console_device);
     } else {
-        printf("No writable TTY device found.\n\n");
+        printf("ERROR: No writable TTY device found.\n"
+               "\n"
+               "If you want to run the virtual console device benchmark, Ctrl-C RIGHT NOW.\n"
+               "\n"
+               "Then either log in on a virtual console to provide a console device\n"
+               "we can open, or run as a user which can open a console device\n"
+               "(*cough* root *cough* /dev/tty0).\n"
+               "\n");
     }
 
     const int retval = benchmark_and_report(argv[0], console_device);
@@ -728,12 +740,11 @@ int main_argc1(const int argc, const char *const argv[])
 
 
 /**
- * Run open-and-close-benchmark of console API (with devicename given on cmdline) versus evdev API (1 cmdline argument).
+ * Run benchmarks of console (device from cmdline) versus evdev.
  *
- * This program first parses the command line to determine the given
- * console device. Then it runs the benchmarks measuring the
- * performance of open(2)-and-close(2) cycles for the given console
- * device and for the well-known evdev device.
+ * Implement issue-6-benchmark when called with one command line
+ * parameter: Compare performances of the console device from the
+ * command line device and the well-known evdev device.
  *
  * After the measurement, a report on the measured values is printed.
  *
@@ -742,8 +753,8 @@ int main_argc1(const int argc, const char *const argv[])
  * in the use cases of this manually invoked test program run as a
  * non-priviledged user.
  *
- * @param argc Length of the `argv` string array.
- * @param argv Command line argument string array.
+ * @param argc Copied from main(): Length of the `argv` string array.
+ * @param argv Copied from main(): Command line argument string array.
  *
  * @return EXIT_FAILURE in case of any error
  * @return EXIT_SUCCESS otherwise
@@ -797,7 +808,10 @@ int main_argc2(const int argc, const char *const argv[])
 
 
 /**
- * Repeat open-and-close cycle for given repeats for given device (2 cmdline arguments).
+ * Run one benchmark of given repeats for given device.
+ *
+ * Implement issue-6-benchmark when called with two command line
+ * parameters.
  *
  * This program first parses the command line to determine the number
  * of repeats to test, and the character device to test. Then it runs
@@ -811,8 +825,8 @@ int main_argc2(const int argc, const char *const argv[])
  * in the use cases of this manually invoked test program run as a
  * non-priviledged user.
  *
- * @param argc Length of the `argv` string array.
- * @param argv Command line argument string array.
+ * @param argc Copied from main(): Length of the `argv` string array.
+ * @param argv Copied from main(): Command line argument string array.
  *
  * @return EXIT_FAILURE in case of any error
  * @return EXIT_SUCCESS otherwise
