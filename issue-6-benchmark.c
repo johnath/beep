@@ -783,12 +783,13 @@ int main_argc2(const int argc, const char *const argv[])
     }
 
     const int ret_open = open(console_device, O_WRONLY);
-    if (ret_open != 0) {
+    if (ret_open < 0) {
         const int saved_errno = errno;
         fprintf(stderr, "%s: open(2) O_WRONLY error for %s: %s\n",
                 argv[0], console_device, strerror(saved_errno));
         return EXIT_FAILURE;
     }
+    close(ret_open);
     /* console_device considered valid now */
 
     return benchmark_and_report(argv[0], console_device);
