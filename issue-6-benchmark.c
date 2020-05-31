@@ -24,7 +24,6 @@
  *
  */
 
-#include <assert.h>
 #include <dirent.h>
 #include <errno.h>
 #include <limits.h>
@@ -705,7 +704,13 @@ char *find_writable_tty(void)
 static
 int main_argc1(const int argc, const char *const argv[])
 {
-    assert(argc == 1);
+    if (argc != 1) {
+        fprintf(stderr,
+                "%s: Exactly zero arguments needed.\n",
+                argv[0]);
+        return EXIT_FAILURE;
+    }
+
     char *console_device = find_writable_tty();
     if (console_device) {
         printf("Writable TTY device found: %s\n\n", console_device);
@@ -745,7 +750,9 @@ static
 int main_argc2(const int argc, const char *const argv[])
 {
     if (argc != 2) {
-        fprintf(stderr, "%s: Exactly one argument needed: the console 'device'.\n", argv[0]);
+        fprintf(stderr,
+                "%s: Exactly one argument needed: the console 'device'.\n",
+                argv[0]);
         return EXIT_FAILURE;
     }
 
