@@ -106,7 +106,7 @@ void print_counters(unsigned long *counters)
 /**
  * Record all resource and time usage data for repeats on device.
  */
-struct i6usage {
+struct issue6_rusage {
     /** The device name for which resource and time usage are recorded. */
     const char *device;
     /** The number of repeats for which resource and time usage are recorded. */
@@ -132,15 +132,15 @@ struct i6usage {
 
 
 /**
- * Print the given struct i6usage in human readable form.
+ * Print the given struct issue6_rusage in human readable form.
  */
 
 static
-void print_i6usage(const struct i6usage *const usage)
+void print_issue6_rusage(const struct issue6_rusage *const usage)
     __attribute__(( nonnull(1) ));
 
 static
-void print_i6usage(const struct i6usage *const usage)
+void print_issue6_rusage(const struct issue6_rusage *const usage)
 {
     if (usage->repeats <= 0) {
         return;
@@ -232,8 +232,8 @@ int run_cycles(const unsigned long repeats,
  *
  * @param repeats The number of repeats to time.
  * @param device  The device to run the repeats on.
- * @param usage   The struct i6usage to store resource and time required.
- * @param verbose Whether to call print_i6usage() after the cycles.
+ * @param usage   The struct issue6_rusage to store resource and time required.
+ * @param verbose Whether to call print_issue6_rusage() after the cycles.
  *
  * @return Negative value in case of any error
  * @return average cycle time otherwise
@@ -242,14 +242,14 @@ int run_cycles(const unsigned long repeats,
 static
 double measure_cycles(const unsigned long repeats,
                       const char *const device,
-                      struct i6usage *usage,
+                      struct issue6_rusage *usage,
                       const bool verbose)
     __attribute__(( nonnull(3) ));
 
 static
 double measure_cycles(const unsigned long repeats,
                       const char *const device,
-                      struct i6usage *usage,
+                      struct issue6_rusage *usage,
                       const bool verbose)
 {
     if (repeats == 0) {
@@ -339,7 +339,7 @@ double measure_cycles(const unsigned long repeats,
     usage->rusage.ru_nivcsw   = usage_end.ru_nivcsw   - usage_begin.ru_nivcsw;
 
     if (verbose) {
-        print_i6usage(usage);
+        print_issue6_rusage(usage);
     }
 
     if ((run_cycles_retval == 0) && (usage->repeats > 0)) {
@@ -385,21 +385,21 @@ unsigned long repeats_for_measurement(const unsigned long repeats,
 
     /* printf("  Trying %lu repeats for device %s\n", repeats, device); */
 
-    struct i6usage i6usage;
-    memset(&i6usage, 0, sizeof(i6usage));
+    struct issue6_rusage issue6_rusage;
+    memset(&issue6_rusage, 0, sizeof(issue6_rusage));
 
-    const double retval = measure_cycles(repeats, device, &i6usage, false);
+    const double retval = measure_cycles(repeats, device, &issue6_rusage, false);
 
     if (retval < 0.0) {
         fprintf(stderr, "Aborting due to error(s) in measure_cycles()\n");
         return 0;
     }
 
-    printf("    Time spent: %g s\n", i6usage.time_wall);
+    printf("    Time spent: %g s\n", issue6_rusage.time_wall);
 
-    const double d_repeats = (double)i6usage.repeats;
+    const double d_repeats = (double)issue6_rusage.repeats;
     const double d_reliable_repeats = 1.10 *
-        ((double)MINIMUM_RELIABLE_PERIOD) * d_repeats / i6usage.time_wall;
+        ((double)MINIMUM_RELIABLE_PERIOD) * d_repeats / issue6_rusage.time_wall;
 
     const unsigned long rounded_cycles =
         (unsigned long)lrint(0.5+d_reliable_repeats);
@@ -494,26 +494,26 @@ int execute_time_ext(const char *const argv0,
  * Print summary on average time for open-and-close cycle.
  *
  * @param api_str Either "console" or "evdev".
- * @param i6usage The struct i6usage to print.
+ * @param issue6_rusage The struct issue6_rusage to print.
  */
 
 static
-void print_summary(const char *const api_str, struct i6usage *i6usage)
+void print_summary(const char *const api_str, struct issue6_rusage *issue6_rusage)
 {
-    if (i6usage->repeats <= 0) {
+    if (issue6_rusage->repeats <= 0) {
         return;
     }
-    if (i6usage->device == NULL) {
+    if (issue6_rusage->device == NULL) {
         return;
     }
 
     const double avg_cycle_time =
-        i6usage->time_wall / ((double)i6usage->repeats);
+        issue6_rusage->time_wall / ((double)issue6_rusage->repeats);
 
     printf("    %s device: %s\n"
            "        time per open(2)-and-close(2): %11.3f us\n"
            "        open(2)-and-close(2) rate:     %11.3f / s\n",
-           api_str, i6usage->device,
+           api_str, issue6_rusage->device,
            1000000.0*avg_cycle_time, 1.0/avg_cycle_time
            );
 }
@@ -556,24 +556,24 @@ int benchmark_and_report(const char *const argv0,
 
     printf("\nNow for some actual benchmarks, measured internally:\n");
 
-    struct i6usage i6usage_console;
-    memset(&i6usage_console, 0, sizeof(i6usage_console));
+    struct issue6_rusage issue6_rusage_console;
+    memset(&issue6_rusage_console, 0, sizeof(issue6_rusage_console));
 
-    struct i6usage i6usage_evdev;
-    memset(&i6usage_evdev, 0, sizeof(i6usage_evdev));
+    struct issue6_rusage issue6_rusage_evdev;
+    memset(&issue6_rusage_evdev, 0, sizeof(issue6_rusage_evdev));
 
     const double avg_cycle_time_console =
         measure_cycles(repeats_console, console_device_str,
-                       &i6usage_console, true);
+                       &issue6_rusage_console, true);
 
     const double avg_cycle_time_evdev =
         measure_cycles(repeats_evdev, evdev_device_str,
-                       &i6usage_evdev, true);
+                       &issue6_rusage_evdev, true);
 
     printf("Summary:\n");
 
-    print_summary("console", &i6usage_console);
-    print_summary("evdev",   &i6usage_evdev);
+    print_summary("console", &issue6_rusage_console);
+    print_summary("evdev",   &issue6_rusage_evdev);
 
     if ((avg_cycle_time_evdev > 0.0) && (avg_cycle_time_console > 0.0)) {
         printf("\n"
