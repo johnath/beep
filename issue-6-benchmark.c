@@ -592,7 +592,7 @@ int benchmark_and_report(const char *const argv0,
            "    *neither* system time *nor* user time. What time is it then?\n"
            );
 
-    if ((repeats_console > 0.0) || (repeats_evdev > 0.0)) {
+    if ((repeats_console > 0) || (repeats_evdev > 0)) {
         printf("\n"
                "Using the external '/usr/bin/time -v' command for the most details:\n");
 
