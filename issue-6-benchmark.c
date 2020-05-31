@@ -593,7 +593,8 @@ int benchmark_and_report(const char *const argv0,
 
     if ((repeats_console > 0) || (repeats_evdev > 0)) {
         printf("\n"
-               "Using the external '/usr/bin/time -v' command for the most details:\n");
+               "Using the external '%s' command for the most details:\n",
+               "/usr/bin/time -v");
 
         if (console_device_str) {
             execute_time_ext(argv0, repeats_console, console_device_str);
@@ -661,7 +662,8 @@ char *find_writable_tty(void)
             }
             /* found valid device name */
 
-            const size_t ttydev_name_sz = strlen("/dev/") + strlen(de->d_name) + 1 + 1;
+            const size_t ttydev_name_sz =
+                strlen("/dev/") + strlen(de->d_name) + 1 + 1;
             char *ttydev_name = calloc(ttydev_name_sz, 1);
             snprintf(ttydev_name, ttydev_name_sz, "/dev/%s", de->d_name);
             /* full path to tty device name */
@@ -758,7 +760,8 @@ int main_argc2(const int argc, const char *const argv[])
 
     const char *const console_device = argv[1];
     if (*console_device == '\0') {
-        fprintf(stderr, "%s: 'device' argument must be non-empty string\n", argv[0]);
+        fprintf(stderr, "%s: 'device' argument must be non-empty string\n",
+                argv[0]);
         return EXIT_FAILURE;
     }
     struct stat sb;
@@ -773,7 +776,9 @@ int main_argc2(const int argc, const char *const argv[])
     if ((sb.st_mode & S_IFMT) == S_IFCHR) {
         /* character device */
     } else {
-        fprintf(stderr, "%s: stat(2): 'device' argument is not a character device\n", argv[0]);
+        fprintf(stderr,
+                "%s: stat(2): 'device' argument is not a character device\n",
+                argv[0]);
         return EXIT_FAILURE;
     }
 
@@ -823,7 +828,8 @@ int main_argc3(const int argc, const char *const argv[])
 
     const char *repeats_str = argv[1];
     if (*repeats_str == '\0') {
-        fprintf(stderr, "%s: 'repeats' argument must be non-empty string\n", argv[0]);
+        fprintf(stderr, "%s: 'repeats' argument must be non-empty string\n",
+                argv[0]);
         return EXIT_FAILURE;
     }
     char *repeats_endptr;
