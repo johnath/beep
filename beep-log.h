@@ -54,7 +54,7 @@ void log_output(const char *const format, ...)
 
 
 /** Log an error message */
-#define LOG_ERROR(FORMAT, ...) log_error(FORMAT, ##__VA_ARGS__)
+#define LOG_ERROR(...) log_error(__VA_ARGS__)
 
 /** Log an error message */
 void log_error(const char *const format, ...)
@@ -63,7 +63,7 @@ void log_error(const char *const format, ...)
 
 
 /** Log a warning message */
-#define LOG_WARNING(FORMAT, ...) log_warning(LOG_MODULE, FORMAT, ##__VA_ARGS__)
+#define LOG_WARNING(...) log_warning(LOG_MODULE, __VA_ARGS__)
 
 /** Log a warning message */
 void log_warning(const char *const module,
@@ -73,7 +73,7 @@ void log_warning(const char *const module,
 
 
 /** Log a verbose message */
-#define LOG_VERBOSE(FORMAT, ...) log_verbose(LOG_MODULE, FORMAT, ##__VA_ARGS__)
+#define LOG_VERBOSE(...) log_verbose(LOG_MODULE, __VA_ARGS__)
 
 /** Log a verbose message */
 void log_verbose(const char *const module,
