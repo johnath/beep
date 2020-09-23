@@ -24,7 +24,6 @@
  *
  */
 
-#include <assert.h>
 #include <dirent.h>
 #include <errno.h>
 #include <limits.h>
@@ -107,9 +106,10 @@ void print_counters(unsigned long *counters)
 /**
  * Record all resource and time usage data for repeats on device.
  */
-struct i6usage {
+struct issue6_rusage {
     /** The device name for which resource and time usage are recorded. */
     const char *device;
+
     /** The number of repeats for which resource and time usage are recorded. */
     unsigned long repeats;
 
@@ -133,15 +133,15 @@ struct i6usage {
 
 
 /**
- * Print the given struct i6usage in human readable form.
+ * Print the given struct issue6_rusage in human readable form.
  */
 
 static
-void print_i6usage(const struct i6usage *const usage)
+void print_issue6_rusage(const struct issue6_rusage *const usage)
     __attribute__(( nonnull(1) ));
 
 static
-void print_i6usage(const struct i6usage *const usage)
+void print_issue6_rusage(const struct issue6_rusage *const usage)
 {
     if (usage->repeats <= 0) {
         return;
@@ -188,9 +188,9 @@ void print_i6usage(const struct i6usage *const usage)
 /**
  * Repeatedly open(2) (O_WRONLY) and close(2) a given device.
  *
- * Repeatedly open(2)s with O_WRONLY and close(2)s a given device for
- * a given number of times.  Counts the number of times the open(2)
- * call succeeds, so that the compiler cannot do any shortcut
+ * Repeatedly open(2) with O_WRONLY and close(2) a given device for a
+ * given number of times.  Count the number of times the open(2) call
+ * succeed and fails, so that the compiler cannot do any shortcut
  * optimizations for this loop.
  *
  * Timing the run and printing the results are left to the caller.
@@ -233,8 +233,8 @@ int run_cycles(const unsigned long repeats,
  *
  * @param repeats The number of repeats to time.
  * @param device  The device to run the repeats on.
- * @param usage   The struct i6usage to store resource and time required.
- * @param verbose Whether to call print_i6usage() after the cycles.
+ * @param usage   The struct issue6_rusage to store resource and time required.
+ * @param verbose Whether to call print_issue6_rusage() after the cycles.
  *
  * @return Negative value in case of any error
  * @return average cycle time otherwise
@@ -243,14 +243,14 @@ int run_cycles(const unsigned long repeats,
 static
 double measure_cycles(const unsigned long repeats,
                       const char *const device,
-                      struct i6usage *usage,
+                      struct issue6_rusage *usage,
                       const bool verbose)
     __attribute__(( nonnull(3) ));
 
 static
 double measure_cycles(const unsigned long repeats,
                       const char *const device,
-                      struct i6usage *usage,
+                      struct issue6_rusage *usage,
                       const bool verbose)
 {
     if (repeats == 0) {
@@ -260,7 +260,7 @@ double measure_cycles(const unsigned long repeats,
         return -1.0;
     }
 
-    printf("  Measuring %lu repeats for device %s\n",
+    printf("  Measuring %lu repeats for %s\n",
            repeats, device);
     usage->repeats = repeats;
     usage->device  = device;
@@ -340,7 +340,7 @@ double measure_cycles(const unsigned long repeats,
     usage->rusage.ru_nivcsw   = usage_end.ru_nivcsw   - usage_begin.ru_nivcsw;
 
     if (verbose) {
-        print_i6usage(usage);
+        print_issue6_rusage(usage);
     }
 
     if ((run_cycles_retval == 0) && (usage->repeats > 0)) {
@@ -386,21 +386,21 @@ unsigned long repeats_for_measurement(const unsigned long repeats,
 
     /* printf("  Trying %lu repeats for device %s\n", repeats, device); */
 
-    struct i6usage i6usage;
-    memset(&i6usage, 0, sizeof(i6usage));
+    struct issue6_rusage issue6_rusage;
+    memset(&issue6_rusage, 0, sizeof(issue6_rusage));
 
-    const double retval = measure_cycles(repeats, device, &i6usage, false);
+    const double retval = measure_cycles(repeats, device, &issue6_rusage, false);
 
     if (retval < 0.0) {
         fprintf(stderr, "Aborting due to error(s) in measure_cycles()\n");
         return 0;
     }
 
-    printf("    Time spent: %g s\n", i6usage.time_wall);
+    printf("    Time spent: %g s\n", issue6_rusage.time_wall);
 
-    const double d_repeats = (double)i6usage.repeats;
+    const double d_repeats = (double)issue6_rusage.repeats;
     const double d_reliable_repeats = 1.10 *
-        ((double)MINIMUM_RELIABLE_PERIOD) * d_repeats / i6usage.time_wall;
+        ((double)MINIMUM_RELIABLE_PERIOD) * d_repeats / issue6_rusage.time_wall;
 
     const unsigned long rounded_cycles =
         (unsigned long)lrint(0.5+d_reliable_repeats);
@@ -495,26 +495,26 @@ int execute_time_ext(const char *const argv0,
  * Print summary on average time for open-and-close cycle.
  *
  * @param api_str Either "console" or "evdev".
- * @param i6usage The struct i6usage to print.
+ * @param issue6_rusage The struct issue6_rusage to print.
  */
 
 static
-void print_summary(const char *const api_str, struct i6usage *i6usage)
+void print_summary(const char *const api_str, struct issue6_rusage *issue6_rusage)
 {
-    if (i6usage->repeats <= 0) {
+    if (issue6_rusage->repeats <= 0) {
         return;
     }
-    if (i6usage->device == NULL) {
+    if (issue6_rusage->device == NULL) {
         return;
     }
 
     const double avg_cycle_time =
-        i6usage->time_wall / ((double)i6usage->repeats);
+        issue6_rusage->time_wall / ((double)issue6_rusage->repeats);
 
     printf("    %s device: %s\n"
            "        time per open(2)-and-close(2): %11.3f us\n"
            "        open(2)-and-close(2) rate:     %11.3f / s\n",
-           api_str, i6usage->device,
+           api_str, issue6_rusage->device,
            1000000.0*avg_cycle_time, 1.0/avg_cycle_time
            );
 }
@@ -543,7 +543,7 @@ static
 int benchmark_and_report(const char *const argv0,
                          const char *const console_device_str)
 {
-    printf("Running benchmarks (this will take a minute or two).\n\n");
+    printf("Running benchmark(s). This will literally take a minute or two.\n\n");
 
     printf("Beginning with a quick test run to dimension the actual benchmark.\n");
 
@@ -557,24 +557,24 @@ int benchmark_and_report(const char *const argv0,
 
     printf("\nNow for some actual benchmarks, measured internally:\n");
 
-    struct i6usage i6usage_console;
-    memset(&i6usage_console, 0, sizeof(i6usage_console));
+    struct issue6_rusage issue6_rusage_console;
+    memset(&issue6_rusage_console, 0, sizeof(issue6_rusage_console));
 
-    struct i6usage i6usage_evdev;
-    memset(&i6usage_evdev, 0, sizeof(i6usage_evdev));
+    struct issue6_rusage issue6_rusage_evdev;
+    memset(&issue6_rusage_evdev, 0, sizeof(issue6_rusage_evdev));
 
     const double avg_cycle_time_console =
         measure_cycles(repeats_console, console_device_str,
-                       &i6usage_console, true);
+                       &issue6_rusage_console, true);
 
     const double avg_cycle_time_evdev =
         measure_cycles(repeats_evdev, evdev_device_str,
-                       &i6usage_evdev, true);
+                       &issue6_rusage_evdev, true);
 
     printf("Summary:\n");
 
-    print_summary("console", &i6usage_console);
-    print_summary("evdev",   &i6usage_evdev);
+    print_summary("console", &issue6_rusage_console);
+    print_summary("evdev",   &issue6_rusage_evdev);
 
     if ((avg_cycle_time_evdev > 0.0) && (avg_cycle_time_console > 0.0)) {
         printf("\n"
@@ -594,7 +594,8 @@ int benchmark_and_report(const char *const argv0,
 
     if ((repeats_console > 0) || (repeats_evdev > 0)) {
         printf("\n"
-               "Using the external '/usr/bin/time -v' command for the most details:\n");
+               "Using the external command '%s' for the most details:\n",
+               "/usr/bin/time -v");
 
         if (console_device_str) {
             execute_time_ext(argv0, repeats_console, console_device_str);
@@ -607,7 +608,7 @@ int benchmark_and_report(const char *const argv0,
 
 
 /**
- * Take a look at all /dev/ttyN devices and find a writable console tty device.
+ * Examine all /dev/ttyN devices until we find a writable tty device.
  *
  * @return Name of a writeable /dev/ttyN virtual console device.
  * @return NULL if no writable device has been found, or if an error occured.
@@ -662,7 +663,8 @@ char *find_writable_tty(void)
             }
             /* found valid device name */
 
-            const size_t ttydev_name_sz = strlen("/dev/") + strlen(de->d_name) + 1 + 1;
+            const size_t ttydev_name_sz =
+                strlen("/dev/") + strlen(de->d_name) + 1 + 1;
             char *ttydev_name = calloc(ttydev_name_sz, 1);
             snprintf(ttydev_name, ttydev_name_sz, "/dev/%s", de->d_name);
             /* full path to tty device name */
@@ -694,10 +696,14 @@ char *find_writable_tty(void)
 
 
 /**
- * Run open-and-close-benchmark of console API (using the first writable /dev/ttyN) versus evdev API (0 cmdline arguments).
+ * Run benchmarks of console (autodetected /dev/ttyN) versus evdev.
  *
- * @param argc Length of the `argv` string array.
- * @param argv Command line argument string array.
+ * Implement issue-6-benchmark when called with zero command line
+ * parameters: Compare performances of the autodetected /dev/ttyN
+ * device and the well-known evdev device.
+ *
+ * @param argc Copied from main(): Length of the `argv` string array.
+ * @param argv Copied from main(): Command line argument string array.
  *
  * @return EXIT_FAILURE in case of any error
  * @return EXIT_SUCCESS otherwise
@@ -705,12 +711,25 @@ char *find_writable_tty(void)
 static
 int main_argc1(const int argc, const char *const argv[])
 {
-    assert(argc == 1);
+    if (argc != 1) {
+        fprintf(stderr,
+                "%s: Exactly zero arguments needed.\n",
+                argv[0]);
+        return EXIT_FAILURE;
+    }
+
     char *console_device = find_writable_tty();
     if (console_device) {
         printf("Writable TTY device found: %s\n\n", console_device);
     } else {
-        printf("No writable TTY device found.\n\n");
+        printf("ERROR: No writable TTY device found.\n"
+               "\n"
+               "If you want to run the virtual console device benchmark, Ctrl-C RIGHT NOW.\n"
+               "\n"
+               "Then either log in on a virtual console to provide a console device\n"
+               "we can open, or run as a user which can open a console device\n"
+               "(*cough* root *cough* /dev/tty0).\n"
+               "\n");
     }
 
     const int retval = benchmark_and_report(argv[0], console_device);
@@ -721,12 +740,11 @@ int main_argc1(const int argc, const char *const argv[])
 
 
 /**
- * Run open-and-close-benchmark of console API (with devicename given on cmdline) versus evdev API (1 cmdline argument).
+ * Run benchmarks of console (device from cmdline) versus evdev.
  *
- * This program first parses the command line to determine the given
- * console device. Then it runs the benchmarks measuring the
- * performance of open(2)-and-close(2) cycles for the given console
- * device and for the well-known evdev device.
+ * Implement issue-6-benchmark when called with one command line
+ * parameter: Compare performances of the console device from the
+ * command line device and the well-known evdev device.
  *
  * After the measurement, a report on the measured values is printed.
  *
@@ -735,8 +753,8 @@ int main_argc1(const int argc, const char *const argv[])
  * in the use cases of this manually invoked test program run as a
  * non-priviledged user.
  *
- * @param argc Length of the `argv` string array.
- * @param argv Command line argument string array.
+ * @param argc Copied from main(): Length of the `argv` string array.
+ * @param argv Copied from main(): Command line argument string array.
  *
  * @return EXIT_FAILURE in case of any error
  * @return EXIT_SUCCESS otherwise
@@ -745,13 +763,16 @@ static
 int main_argc2(const int argc, const char *const argv[])
 {
     if (argc != 2) {
-        fprintf(stderr, "%s: Exactly one argument needed: the console 'device'.\n", argv[0]);
+        fprintf(stderr,
+                "%s: Exactly one argument needed: the console 'device'.\n",
+                argv[0]);
         return EXIT_FAILURE;
     }
 
     const char *const console_device = argv[1];
     if (*console_device == '\0') {
-        fprintf(stderr, "%s: 'device' argument must be non-empty string\n", argv[0]);
+        fprintf(stderr, "%s: 'device' argument must be non-empty string\n",
+                argv[0]);
         return EXIT_FAILURE;
     }
     struct stat sb;
@@ -766,17 +787,20 @@ int main_argc2(const int argc, const char *const argv[])
     if ((sb.st_mode & S_IFMT) == S_IFCHR) {
         /* character device */
     } else {
-        fprintf(stderr, "%s: stat(2): 'device' argument is not a character device\n", argv[0]);
+        fprintf(stderr,
+                "%s: stat(2): 'device' argument is not a character device\n",
+                argv[0]);
         return EXIT_FAILURE;
     }
 
     const int ret_open = open(console_device, O_WRONLY);
-    if (ret_open != 0) {
+    if (ret_open < 0) {
         const int saved_errno = errno;
         fprintf(stderr, "%s: open(2) O_WRONLY error for %s: %s\n",
                 argv[0], console_device, strerror(saved_errno));
         return EXIT_FAILURE;
     }
+    close(ret_open);
     /* console_device considered valid now */
 
     return benchmark_and_report(argv[0], console_device);
@@ -784,7 +808,10 @@ int main_argc2(const int argc, const char *const argv[])
 
 
 /**
- * Repeat open-and-close cycle for given repeats for given device (2 cmdline arguments).
+ * Run one benchmark of given repeats for given device.
+ *
+ * Implement issue-6-benchmark when called with two command line
+ * parameters.
  *
  * This program first parses the command line to determine the number
  * of repeats to test, and the character device to test. Then it runs
@@ -798,8 +825,8 @@ int main_argc2(const int argc, const char *const argv[])
  * in the use cases of this manually invoked test program run as a
  * non-priviledged user.
  *
- * @param argc Length of the `argv` string array.
- * @param argv Command line argument string array.
+ * @param argc Copied from main(): Length of the `argv` string array.
+ * @param argv Copied from main(): Command line argument string array.
  *
  * @return EXIT_FAILURE in case of any error
  * @return EXIT_SUCCESS otherwise
@@ -816,7 +843,8 @@ int main_argc3(const int argc, const char *const argv[])
 
     const char *repeats_str = argv[1];
     if (*repeats_str == '\0') {
-        fprintf(stderr, "%s: 'repeats' argument must be non-empty string\n", argv[0]);
+        fprintf(stderr, "%s: 'repeats' argument must be non-empty string\n",
+                argv[0]);
         return EXIT_FAILURE;
     }
     char *repeats_endptr;
