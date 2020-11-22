@@ -19,6 +19,8 @@
 #
 # Usage:
 # echo cq cq cq sos | /usr/games/morse -s | perl morse2beep [milliseconds for "."] | xargs beep
+#
+# Note that this strips the trailing End Of Work (...-.-) symbol.
 
 use strict;
 use warnings FATAL => q(all);
