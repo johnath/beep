@@ -30,7 +30,7 @@ my $short    = pop || 100;
 my $long     = $short * 3;
 my $word_gap = $short * 7;
 my @elements;
-sub d { die "Expected input from bsdgames package /usr/games/morse." }
+sub d { die "Expected input from bsdgames package's /usr/games/morse -s." }
 while (<>) {
     chomp;
     s/^ // or d;
