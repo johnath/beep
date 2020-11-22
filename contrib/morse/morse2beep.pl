@@ -2,6 +2,7 @@
 # Turn Morse code into beeps.
 #
 # Copyright 2020 Dan Jacobson (https://www.jidanni.org/)
+# Copyright 2020 Hans Ulrich Niedermann <hun@n-dimensional.de>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,7 +34,7 @@ sub d { die "Expected input from bsdgames package /usr/games/morse." }
 while (<>) {
     chomp;
     s/^ // or d;
-    if    (/^...-.-$/) { die "Didn't get any input!" unless @elements; last; }
+    if    (/^\.\.\.-\.-$/) { die "Didn't get any input!" unless @elements; last; }
     elsif (/^$/)       { $elements[-1]{delay} += $word_gap if @elements; }
     else {
         for ( split // ) {
