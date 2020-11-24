@@ -223,7 +223,7 @@ char *param_device_name = NULL;
  */
 static
 void parse_command_line(const int argc, char *const argv[], beep_parms_T *result)
-    __attribute(( nonnull(3) ));
+    __attribute__(( nonnull(3) ));
 
 static
 void parse_command_line(const int argc, char *const argv[], beep_parms_T *result)
