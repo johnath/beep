@@ -118,7 +118,7 @@ struct _beep_parms_T
 /**
  * Global flag for signalling program abort due to signal handlers.
  *
- * Initialized as fales. Written only by the signal handlers (set to
+ * Initialized as false. Written only by the signal handlers (set to
  * true), read only by the main thread.
  */
 static
