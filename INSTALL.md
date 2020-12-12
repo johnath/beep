@@ -9,6 +9,13 @@ package should have done most of those steps for you.  The notable
 exception should be adding users to the `beep` group.
 
 
+Build requirements
+==================
+
+  * GNU make
+  * clang and/or gcc
+
+
 Compile and Install
 ===================
 
