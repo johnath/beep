@@ -189,9 +189,7 @@ Packages
 ========
 
 The following is a list of links to some distributions' packages of
-`beep`. More information on miscellaneous distributions' `beep`
-packages can be found at the [repology.org beep
-page](https://repology.org/project/beep/packages).
+`beep`:
 
   * [archlinux](https://www.archlinux.org/)  
     [overview](https://www.archlinux.org/packages/extra/x86_64/beep/)
@@ -231,3 +229,8 @@ page](https://repology.org/project/beep/packages).
   * [Ubuntu](https://www.ubuntu.com/)  
     http://packages.ubuntu.com/src:beep
     Sources: See Debian.
+
+More information on miscellaneous distributions' `beep` packages can be found
+at the [repology.org beep page](https://repology.org/project/beep/packages).
+
+[![Packaging status](https://repology.org/badge/vertical-allrepos/beep.svg)](https://repology.org/project/beep/versions)
