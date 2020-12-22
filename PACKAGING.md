@@ -188,7 +188,10 @@ platforms.
 Packages
 ========
 
-This is a list of links to some distributions' packages of `beep`:
+The following is a list of links to some distributions' packages of
+`beep`. More information on miscellaneous distributions' `beep`
+packages can be found at the [repology.org beep
+page](https://repology.org/project/beep/packages).
 
   * [archlinux](https://www.archlinux.org/)  
     [overview](https://www.archlinux.org/packages/extra/x86_64/beep/)
