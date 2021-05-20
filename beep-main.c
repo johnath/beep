@@ -74,7 +74,7 @@ static
 const char version_message[] =
     PACKAGE_TARNAME " " PACKAGE_VERSION "\n"
     "Copyright (C) 2002-2016 Johnathan Nightingale\n"
-    "Copyright (C) 2013-2020 Hans Ulrich Niedermann\n"
+    "Copyright (C) 2013-2021 Hans Ulrich Niedermann\n"
     "Use and Distribution subject to GPL.\n"
     "For information: http://www.gnu.org/copyleft/.\n";
 

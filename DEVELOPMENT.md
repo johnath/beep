@@ -138,6 +138,11 @@ Release checklist
   * Does [`CHANGELOG`](CHANGELOG) start with the proper version
     number?
 
+  * Does [`CREDITS`](CREDITS) contain the credits information for all
+    new commits since the last release?
+
+  * Are the copyright notices inside code files up to date?
+
   * Does `beep --version` contain the current year?
 
   * Does [`GNUmakefile`](GNUmakefile) define `PACKAGE_VERSION` as the
