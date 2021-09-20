@@ -131,8 +131,8 @@ trees.
 
     Use, change, replace as is fitting for your distribution.
 
-  * Add a `beep` system user group
-  
+  * Add a `beep` system user group  
+
     If you want to use the suggested permission setup
     (cf. [`PERMISSIONS.md`](PERMISSIONS.md)), have the package run
     something like e.g.
