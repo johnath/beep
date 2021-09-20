@@ -8,7 +8,7 @@ Deficiencies
 
   * Does not test whether actual sound output happened. The different
     frequency might help a human detect a different melody, but that
-    is no replacement for a properly automatted test.
+    is no replacement for a properly automated test.
 
 
 Devices

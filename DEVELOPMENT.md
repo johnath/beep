@@ -66,7 +66,7 @@ have PC beeper hardware, they have GPIO pins some of which are
 attached to PWM hardware which can be set to produce beeps.
 
 So if one properly attaches a loudspeaker or piezo buzzer to such a
-PWM pin (with a bunch more electrial components like capacitors,
+PWM pin (with a bunch more electrical components like capacitors,
 resistors, transistors where required), one has the hardware to
 produce beeps.
 
@@ -81,7 +81,7 @@ Options:
 
     Not realistic.
 
-  * Add a priviledged `beep-daemon` to handle the beeping, and have a
+  * Add a privileged `beep-daemon` to handle the beeping, and have a
     non-priviledge `beep` contact the beep daemon in some manner to do
     the actual beeping.
 

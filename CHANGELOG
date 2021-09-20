@@ -60,7 +60,7 @@
 - Fix CVE-2018-0492 race condition that allows local privilege escalation
 - Make /dev/input/by-path/platform-pcspkr-event-spkr the default device to use
   as the system administrator can allow access to that without needing any
-  priviledge escalation risks via setuid or sudo.
+  privilege escalation risks via setuid or sudo.
 - Adapt --help output, beep.1 man page, README.md, INSTALL.md to reflect the new device use.
 - Add basic suite of tests.
 - Constrained a few integers to avoid integer overflows.
@@ -83,7 +83,7 @@ and years
 - Man pages now gzip -9 for better compression
 - Table of frequencies added to man page
 - Fix for platforms with unsigned chars
-- On ioctl() errors, beep will now do a printf("\a") so that, at very least, youget a beep.  :)
+- On ioctl() errors, beep will now do a printf("\a") so that, at very least, you get a beep.  :)
 
 
 1.2.1
