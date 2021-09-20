@@ -33,6 +33,7 @@ FREQS=(440 494 554 587 659 740 831 880 988 1109 1175 1319 1480 1661 1760)
 test_dir="$1"
 shift
 
+skip=0
 pass=0
 fail=0
 
@@ -40,15 +41,18 @@ if test -t 1; then
     hilite="$(tput setaf 3)"
     normal="$(tput sgr0)"
     green="$(tput setaf 2)"
+    blue="$(tput setaf 4)"
     red="$(tput setaf 1)$(tput bold)"
 else
     hilite=""
     normal=""
     green=""
+    blue=""
     red=""
 fi
 passmsg="${green}PASS${normal}"
 failmsg="${red}FAIL${normal}"
+skipmsg="${blue}SKIP${normal}"
 
 canonicalize_output() {
     ${SED} -e "s|${BEEP}|BEEP_EXECUTABLE|g" -e "s|^${BEEP##*/}:|BEEP_EXECUTABLE:|g" -e "s|$(echo "${PACKAGE_VERSION}" | ${SED} 's/\./\\./g')|PACKAGE_VERSION|g"
@@ -56,17 +60,27 @@ canonicalize_output() {
 
 # taken from contrib/
 failure_beeps() {
-    if test -e "beep"; then
+    if "$have_no_hardware"; then
+	:
+    elif test -e "beep"; then
 	./beep -f 880 -l 200  -n -f 659  -n -f 523  -n -f 370 -l 400
     fi
 }
 
 # taken from contrib/
 success_beeps() {
-    if test -e "beep"; then
+    if "$have_no_hardware"; then
+	:
+    elif test -e "beep"; then
 	./beep -f 220 -l 100 -n -f 275  -l 100 -n -f 330 -l 100  -n -f 440  -l 100 -n -f 550  -l 100 -n -f 660  -l 100 -n -f 880
     fi
 }
+
+# Determine whether we can test actual hardware
+have_no_hardware=true
+if test -c /dev/input/by-path/platform-pcspkr-event-spkr; then
+    have_no_hardware=false
+fi
 
 : set -x
 
@@ -79,7 +93,10 @@ for executable; do
 	dir="$(dirname "$test")"
 	actual="${dir}/${executable}--${base}.actual"
 	printf "${hilite}%-13s${normal} ${hilite}%-32s${normal} " "${executable}" "${base}"
-	if "${test}" > "${actual}.new" 2>&1; then
+	if "$have_no_hardware" && grep "^: REQUIRES_HARDWARE" "$test" > /dev/null; then
+	    skip="$(expr "${skip}" + 1)"
+	    echo "$skipmsg"
+	elif "${test}" > "${actual}.new" 2>&1; then
 	    canonicalize_output < "${actual}.new" > "${actual}"
 	    expects_output=false
 	    for file in "${dir}/${base}.expected".[0-9]; do
@@ -129,7 +146,7 @@ for executable; do
     done
 done
 
-echo "${pass} passed, ${fail} failed, $(expr "${pass}" + "${fail}") total."
+echo "${pass} passed, ${fail} failed, ${skip} skipped, $(expr "${pass}" + "${fail}" + "${skip}") total."
 
 if test "${fail}" -gt 0; then \
     failure_beeps

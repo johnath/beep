@@ -1,3 +1,5 @@
+: REQUIRES_HARDWARE
+
 ts_begin="$(date +%s)"
 
 ${BEEP} -f "$FREQ" -D 10000 &
