@@ -39,6 +39,6 @@ Options:
 
 Exit status:
     0             if OK
-    non-0         if any problems occured
+    non-0         if any problems occurred
 
 More documentation is available in the beep(1) man page via:  man 1 beep

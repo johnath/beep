@@ -457,7 +457,7 @@ int main(const int argc, char *const argv[])
      * which does not require being root at all.
      *
      * As it is near impossible to make beep safe for running with
-     * elevated priviledges (beep opens files for writing, and usually
+     * elevated privileges (beep opens files for writing, and usually
      * even writes to them, and checking the device file with realpath
      * leaks information), we now check for these two popular old
      * permission setups being carried over to a new beep installation
@@ -565,7 +565,7 @@ int main(const int argc, char *const argv[])
 
         if (parms->stdin_beep != STDIN_BEEP_NONE) {
             /* In this case, beep is probably part of a pipe, in which
-               case POSIX says stdin and out should be fuly buffered.
+               case POSIX says stdin and out should be fully buffered.
                This however means very laggy performance with beep
                just twiddling it's thumbs until a buffer fills. Thus,
                kill the buffering.  In some situations, this too won't

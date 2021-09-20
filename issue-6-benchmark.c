@@ -199,7 +199,7 @@ void print_issue6_rusage(const struct issue6_rusage *const usage)
  * @param device   The name of the device file.
  * @param counters The counters this run generates.
  *
- * @return EXIT_FAILURE if some error occured
+ * @return EXIT_FAILURE if some error occurred
  * @return EXIT_SUCCESS otherwise
  */
 
@@ -611,7 +611,7 @@ int benchmark_and_report(const char *const argv0,
  * Examine all /dev/ttyN devices until we find a writable tty device.
  *
  * @return Name of a writeable /dev/ttyN virtual console device.
- * @return NULL if no writable device has been found, or if an error occured.
+ * @return NULL if no writable device has been found, or if an error occurred.
  */
 
 static
@@ -751,7 +751,7 @@ int main_argc1(const int argc, const char *const argv[])
  * This program contains race conditions between the consistency
  * checks and the actual open(2) for O_WRONLY. Those should not matter
  * in the use cases of this manually invoked test program run as a
- * non-priviledged user.
+ * non-privileged user.
  *
  * @param argc Copied from main(): Length of the `argv` string array.
  * @param argv Copied from main(): Command line argument string array.
@@ -823,7 +823,7 @@ int main_argc2(const int argc, const char *const argv[])
  * This program contains race conditions between the consistency
  * checks and the actual open(2) for O_WRONLY. Those should not matter
  * in the use cases of this manually invoked test program run as a
- * non-priviledged user.
+ * non-privileged user.
  *
  * @param argc Copied from main(): Length of the `argv` string array.
  * @param argv Copied from main(): Command line argument string array.
