@@ -17,6 +17,10 @@ jobs:
         fetch-depth: 0
     - name: make
       run: make
+    - name: 'make --help'
+      run: |
+        ./beep --help > beep-usage.from--help
+        diff -u beep-usage.txt beep-usage.from--help
     - name: 'make check'
       run: make check
     - name: 'make install'
