@@ -21,19 +21,25 @@ Compile and Install
 
 The easy way is
 
-    $ make
-    $ make install
+```
+[user@host beep]$ make
+[user@host beep]$ make install
+```
 
 By default, it'll put the executable `beep` in `/usr/bin`.  If you
 don't like this, change the common variables as appropriate, e.g.
 
-    $ make prefix=$HOME/.local
-    $ make prefix=$HOME/.local install
+```
+[user@host beep]$ make prefix=$HOME/.local
+[user@host beep]$ make prefix=$HOME/.local install
+```
 
 or
 
-    $ make
-    $ make DESTDIR=$PWD/__installroot install
+```
+[user@host beep]$ make
+[user@host beep]$ make DESTDIR=$PWD/__installroot install
+```
 
 For the complete list of those variables, see the top of
 [`GNUmakefile`](GNUmakefile).

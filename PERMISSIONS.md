@@ -71,8 +71,10 @@ following rule into a udev rule file like
 `/lib/udev/rules.d/70-pcspkr-beep.rules` (the exact location depends
 on your distribution):
 
-    # Give write access to the PC speaker to the user logged in on the current virtual console
-    ACTION=="add", SUBSYSTEM=="input", ATTRS{name}=="PC Speaker", ENV{DEVNAME}!="", TAG+="uaccess"
+```
+# Give write access to the PC speaker to the user logged in on the current virtual console
+ACTION=="add", SUBSYSTEM=="input", ATTRS{name}=="PC Speaker", ENV{DEVNAME}!="", TAG+="uaccess"
+```
 
 This allows `beep` to run for the user  currently logged in locally
 without any user specific setup required.
@@ -95,9 +97,11 @@ device special file.
 The exact command to add the group varies from system to
 system. Choose whatever works on your system:
 
-    [root@host ~]# addgroup --system beep    # Debian, Ubuntu, etc.
+```
+[root@host ~]# addgroup --system beep    # Debian, Ubuntu, etc.
 
-    [root@host ~]# groupadd --system beep    # Fedora, RHEL, etc.
+[root@host ~]# groupadd --system beep    # Fedora, RHEL, etc.
+```
 
 Now to allow writing to the device special file for members of the
 `beep` user group, you have the choice between the following two udev
@@ -129,35 +133,41 @@ Verifying the udev rules work
 You will have to (re-)load the `pcspkr.ko` module to (re-)add the
 device so that the new rule is invoked:
 
-    [root@host ~]# modprobe -r pcspkr; sleep 2; modprobe pcspkr
-    [root@host ~]# _
+```
+[root@host ~]# modprobe -r pcspkr; sleep 2; modprobe pcspkr
+[root@host ~]# _
+```
 
 Check that the device has the desired permissions with `ls` and/or
 `getfacl` (`getfacl` only if you are using ACLs).
 
 A working non-ACL setup might look something like
 
-    [root@host ~]# ls -lH /dev/input/by-path/platform-pcspkr-event-spkr
-    crw-rw----. 1 jane beep 13, 84 Apr  8 07:35 /dev/input/by-path/platform-pcspkr-event-spkr
-    [root@host ~]# _
+```
+[root@host ~]# ls -lH /dev/input/by-path/platform-pcspkr-event-spkr
+crw-rw----. 1 jane beep 13, 84 Apr  8 07:35 /dev/input/by-path/platform-pcspkr-event-spkr
+[root@host ~]# _
+```
 
 and a working ACL setup might look something like
 
-    [root@host ~]# ls -lH /dev/input/by-path/platform-pcspkr-event-spkr
-    crw-rw----+ 1 root input 13, 84 Apr  8 07:35 /dev/input/by-path/platform-pcspkr-event-spkr
-    [root@host ~]# getfacl /dev/input/by-path/platform-pcspkr-event-spkr
-    getfacl: Removing leading '/' from absolute path names
-    # file: dev/input/by-path/platform-pcspkr-event-spkr
-    # owner: root
-    # group: input
-    user::rw-
-    user:jane:rw-
-    group::rw-
-    group:beep:-w-
-    mask::rw-
-    other::---
+```
+[root@host ~]# ls -lH /dev/input/by-path/platform-pcspkr-event-spkr
+crw-rw----+ 1 root input 13, 84 Apr  8 07:35 /dev/input/by-path/platform-pcspkr-event-spkr
+[root@host ~]# getfacl /dev/input/by-path/platform-pcspkr-event-spkr
+getfacl: Removing leading '/' from absolute path names
+# file: dev/input/by-path/platform-pcspkr-event-spkr
+# owner: root
+# group: input
+user::rw-
+user:jane:rw-
+group::rw-
+group:beep:-w-
+mask::rw-
+other::---
 
-    [root@host ~]# _
+[root@host ~]# _
+```
 
 
 General rules for permissions setup
@@ -198,15 +208,18 @@ beep to the `beep` group.
 To add user `jane` to the `beep` group, the system administrator has
 to run a command like
 
-    # usermod jane -a -G beep
+```
+[root@host ~]# usermod jane -a -G beep
+```
 
 After having user `jane` log out (and after killing user `jane`'s
 running `tmux` instances, killing `system --user` sessions for user
 `jane`, or just plain rebooting), user `jane` can log back in and
 check whether she now is a `beep` group member:
 
-    [jane@host ~]$ id
-    uid=1000(jane) gid=1000(jane) groups=1000(jane),10(wheel),942(beep) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
-    [jane@host ~]$ ./beep -f 220 -n -f 275 -n -f 330 -n -f 440 -n -f 550 -n -f 660 -n -f 880
-    [jane@host ~]$ _
-
+```
+[jane@host ~]$ id
+uid=1000(jane) gid=1000(jane) groups=1000(jane),10(wheel),942(beep) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+[jane@host ~]$ ./beep -f 220 -n -f 275 -n -f 330 -n -f 440 -n -f 550 -n -f 660 -n -f 880
+[jane@host ~]$ _
+```

@@ -15,7 +15,9 @@ Testing
 If you want to run the tests only for the executables compiled with
 clang, run
 
-    $ make check COMPILERS=clang
+```
+[user@host beep]$ make check COMPILERS=clang
+```
 
 
 APIs
