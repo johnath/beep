@@ -108,7 +108,7 @@ and years
 
 1.0.0
 -----
-- added a SIGINT handler, so Ctrl-C no longer leaves the speaker wailing 
+- added a SIGINT handler, so Ctrl-C no longer leaves the speaker wailing
   forever
 - added -v/--version and -h/--help support
 - updated man page
@@ -124,7 +124,7 @@ and years
 0.6
 ---
 - added -D option.  Both -d and -D set inter-repetition delay, but -D instructs
-  beep to delay even after the last beep, where -d delays only between beeps, 
+  beep to delay even after the last beep, where -d delays only between beeps,
   and terminates immediately after last beep.
 - incorporated Rick Franchuk's idea of stdin hooks - dear god -c is annoying.
 - added a man page
@@ -133,7 +133,7 @@ and years
 0.5
 ---
 - changed over from manually parsing command line parms to getopt()
-- changed atoi() calls into sscanf() calls, to get more meaningful error 
+- changed atoi() calls into sscanf() calls, to get more meaningful error
   handling
 
 0.4

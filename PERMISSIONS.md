@@ -130,7 +130,7 @@ You will have to (re-)load the `pcspkr.ko` module to (re-)add the
 device so that the new rule is invoked:
 
     [root@host ~]# modprobe -r pcspkr; sleep 2; modprobe pcspkr
-    [root@host ~]# 
+    [root@host ~]#
 
 Check that the device has the desired permissions with `ls` and/or
 `getfacl` (`getfacl` only if you are using ACLs).
@@ -139,7 +139,7 @@ A working non-ACL setup might look something like
 
     [root@host ~]# ls -lH /dev/input/by-path/platform-pcspkr-event-spkr
     crw-rw----. 1 jane beep 13, 84 Apr  8 07:35 /dev/input/by-path/platform-pcspkr-event-spkr
-    [root@host ~]# 
+    [root@host ~]#
 
 and a working ACL setup might look something like
 
@@ -157,7 +157,7 @@ and a working ACL setup might look something like
     mask::rw-
     other::---
 
-    [root@host ~]# 
+    [root@host ~]#
 
 
 General rules for permissions setup
@@ -208,5 +208,4 @@ check whether she now is a `beep` group member:
     [jane@host ~]$ id
     uid=1000(jane) gid=1000(jane) groups=1000(jane),10(wheel),942(beep) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
     [jane@host ~]$ ./beep -f 220 -n -f 275 -n -f 330 -n -f 440 -n -f 550 -n -f 660 -n -f 880
-    [jane@host ~]$ 
-
+    [jane@host ~]$

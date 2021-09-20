@@ -19,7 +19,7 @@ Devices
     [user@host ~]$ ls -lR /dev/tty0 /dev/vc/0 /dev/input/
     ls: cannot access '/dev/vc/0': No such file or directory
     crw--w----+ 1 root tty  4, 0 27. Dez 17:55 /dev/tty0
-    
+
     /dev/input/:
     total 4
     -rw-r--r--. 1 root root       6 28. Dez 01:55 blubb
@@ -49,7 +49,7 @@ Devices
     crw-rw----. 1 root input 13, 73 27. Dez 17:55 event9
     crw-rw----. 1 root input 13, 63 27. Dez 17:55 mice
     crw-rw----. 1 root input 13, 32 27. Dez 17:55 mouse0
-    
+
     /dev/input/by-id:
     total 0
     lrwxrwxrwx. 1 root root 9 27. Dez 17:55 usb-B16_b_02_USB-PS_2_Optical_Mouse-event-mouse -> ../event3
@@ -57,7 +57,7 @@ Devices
     lrwxrwxrwx. 1 root root 9 27. Dez 17:55 usb-Burr-Brown_from_TI_USB_Audio_CODEC-event-if03 -> ../event2
     lrwxrwxrwx. 1 root root 9 27. Dez 17:55 usb-Microsoft_Natural®_Ergonomic_Keyboard_4000-event-kbd -> ../event4
     lrwxrwxrwx. 1 root root 9 27. Dez 17:55 usb-Microsoft_Natural®_Ergonomic_Keyboard_4000-if01-event-kbd -> ../event5
-    
+
     /dev/input/by-path:
     total 0
     lrwxrwxrwx. 1 root root  9 27. Dez 17:55 pci-0000:00:10.1-usb-0:1:1.3-event -> ../event2
