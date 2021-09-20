@@ -67,4 +67,4 @@ Devices
     lrwxrwxrwx. 1 root root  9 27. Dez 17:55 pci-0000:00:12.2-usb-0:2.4:1.1-event-kbd -> ../event5
     lrwxrwxrwx. 1 root root 10 27. Dez 17:55 platform-eeepc-wmi-event -> ../event20
     lrwxrwxrwx. 1 root root 10 27. Dez 19:19 platform-pcspkr-event-spkr -> ../event21
-    [user@host ~]$
+    [user@host ~]$ _
