@@ -1,0 +1,27 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: make
+      run: make
+    - name: 'make check'
+      run: make check
+    - name: 'make install'
+      run: make install prefix="$PWD/_root"
+    - name: 'tree'
+      run: |
+        cd $PWD/_root
+        tree .
