@@ -26,8 +26,9 @@ The easy way is
 [user@host beep]$ make install
 ```
 
-By default, it'll put the executable `beep` in `/usr/bin`.  If you
-don't like this, change the common variables as appropriate, e.g.
+By default, `make install` will put the executable `beep` in
+`/usr/bin`.  If you do not like this, change the common GNU Makefile
+standard variables as appropriate, e.g.
 
 ```
 [user@host beep]$ make prefix=$HOME/.local
