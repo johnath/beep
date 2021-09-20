@@ -54,7 +54,7 @@ There are two locations where `udev(7)` rules can be installed:
     This where the system administrator will install their special
     rules independent of any distribution packages.
 
-	This location is suitable when a system administrator is
+    This location is suitable when a system administrator is
     installing `beep` from source tree, or when the system
     administrator wants to install their own rules to override the
     distro package provided ones.

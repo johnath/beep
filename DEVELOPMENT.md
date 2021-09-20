@@ -155,5 +155,5 @@ Release checklist
 
       * Tag beep version 1.2.3 as "v1.2.3".
 
-	  * Summarize the `CHANGELOG` in the release notes while properly
+      * Summarize the `CHANGELOG` in the release notes while properly
         formatting it using github flavoured Markdown.

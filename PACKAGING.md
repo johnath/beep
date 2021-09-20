@@ -139,7 +139,7 @@ trees.
     administrators how to give users permissions to actually beep the
     PC speaker, both with the suggested udev rules, and generally.
 
-	If your distribution ships a different set of udev rules, you
+    If your distribution ships a different set of udev rules, you
     should describe those in some distribution specific README file
     (like e.g. `README.Debian` or `README.fedora`).
 

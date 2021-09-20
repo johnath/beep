@@ -137,8 +137,8 @@ void driver_begin_tone(beep_driver *driver, const uint16_t freq)
     LOG_VERBOSE("driver_begin_tone %p %u", (void *)driver, freq);
     const uintptr_t argp = ((freq != 0) ? (CLOCK_TICK_RATE/freq) : freq) & 0xffff;
     if (-1 == ioctl(driver->device_fd, KIOCSOUND, argp)) {
-	/* If we cannot use the sound API, we cannot silence the sound either */
-	safe_error_exit("ioctl KIOCSOUND");
+        /* If we cannot use the sound API, we cannot silence the sound either */
+        safe_error_exit("ioctl KIOCSOUND");
     }
 }
 
@@ -148,7 +148,7 @@ void driver_end_tone(beep_driver *driver)
 {
     LOG_VERBOSE("driver_end_tone %p", (void *)driver);
     if (-1 == ioctl(driver->device_fd, KIOCSOUND, 0)) {
-	safe_error_exit("ioctl KIOCSOUND");
+        safe_error_exit("ioctl KIOCSOUND");
     }
 }
 
