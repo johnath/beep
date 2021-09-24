@@ -25,7 +25,5 @@ jobs:
       run: make check
     - name: 'make install'
       run: make install prefix="$PWD/_root"
-    - name: 'tree'
-      run: |
-        cd $PWD/_root
-        tree .
+    - name: 'installed files'
+      run: cd "$PWD/_root" && ls -l $(find . -type f)
