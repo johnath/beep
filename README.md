@@ -1,7 +1,7 @@
 beep - beep the PC loudspeaker on Linux
 =======================================
 
-[![Build Status](https://travis-ci.org/spkr-beep/beep.svg?branch=master)](https://travis-ci.org/spkr-beep/beep)
+![Build Status](https://github.com/spkr-beep/beep/actions/workflows/beep-build.yml/badge.svg)
 
 `beep` allows you to have the PC speaker issue beeps and beep patterns
 with given frequencies, durations, and spacing.
