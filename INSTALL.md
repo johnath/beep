@@ -4,9 +4,9 @@ Installing beep
 This document describes how to install `beep` from sources and how to
 set up the system afterwards.
 
-If you are using `beep` as shipped in a distribution package, the
-package should have done most of those steps for you.  The notable
-exception should be adding users to the `beep` group.
+If you are using `beep` as shipped in a binary distribution package,
+that package should have done most of those steps for you.  The
+notable exception should be the step adding users to the `beep` group.
 
 
 Build requirements
