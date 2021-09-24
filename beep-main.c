@@ -51,8 +51,6 @@
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <linux/kd.h>
-#include <linux/input.h>
 
 
 #include "beep-config.h"
