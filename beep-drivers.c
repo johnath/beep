@@ -60,6 +60,10 @@ void beep_drivers_register(beep_driver *driver)
 /* documented in header file */
 beep_driver *beep_drivers_detect(const char *const device_name)
 {
+    if (first_driver == NULL) {
+        LOG_ERROR("beep has been built without any driver");
+        exit(EXIT_FAILURE);
+    }
     for (beep_driver *driver = first_driver; driver; driver=driver->next) {
         if (driver->detect(driver, device_name)) {
             return driver;
