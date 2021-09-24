@@ -4,7 +4,7 @@ beep - beep the PC loudspeaker on Linux
 ![Build Status](https://github.com/spkr-beep/beep/actions/workflows/beep-build.yml/badge.svg)
 
 `beep` allows you to have the PC speaker issue beeps and beep patterns
-with given frequencies, durations, and spacing.
+with given frequencies, durations, and spacing on Linux systems.
 
 Beginning in 2019, this version of `beep` can be found at
 [github.com/spkr-beep/beep/](https://github.com/spkr-beep/beep/). Please
@@ -58,11 +58,12 @@ How beep works internally
 The evdev API
 -------------
 
-The evdev API uses `write(2)` to write `EV_SND`/`SND_TONE` input_event
-data to the `/dev/input/by-path/platform-pcspkr-event-spkr` device
-file.  The system administrator can set up normal file permissions on
-the device file to allow beeping access for certain users and
-groups.
+The Linux evdev API uses `write(2)` to write `EV_SND`/`SND_TONE`
+input_event data to the
+`/dev/input/by-path/platform-pcspkr-event-spkr` device file.
+
+The system administrator can set up normal file permissions on the
+device file to allow beeping access for certain users and groups.
 
 See [`PERMISSIONS.md`](PERMISSIONS.md) for more details on permission
 setup.
@@ -72,8 +73,8 @@ The console API
 ---------------
 
 In order to be allowed to run the `KIOCSOUND` `ioctl(2)` of the
-classical console API, the Linux kernel insists you must either be
-root or own the current TTY (e.g. non-root user logged in on
+classical Linux console API, the Linux kernel insists you must either
+be root or own the current TTY (e.g. non-root user logged in on
 `/dev/tty4`).
 
 `beep` only uses this API as a fallback.

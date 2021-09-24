@@ -14,6 +14,7 @@ Build requirements
 
   * GNU make
   * clang and/or gcc
+  * Linux kernel headers
 
 
 Compile and Install
