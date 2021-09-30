@@ -135,13 +135,13 @@ Release checklist
 
   * Does `make clean && make check` run?
 
-  * Is [`CHANGELOG`](CHANGELOG) up to date?
+  * Is [`NEWS.md`](NEWS.md) up to date?
 
-  * Does [`CHANGELOG`](CHANGELOG) start with the proper version
+  * Does [`NEWS.md`](NEWS.md) start with the proper version
     number?
 
-  * Does [`CREDITS`](CREDITS) contain the credits information for all
-    new commits since the last release?
+  * Does [`CREDITS.md`](CREDITS.md) contain the credits information
+    for all new commits since the last release?
 
   * Are the copyright notices inside code files up to date?
 
@@ -162,5 +162,5 @@ Release checklist
 
       * Tag beep version 1.2.3 as "v1.2.3".
 
-      * Summarize the `CHANGELOG` in the release notes while properly
+      * Summarize the `NEWS.md` in the release notes while properly
         formatting it using github flavoured Markdown.
