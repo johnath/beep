@@ -18,7 +18,7 @@
  *
  * \defgroup issue-6-benchmark The issue-6-benchmark program
  *
- * Usage: See print_usage() function below.
+ * Usage: See print_usage() function just below the "#include"s.
  *
  * @{
  *
@@ -43,15 +43,6 @@
 #include <sys/wait.h>
 
 #include "beep-compiler.h"
-
-
-/** The minimum measurement period considered to create a reliable result.
- *
- * A value of 23 seconds works nicely as we are basically running 4
- * times this value plus a bit of change. The total will then still
- * fit into the "takes a minute or two" range.
- */
-#define MINIMUM_RELIABLE_PERIOD 23.0
 
 
 /**
@@ -88,6 +79,15 @@ void print_usage(FILE *file, const char *const argv0)
             argv0
             );
 }
+
+
+/** The minimum measurement period considered to create a reliable result.
+ *
+ * A value of 23 seconds works nicely as we are basically running 4
+ * times this value plus a bit of change. The total will then still
+ * fit into the "takes a minute or two" range.
+ */
+#define MINIMUM_RELIABLE_PERIOD 23.0
 
 
 /**
