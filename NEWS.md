@@ -6,6 +6,18 @@ The big and user visible changes.
 
 1.4.x
 -----
+  * Rename `CREDITS` to `CREDITS.md` and `CHANGELOG` to `NEWS.md` and
+    reformatted them to markdown.
+  * Fix some `__VA_ARGS__` problems with some C language compiler
+    options.
+  * `contrib/morse/`: Add both `perl` and `tr`+`sed` script options to
+    have beep produce morse code by converting the output of the
+    `morse` utility from the BSD Games package to a `beep` command
+    line.
+  * If built without any drivers, running `beep` will now complain and
+    abort instead of silently (pun intended) just not beeping.
+  * Stop using Travis CI. Use GitHub Actions workflows for CI instead.
+  * Skip test cases using PC speaker hardware if absent (e.g. on a VM)
 
 1.4.9
 -----

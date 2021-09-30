@@ -57,3 +57,11 @@ permissions setup (https://github.com/spkr-beep/beep/issues/4).
 Thanks to Daniel Kamil Kozar (xavery on github) for reporting and
 helping with fixing the sudo check when beep runs as non-root user
 (https://github.com/spkr-beep/beep/issues/5).
+
+Thanks to Walter B. Vaughan for reminding me that keeping a format
+string in C macros using `__VA_ARGS__` is still a bad idea.
+
+Thanks to Dan Jacobson for the idea and the perl script for converting
+morse code to beeps via a beep command line.
+
+Thanks to a1346054 for the fixes to spelling and whitespace.
