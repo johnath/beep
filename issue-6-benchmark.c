@@ -45,8 +45,13 @@
 #include "beep-compiler.h"
 
 
-/** The minimum measurement period considered to create a reliable result. */
-#define MINIMUM_RELIABLE_PERIOD (23.0)
+/** The minimum measurement period considered to create a reliable result.
+ *
+ * A value of 23 seconds works nicely as we are basically running 4
+ * times this value plus a bit of change. The total will then still
+ * fit into the "takes a minute or two" range.
+ */
+#define MINIMUM_RELIABLE_PERIOD 23.0
 
 
 /**
@@ -57,7 +62,7 @@ void print_usage(FILE *file, const char *const argv0)
 {
     fprintf(file,
             "issue-6-benchmark - benchmark program for open(2) speed (github issue #6)\n"
-            "Benchmark open(2)-and-close(2) cycles work console versus evdev API.\n"
+            "Benchmark open(2)-and-close(2) cycles on console versus evdev speaker API.\n"
             "\n"
             "Usage:\n"
             "\n"
@@ -72,6 +77,9 @@ void print_usage(FILE *file, const char *const argv0)
             "    %s 2342 /dev/chardevice\n"
             "        Repeat 2342 open-and-close cycles for the given /dev/chardevice.\n"
             "        Timing this is left to the caller.\n"
+            "\n"
+            "Obviously, the `pcspkr.ko' kernel module must be loaded for the PC speaker\n"
+            "evdev character device file to be available.\n"
             "\n"
             "See also the https://github.com/spkr-beep/beep/issues/6 discussion.\n"
             ,
@@ -413,7 +421,7 @@ unsigned long repeats_for_measurement(const unsigned long repeats,
  * Run externally timed main_argc3() process via fork(2), execv(3), and waitpid(2).
  *
  * This runs a separate instance of `issue-6-benchmark` via
- * `/usr/bin/time -v`. This gives a lot more information about the
+ * `/usr/bin/time -v`. GNU time gives a lot more information about the
  * system resources used.
  *
  * @param argv0   The name issue-6-benchmark has been called, and
@@ -545,15 +553,19 @@ int benchmark_and_report(const char *const argv0,
 {
     printf("Running benchmark(s). This will literally take a minute or two.\n\n");
 
-    printf("Beginning with a quick test run to dimension the actual benchmark.\n");
+    printf("For reproducible results, make sure the CPU load very close to 0,\n"
+           "that there is a sufficient amount of available RAM, and there is\n"
+           "no heavy I/O load. Stopping web browsers running Javascript might help.\n\n");
 
-    /* These both take around 3 seconds on my system. That should be a
-     * good enough base to extrapolate to MINIMUM_RELIABLE_PERIOD
-     * from. */
+    printf("Beginning with a quick test run to dimension the actual benchmark:\n");
+
+    /* These both take between around 1 to 10 seconds on my
+     * system. That should be a good enough base to extrapolate to
+     * MINIMUM_RELIABLE_PERIOD from. */
     const unsigned long repeats_console =
-        repeats_for_measurement(1000000, console_device_str);
+        repeats_for_measurement(250000UL, console_device_str);
     const unsigned long repeats_evdev =
-        repeats_for_measurement(230, evdev_device_str);
+        repeats_for_measurement(250UL, evdev_device_str);
 
     printf("\nNow for some actual benchmarks, measured internally:\n");
 
@@ -578,7 +590,7 @@ int benchmark_and_report(const char *const argv0,
 
     if ((avg_cycle_time_evdev > 0.0) && (avg_cycle_time_console > 0.0)) {
         printf("\n"
-               "So opening an evdev device takes about %g times as long\n"
+               "So opening an evdev device takes %g times as long\n"
                "as opening a console device.\n",
                avg_cycle_time_evdev/avg_cycle_time_console);
     }
@@ -586,10 +598,10 @@ int benchmark_and_report(const char *const argv0,
     printf("\n"
            "Notes:\n"
            "  * All measured times can only be relied upon when this benchmark\n"
-           "    is running on an otherwise idle machine.\n"
-           "  * The weird thing is that for the evdev device, almost 100%% of\n"
+           "    is running on an otherwise idle machine, as wall clock time matters.\n"
+           "  * The really weird thing is that for the evdev device, almost 100%% of\n"
            "    the elapsed wall clock time is spent doing something which is\n"
-           "    *neither* system time *nor* user time. What time is it then?\n"
+           "    *neither* system time *nor* user time. What kind of time is it then?\n"
            );
 
     if ((repeats_console > 0) || (repeats_evdev > 0)) {
@@ -699,8 +711,8 @@ char *find_writable_tty(void)
  * Run benchmarks of console (autodetected /dev/ttyN) versus evdev.
  *
  * Implement issue-6-benchmark when called with zero command line
- * parameters: Compare performances of the autodetected /dev/ttyN
- * device and the well-known evdev device.
+ * parameters: Compare the performances of the autodetected /dev/ttyN
+ * console device and the well-known evdev device.
  *
  * @param argc Copied from main(): Length of the `argv` string array.
  * @param argv Copied from main(): Command line argument string array.
@@ -743,8 +755,8 @@ int main_argc1(const int argc, const char *const argv[])
  * Run benchmarks of console (device from cmdline) versus evdev.
  *
  * Implement issue-6-benchmark when called with one command line
- * parameter: Compare performances of the console device from the
- * command line device and the well-known evdev device.
+ * parameter: Compare the performances of the console device given on
+ * the command line and the well-known evdev device.
  *
  * After the measurement, a report on the measured values is printed.
  *
