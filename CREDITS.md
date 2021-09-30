@@ -40,11 +40,15 @@
 
 Thanks to terom on Hacker News, Andrew Ayer, Richard Kettlewall,
 rain-1 on github, Jakub Wilk, and Benjamin Grange for their help with
-fixing CVE-2018-0492, CVE-2018-1000532, and the help fixing the fixes.
+fixing
+[CVE-2018-0492](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-0492),
+[CVE-2018-1000532](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-1000532),
+and the help fixing the fixes (https://github.com/johnath/beep/issues/11).
 
-Thanks to Hanno Böck for the report on possible integer overflows.
+Thanks to Hanno Böck for the report on possible integer overflows
+(https://github.com/johnath/beep/issues/13).
 
-Thanks to Stefan Helmert for the sig_atomic_t idea.
+Thanks to Stefan Helmert for the `sig_atomic_t` idea.
 
 Thanks to Dan Jacobson (jidanni on github) and kanliot for suggesting
 documentation improvements especially for but not restricted to the
