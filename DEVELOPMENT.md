@@ -154,8 +154,8 @@ Release checklist
 
   * Do the `git push` to github.
 
-  * Wait for travis CI to finish building successfully. If it fails,
-    investigate and fix the problem.
+  * Wait for CI builds and checks to finish building
+    successfully. Investigate and fix any problems.
 
   * Enjoy the [github releases web
     interface](https://github.com/spkr-beep/beep/releases):
