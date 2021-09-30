@@ -96,7 +96,7 @@ Files to install for beep
 
   * `/usr/share/doc/beep/COPYING`  
 
-  * `/usr/share/doc/beep/CREDITS`  
+  * `/usr/share/doc/beep/CREDITS.md`  
 
 The files [`INSTALL.md`](INSTALL.md),
 [`DEVELOPMENT.md`](DEVELOPMENT.md), [`PACKAGING.md`](PACKAGING.md) are

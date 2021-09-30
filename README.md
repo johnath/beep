@@ -94,7 +94,7 @@ alphabetically:
   * [`COPYING`](COPYING)  
     The licensing text.
 
-  * [`CREDITS`](CREDITS)  
+  * [`CREDITS.md`](CREDITS.md)  
     Giving credit where credit is due.
 
   * [`DEVELOPMENT.md`](DEVELOPMENT.md)  

@@ -325,7 +325,7 @@ serve-html: html
 
 pkgdoc_DATA += CHANGELOG
 pkgdoc_DATA += COPYING
-pkgdoc_DATA += CREDITS
+pkgdoc_DATA += CREDITS.md
 pkgdoc_DATA += README.md
 pkgdoc_DATA += PERMISSIONS.md
 

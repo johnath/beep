@@ -140,8 +140,8 @@ Release checklist
   * Does [`CHANGELOG`](CHANGELOG) start with the proper version
     number?
 
-  * Does [`CREDITS`](CREDITS) contain the credits information for all
-    new commits since the last release?
+  * Does [`CREDITS.md`](CREDITS.md) contain the credits information
+    for all new commits since the last release?
 
   * Are the copyright notices inside code files up to date?
 
