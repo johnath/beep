@@ -124,7 +124,6 @@ LINKER_clang = clang
 CPPFLAGS_clang =
 CFLAGS_clang += -Wall -Wextra
 CFLAGS_clang += -Weverything
-CFLAGS_clang += -Wno-gnu-zero-variadic-macro-arguments
 CFLAGS_clang += -Wno-padded
 CFLAGS_clang += -std=gnu99 -pedantic
 CFLAGS_clang += -Werror
