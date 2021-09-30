@@ -11,11 +11,13 @@ Beginning in 2019, this version of `beep` can be found at
 report bugs and other problems at
 [github.com/spkr-beep/beep/issues](https://github.com/spkr-beep/beep/issues).
 
-This version of `beep` is based on Johnathan Nightingales' original
-`beep` from
+This version of `beep` has been forked from Johnathan Nightingales'
+original `beep` when [CVE-2018-0492 and
+CVE-2018-1000532](https://github.com/johnath/beep/issues/11) required
+fixes in 2018, while Johnathan Nightingales'
 [github.com/johnath/beep/](https://github.com/johnath/beep/) and
-[johnath.com/beep/](http://johnath.com/beep/) which was maintained
-from around 2000 to around 2013.
+[johnath.com/beep/](http://johnath.com/beep/) was only maintained from
+around 2000 until around 2013.
 
 
 What beep does
