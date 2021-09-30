@@ -260,8 +260,10 @@ $(foreach compiler,$(COMPILERS),$(eval $(call PER_COMPILER,$(compiler))))
 man1_DATA  += beep.1
 CLEANFILES += beep.1
 
+HTML_DATA += html/CREDITS.html
 HTML_DATA += html/DEVELOPMENT.html
 HTML_DATA += html/INSTALL.html
+HTML_DATA += html/NEWS.html
 HTML_DATA += html/PACKAGING.html
 HTML_DATA += html/PERMISSIONS.html
 HTML_DATA += html/README.html
