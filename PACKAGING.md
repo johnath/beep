@@ -92,7 +92,7 @@ Files to install for beep
     Covers installing from source tree, and distro package following
     and not following the beep suggested udev rule setup.
 
-  * `/usr/share/doc/beep/CHANGELOG`  
+  * `/usr/share/doc/beep/NEWS.md`  
 
   * `/usr/share/doc/beep/COPYING`  
 

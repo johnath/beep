@@ -86,11 +86,6 @@ Documentation
 The documentation files shipped with the `beep` source tree, sorted
 alphabetically:
 
-  * [`CHANGELOG`](CHANGELOG)  
-    Usually called `NEWS` but not renamed for historical reasons, this
-    file contains a list of the high level changes between `beep`
-    releases.
-
   * [`COPYING`](COPYING)  
     The licensing text.
 
@@ -102,6 +97,9 @@ alphabetically:
 
   * [`INSTALL.md`](INSTALL.md)  
     How to build and install `beep` from source tree.
+
+  * [`NEWS.md`](NEWS.md)  
+    Contains a list of the high level changes between `beep` releases.
 
   * [`PACKAGING.md`](PACKAGING.md)  
     How to package `beep` for a Linux distribution.

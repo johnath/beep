@@ -323,9 +323,9 @@ html: doxygen.stamp
 serve-html: html
 	$(PYTHON3) -m http.server --directory html/dox/html
 
-pkgdoc_DATA += CHANGELOG
 pkgdoc_DATA += COPYING
 pkgdoc_DATA += CREDITS.md
+pkgdoc_DATA += NEWS.md
 pkgdoc_DATA += README.md
 pkgdoc_DATA += PERMISSIONS.md
 
