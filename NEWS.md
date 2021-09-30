@@ -70,7 +70,7 @@ The big and user visible changes.
   * Adapt --help output, beep.1 man page, README.md, INSTALL.md to reflect the new device use.
   * Add basic suite of tests.
   * Constrained a few integers to avoid integer overflows.
-  * Only issue fallback '\a' type beeps if that '\a' actually goes to a tty device
+  * Only issue fallback `\a` type beeps if that `\a` actually goes to a tty device
     which can actually beep
   * Stop promoting floating point frequencies which no Kernel API can even use
 
