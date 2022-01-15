@@ -3,8 +3,8 @@
 ########################################################################
 
 # We use GNU makefile conventions for directory names with one notable
-# exception: prefix is not /usr/local in order to keep the traditional
-# default installation location for beep.
+# exception: prefix is not /usr/local in order to keep beep's
+# traditional default installation location prefix /usr.
 
 PACKAGE_TARNAME = beep
 PACKAGE_VERSION = 1.4.9
