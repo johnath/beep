@@ -333,6 +333,8 @@ pkgdoc_DATA += PERMISSIONS.md
 
 contrib_SCRIPTS += contrib/failure-beeps
 contrib_SCRIPTS += contrib/success-beeps
+contrib_SCRIPTS += contrib/morse/morse2beep.pl
+contrib_SCRIPTS += contrib/morse/morse2beep.sed
 
 
 ########################################################################

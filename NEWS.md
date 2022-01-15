@@ -5,6 +5,7 @@ The big and user visible changes.
 
 1.4.x
 -----
+  * Install the `contrib/morse/*` scripts just like the failure-beeps.
 
 1.4.10
 ------
