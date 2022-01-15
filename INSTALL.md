@@ -53,11 +53,30 @@ packagers are documented in [`PACKAGING.md`](PACKAGING.md).
 System configuration
 ====================
 
-  * Add a line
+  * The Linux kernel driver `pcspkr` must be loaded to provide
+    access to the PC speaker via the evdev and console APIs.
+
+  * To have the system load the `pcspkr` kernel module by default
+    during each system boot, add a line
 
         alias platform:pcspkr pcspkr
 
-    to a file like e.g. `/etc/modprobe.d/pcspkr-beep.conf`.
+    to a modprobe config file, like
+    e.g. `/etc/modprobe.d/pcspkr-beep.conf`.
 
-  * Set up the udev rules to set the device special file permissions
-    for non-root users according to [`PERMISSIONS.md`](PERMISSIONS.md).
+  * To load the `pcspkr` kernel module right now without needing to
+    boot, run
+
+        modprobe pcspkr
+
+    To unload the `pcspkr` driver again, run
+
+        modprobe -r pcspkr
+
+  * Set up the udev rules which set the device special file
+    permissions for non-root users according to
+    [`PERMISSIONS.md`](PERMISSIONS.md).
+
+    You can test whether the permission setup work by unloading and
+    then loading the `pcspkr` kernel module, as loading the module
+    will cause all the udev rules to run.
