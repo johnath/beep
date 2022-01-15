@@ -18,6 +18,7 @@ The big and user visible changes.
     abort instead of silently (pun intended) just not beeping.
   * Stop using Travis CI. Use GitHub Actions workflows for CI instead.
   * Skip test cases using PC speaker hardware if absent (e.g. on a VM)
+  * Improved documentation (e.g. alsamixer requirement, loading pcspkr)
 
 1.4.9
 -----
