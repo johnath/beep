@@ -1,6 +1,7 @@
 /** \file beep-driver.h
  * \brief the interface all beep drivers implement
  * \author Copyright (C) 2019 Hans Ulrich Niedermann
+ * \author Copyright (C) 2022 Hans Ulrich Niedermann
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +36,7 @@
 /**
  * Abstract declaration of beep_driver.
  */
-typedef struct _beep_driver beep_driver;
+typedef struct beep_driver beep_driver;
 
 
 /**
@@ -69,7 +70,7 @@ typedef void (*beep_driver_end_tone_func)   (beep_driver *driver);
 /**
  * Internal beep driver data structure.
  */
-struct _beep_driver {
+struct beep_driver {
     /** Unique name for the driver */
     char        *name;
 

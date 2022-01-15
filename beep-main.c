@@ -2,7 +2,7 @@
  * \brief main program to beep the pc speaker any number of ways
  * \author Copyright (C) 2000-2010 Johnathan Nightingale
  * \author Copyright (C) 2010-2013 Gerfried Fuchs
- * \author Copyright (C) 2013-2018 Hans Ulrich Niedermann
+ * \author Copyright (C) 2013-2022 Hans Ulrich Niedermann
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -72,7 +72,7 @@ static
 const char version_message[] =
     PACKAGE_TARNAME " " PACKAGE_VERSION "\n"
     "Copyright (C) 2002-2016 Johnathan Nightingale\n"
-    "Copyright (C) 2013-2021 Hans Ulrich Niedermann\n"
+    "Copyright (C) 2013-2022 Hans Ulrich Niedermann\n"
     "Use and Distribution subject to GPL.\n"
     "For information: http://www.gnu.org/copyleft/.\n";
 
@@ -80,7 +80,7 @@ const char version_message[] =
 /**
  * Per note parameter set.
  */
-typedef struct _beep_parms_T beep_parms_T;
+typedef struct beep_parms_T beep_parms_T;
 
 
 /* The default values are defined in beep-config.h */
@@ -89,7 +89,7 @@ typedef struct _beep_parms_T beep_parms_T;
 /**
  * Per note parameter set (including heritage information and linked list pointer).
  */
-struct _beep_parms_T
+struct beep_parms_T
 {
     unsigned int freq;       /**< tone frequency (Hz)         */
     unsigned int length;     /**< tone length    (ms)         */
