@@ -4,8 +4,8 @@ beep NEWS
 The big and user visible changes.
 
 
-1.4.x
------
+1.4.10
+------
   * Rename `CREDITS` to `CREDITS.md` and `CHANGELOG` to `NEWS.md` and
     reformatted them to markdown.
   * Fix some `__VA_ARGS__` problems with some C language compiler

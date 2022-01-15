@@ -7,7 +7,7 @@
 # traditional default installation location prefix /usr.
 
 PACKAGE_TARNAME = beep
-PACKAGE_VERSION = 1.4.9
+PACKAGE_VERSION = 1.4.10
 
 DESTDIR=
 prefix=/usr
