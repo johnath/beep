@@ -245,4 +245,4 @@ The following is a list of links to some distributions' packages of
 More information on miscellaneous distributions' `beep` packages can be found
 at the [repology.org beep page](https://repology.org/project/beep/packages).
 
-[![Packaging status](https://repology.org/badge/vertical-allrepos/beep.svg)](https://repology.org/project/beep/versions)
+[![Packaging status](https://repology.org/badge/vertical-allrepos/beep.svg?columns=3)](https://repology.org/project/beep/versions)
