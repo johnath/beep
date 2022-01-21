@@ -3,6 +3,9 @@ beep NEWS
 
 The big and user visible changes.
 
+1.4.x
+-----
+
 1.4.11
 ------
   * Install the `contrib/morse/*` scripts just like the failure-beeps.
