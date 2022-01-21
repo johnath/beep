@@ -34,8 +34,9 @@ Whenever a new device is added to or removed from the system, the
 
 Every rule consists of a part to match a particular type of device
 (with comparison operators such as `==`), and a part which does
-something about that device, such as modifying or setting a variable
-(e.g. `+=' or `=`), changing its file mode or ownership or file ACL.
+something about that device, such as modifying or setting one or more
+variable (e.g. `+=' or `=`), which can change the device file's mode
+or ownership or file ACL.
 
 See the sections below for example rules suggested for `beep`.
 
@@ -58,6 +59,12 @@ There are two locations where `udev(7)` rules can be installed:
     installing `beep` from source tree, or when the system
     administrator wants to install their own rules to override the
     distro package provided ones.
+
+    This is also where a sysadmin can override a file from
+    `/usr/lib/udev/rules.d/` or `/lib/udev/rules.d/` by creating a
+    file of the same name in `/etc/udev/rules.d/`. This file can
+    contain different udev rules, or be empty (or a symlink to
+    `/dev/null`) to just disable the rules from that file.
 
 
 Users currently logged into virtual console
@@ -118,6 +125,10 @@ on your distribution).
 
     This ACL based rule requires installing the `acl` package on those
     distributions which do not install it by default yet.
+
+	The nice part about just adding this one ACL is that it does not
+    need to possibly interfere with whatever else the system does to
+    the device, e.g. to implement the effects of `TAG+="uaccess"`.
 
   * The following non-ACL rule grants access to the `beep` group by
     changing the owning group, removing access for the default group

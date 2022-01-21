@@ -131,6 +131,14 @@ trees.
 
     Use, change, replace as is fitting for your distribution.
 
+  * Shipping the two permission approaches (`TAG+="uaccess"` and the
+    group based one) in separate udev rule files allows the sysadmin
+    to override or completely disable either one of those rules by
+    placing a file of the same name into `/etc/udev/rules.d/`, which
+    does not require changing things in `/usr` which might be a
+    readonly filesystem or be overwritten by the next update of the
+    beep packge.
+
   * Add a `beep` system user group  
 
     If you want to use the suggested permission setup

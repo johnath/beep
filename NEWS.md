@@ -5,6 +5,7 @@ The big and user visible changes.
 
 1.4.x
 -----
+  * Document how to override and disable packaged udev rules.
 
 1.4.11
 ------
