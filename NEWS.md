@@ -6,6 +6,14 @@ The big and user visible changes.
 1.4.x
 -----
   * Document how to override and disable packaged udev rules.
+  * Changed the build system to be closer to the GNU makefile
+    conventions, i.e. only one compiler/toolchain per build, default
+    installation is prefix=/usr/local instead of prefix=/usr, use GNU
+    style docdir= instead of RPM spec file style pkgdocdir=, etc.
+    Still not using a `configure` script, though, as that is complex.
+    The user writing a `local.mk` with some definitions covers
+    everyone wanting to use the same settings across `make`
+    invocations, though.
 
 1.4.11
 ------

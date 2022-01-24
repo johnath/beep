@@ -32,6 +32,9 @@ FREQS=(440 494 554 587 659 740 831 880 988 1109 1175 1319 1480 1661 1760)
 
 test_dir="$1"
 shift
+BEEP="$1"
+shift
+export BEEP
 
 skip=0
 pass=0
@@ -63,7 +66,7 @@ failure_beeps() {
     if "$have_no_hardware"; then
 	:
     elif test -e "beep"; then
-	./beep -f 880 -l 200  -n -f 659  -n -f 523  -n -f 370 -l 400
+	${BEEP} -f 880 -l 200  -n -f 659  -n -f 523  -n -f 370 -l 400
     fi
 }
 
@@ -72,7 +75,7 @@ success_beeps() {
     if "$have_no_hardware"; then
 	:
     elif test -e "beep"; then
-	./beep -f 220 -l 100 -n -f 275  -l 100 -n -f 330 -l 100  -n -f 440  -l 100 -n -f 550  -l 100 -n -f 660  -l 100 -n -f 880
+	${BEEP} -f 220 -l 100 -n -f 275  -l 100 -n -f 330 -l 100  -n -f 440  -l 100 -n -f 550  -l 100 -n -f 660  -l 100 -n -f 880
     fi
 }
 
@@ -84,15 +87,14 @@ fi
 
 : set -x
 
-for executable; do
-    export BEEP="$PWD/$executable"
+if true; then
     freq_idx=0
-    for test in $(ls -1 tests/*.{bash,sh}); do
+    for test in $(ls -1 "${test_dir}/"*.{bash,sh}); do
 	export FREQ="${FREQS[${freq_idx}]}"
 	base="$(basename $(basename "$test" .bash) .sh)"
 	dir="$(dirname "$test")"
-	actual="${dir}/${executable}--${base}.actual"
-	printf "${hilite}%-13s${normal} ${hilite}%-32s${normal} " "${executable}" "${base}"
+	actual="${dir}/${base}.actual"
+	printf "${hilite}%-32s${normal} " "${base}"
 	if "$have_no_hardware" && grep "^: REQUIRES_HARDWARE" "$test" > /dev/null; then
 	    skip="$(expr "${skip}" + 1)"
 	    echo "$skipmsg"
@@ -144,7 +146,7 @@ for executable; do
 	fi
 	sleep 0.35 || sleep 1
     done
-done
+fi
 
 echo "${pass} passed, ${fail} failed, ${skip} skipped, $(expr "${pass}" + "${fail}" + "${skip}") total."
 

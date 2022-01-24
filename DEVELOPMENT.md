@@ -16,7 +16,7 @@ If you want to run the tests only for the executables compiled with
 clang, run
 
 ```
-[user@host beep]$ make check COMPILERS=clang
+[user@host beep]$ make check TOOLCHAINS=clang
 ```
 
 

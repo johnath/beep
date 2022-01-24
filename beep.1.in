@@ -155,7 +155,7 @@ rule to allow write access to
 .B /dev/input/by\-path/platform\-pcspkr\-event\-spkr
 for certain users and/or user groups. For details, see the
 .B beep
-.B @pkgdocdir@/PERMISSIONS.md
+.B @docdir@/PERMISSIONS.md
 file.
 .\"
 .SS "APIs"
@@ -277,8 +277,8 @@ will produce first two 1000Hz beeps, then 5 beeps at the default tone, but only 
 .\"
 .SH SEE ALSO
 .\" Distro packages might want to replace the next line with their README
-.\" .BR @pkgdocdir@/README.Distro ,
-.BR @pkgdocdir@/README.md ,
-.BR @pkgdocdir@/PERMISSIONS.md ,
+.\" .BR @docdir@/README.Distro ,
+.BR @docdir@/README.md ,
+.BR @docdir@/PERMISSIONS.md ,
 .UR "https://github.com/spkr\-beep/beep"
 .UE

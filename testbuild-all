@@ -1,0 +1,53 @@
+#!/bin/sh
+
+cd "$(dirname "$0")"
+
+export LC_ALL=C
+
+set -ex
+
+make clean
+
+while read id cc cflags
+do
+    abs_top_srcdir="$PWD"
+    builddir="$PWD/_build-$id"
+    prefix="$PWD/_prefix-$id"
+    rm -rf "$builddir" "$prefix"
+    (
+	mkdir "$builddir"
+	cd "$builddir"
+	srcdir="${abs_top_srcdir}"
+
+	run_make() {
+	    make -j -f "$srcdir/GNUmakefile" VPATH="$srcdir" srcdir="$srcdir" CFLAGS="$cflags" CPPFLAGS="-I. -I$srcdir" prefix="$prefix" "$@"
+	}
+
+	run_make CC="$cc"
+	run_make CC="$cc" check
+
+	run_make CC="false" $(sed -n 's|^\(install[^: ]*\):.*|\1|p' "$srcdir/GNUmakefile")
+	(cd "$prefix" && find . -type f | sort) > after-installation.txt
+	nl after-installation.txt
+	if test -s after-installation.txt; then
+	    :
+	else
+	    echo "Error: After installation, there should be files installed."
+	    exit 1
+	fi
+
+	run_make uninstall
+	(cd "$prefix" && find . -type f | sort) > after-uninstall.txt
+	nl after-uninstall.txt
+	if test -s after-uninstall.txt; then
+	    echo "Error: After uninstall, there should be no files left."
+	    exit 1
+	fi
+    )
+done <<EOF
+native-clang	clang	-Dbuilt_with="clang"
+native-gcc	gcc	-Dbuilt_with="gcc"
+EOF
+
+# Note that at this time, the cflags part of the parameter list is
+# only used as a placeholder.

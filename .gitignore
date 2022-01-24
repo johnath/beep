@@ -1,9 +1,10 @@
 # Files that should not be tracked by Git
 
-# The compiled executable
+# The compiled executables
 /beep
 /*.clang
 /*.gcc
+/*.map
 /issue-6-benchmark
 
 # Built sources
@@ -19,6 +20,7 @@
 *.o
 *.i
 *.s
+*.bc
 *.lst
 *.gcc-lst
 /beep.1
@@ -27,6 +29,7 @@
 /beep.1.gz
 
 # Built stuff
+/dox/
 /html/
 /beep-*.tar.gz
 /beep-*.tar.xz
@@ -45,3 +48,7 @@
 *.strace
 /Doxyfile
 /doxygen.stamp
+
+# Test builds
+/_build-*/
+/_prefix-*/

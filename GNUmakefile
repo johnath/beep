@@ -1,10 +1,24 @@
 ########################################################################
-# Installation directories
+# GNUmakefile for beep
+#
+# This GNUmakefile has been written to mostly follow the GNU Makefile
+# conventions[1], even if there is no "configure" script to accompany
+# the GNUmakefile. If you want to keep some definitions across "make"
+# invocations instead of providing them on each "make" command line,
+# write the definitions into a file "local.mk" make include file, e.g.
+#
+#     CC = clang
+#     prefix = $(HOME)/foo-prefix
+#
+# The GNUmakefile also internally follows some conventions known from
+# Automake (e.g. bin_PROGRAMS variables), but uses features specific
+# to GNU make to implement those Automake like features.
+#
+# [1]: https://www.gnu.org/prep/standards/html_node/Makefile-Conventions.html
 ########################################################################
 
-# We use GNU makefile conventions for directory names with one notable
-# exception: prefix is not /usr/local in order to keep beep's
-# traditional default installation location prefix /usr.
+
+$(info #=======================================================================)
 
 
 ########################################################################
@@ -19,16 +33,18 @@ PACKAGE_VERSION = 1.4.11
 # Installation directories
 ########################################################################
 
-prefix      = /usr
+# We use GNU makefile conventions for directory names.
+
+prefix      = /usr/local
 exec_prefix = $(prefix)
 bindir      = $(exec_prefix)/bin
 sbindir     = $(exec_prefix)/sbin
 datarootdir = $(prefix)/share
 mandir      = $(datarootdir)/man
 man1dir     = $(mandir)/man1
-docdir      = $(datarootdir)/doc
-pkgdocdir   = $(docdir)/$(PACKAGE_TARNAME)
-contribdir  = $(pkgdocdir)/contrib
+docdir      = $(datarootdir)/doc/$(PACKAGE_TARNAME)
+contribdir  = $(docdir)/contrib
+htmldir     = $(docdir)
 
 # TODO: We might want to autodetect which kind of $(docdir) is used on
 #       this system.  Until then, people will just need to set
@@ -42,22 +58,20 @@ contribdir  = $(pkgdocdir)/contrib
 # Tools
 ########################################################################
 
-pathsearch = $(firstword $(wildcard $(addsuffix /$(1),$(subst :, ,$(PATH)))))
+# This makes it easy to replace any of those tools with specific
+# versions, e.g. to test the portability of the SED commands, you can
+# run with SED="busybox sed".
 
-# Avoid running GNU make builtin rules based on $(CC) by mistake
-CC        = false
-
-DOT       = $(call pathsearch,dot)
-DOXYGEN   = $(call pathsearch,doxygen)
+DOT       = dot
+DOXYGEN   = doxygen
 EGREP     = $(GREP) -E
-GIT       = $(call pathsearch,git)
-GREP      = $(call pathsearch,grep)
-INSTALL   = $(call pathsearch,install)
+GIT       = git
+GREP      = grep
+INSTALL   = install
 MKDIR_P   = mkdir -p
-PANDOC    = $(call pathsearch,pandoc)
-PYTHON3   = $(call pathsearch,python3)
-SED       = $(call pathsearch,sed)
-SLOCCOUNT = $(call pathsearch,sloccount)
+PANDOC    = pandoc
+PYTHON3   = python3
+SED       = sed
 
 
 ########################################################################
@@ -68,8 +82,10 @@ SLOCCOUNT = $(call pathsearch,sloccount)
 all: all-local
 
 
-# Have make forget rules for known suffixes
+# Prevent make from using its built-in rules
 .SUFFIXES:
+COMPILE.c = false COMPILE.c
+LINK.c    = false LINK.c
 
 
 ########################################################################
@@ -77,82 +93,86 @@ all: all-local
 ########################################################################
 
 # targets to build for the "all" target
-all_TARGETS     =
+all_TARGETS      =
 
 # targets to build for the "check" target
-check_TARGETS   =
+check_TARGETS    =
 
-bin_PROGRAMS    =
-check_PROGRAMS  =
-contrib_DATA    =
-contrib_SCRIPTS =
-sbin_PROGRAMS   =
-CLEANFILES      =
-HTML_DATA       =
-man1_DATA       =
-pkgdoc_DATA     =
+bin_PROGRAMS     =
+check_PROGRAMS   =
+contrib_DATA     =
+contrib_SCRIPTS  =
+sbin_PROGRAMS    =
+CLEANFILES       =
+html_DATA        =
+noinst_html_DATA =
+man1_DATA        =
+doc_DATA         =
 
 
 ########################################################################
-# Define compilers and their flags
+# Define compiler and linker flags
 ########################################################################
-
-# CPPFLAGS common to all compilers
-CPPFLAGS_COMMON  =
-CPPFLAGS_COMMON += -DPACKAGE_TARNAME='"$(PACKAGE_TARNAME)"'
-CPPFLAGS_COMMON += -DPACKAGE_VERSION='"$(PACKAGE_VERSION)"'
 
 comma := ,
 
-# If supported by COMPILER_gcc, add given flags to CFLAGS_gcc.
+# If supported by $(CC), add given flags to CFLAGS type variable.
 # Example usage:
-#   $(eval $(call CHECK_CFLAGS_gcc,-fasynchronous-unwind-tables))
-define CHECK_CFLAGS_gcc
-CFLAGS_gcc  += $$(if $$(shell if $$(COMPILER_gcc) $(1) -x c -o compile-check.gcc-o -c - < /dev/null > /dev/null 2>&1; then echo yes; else :; fi; rm -f compile-check.gcc-o > /dev/null 2>&1),$(1))
+#   $(eval $(call CHECK_CFLAGS,common-CFLAGS,-fasynchronous-unwind-tables))
+define CHECK_CFLAGS
+$(1) += $$(if $$(shell if $$(CC) $$(patsubst -Wno-%,-W%,$(2)) -x c -o compile-check.o -c - < /dev/null > /dev/null 2>&1; then echo yes; else :; fi; rm -f compile-check.o > /dev/null 2>&1),$(2))
 endef
 
-COMPILER_gcc = gcc
-LINKER_gcc   = gcc
-CPPFLAGS_gcc =
-CFLAGS_gcc   =
-CFLAGS_gcc  += -std=gnu99 -pedantic
-CFLAGS_gcc  += -O -g
-CFLAGS_gcc  += -Wa,-adhlns=$(@:-o=-lst)
-$(eval $(call CHECK_CFLAGS_gcc,-Wall -Wextra -Werror -Werror=format-security))
-$(eval $(call CHECK_CFLAGS_gcc,-Wp$$(comma)-D_FORTIFY_SOURCE=2))
-$(eval $(call CHECK_CFLAGS_gcc,-Wp$$(comma)-D_GLIBCXX_ASSERTIONS))
-$(eval $(call CHECK_CFLAGS_gcc,-fasynchronous-unwind-tables))
-$(eval $(call CHECK_CFLAGS_gcc,-fstack-protector-strong))
-$(eval $(call CHECK_CFLAGS_gcc,-fstack-clash-protection))
-$(eval $(call CHECK_CFLAGS_gcc,-fcf-protection))
-CFLAGS_gcc  += -save-temps=obj
-LDFLAGS_gcc  =
-LIBS_gcc     =
+# This might be useful or not.
+CFLAGS   :=
+CPPFLAGS  =
+LDFLAGS   =
+LIBS      =
 
-ifneq ($(call pathsearch,$(COMPILER_gcc)),)
-ifneq ($(COMPILER_gcc)),no)
-COMPILERS   += gcc
-endif
-endif
+# Flags common to all executable targets
+common_CFLAGS   :=
+common_CPPFLAGS  =
+common_LDFLAGS   =
+common_LIBS      =
 
-COMPILER_clang = clang
-LINKER_clang   = clang
-CPPFLAGS_clang =
-CFLAGS_clang  += -Wall -Wextra
-CFLAGS_clang  += -Weverything
-CFLAGS_clang  += -Wno-padded
-CFLAGS_clang  += -std=gnu99 -pedantic
-CFLAGS_clang  += -Werror
-CFLAGS_clang  += -fsanitize=undefined
-CFLAGS_clang  += -O -g
-LDFLAGS_clang  =
-LIBS_clang     =
+common_CPPFLAGS += -DPACKAGE_TARNAME='"$(PACKAGE_TARNAME)"'
+common_CPPFLAGS += -DPACKAGE_VERSION='"$(PACKAGE_VERSION)"'
+common_CFLAGS   += -O2 -g
+common_CFLAGS   += -std=gnu99
+common_CFLAGS   += $(if $(filter %.o,$@),-Wa$(comma)-adhlns=$(@:.o=.lst))
+common_CFLAGS   += -pedantic
+$(eval $(call CHECK_CFLAGS,common_CFLAGS,-Werror=unknown-warning-option))
+$(eval $(call CHECK_CFLAGS,common_CFLAGS,-Wall))
+$(eval $(call CHECK_CFLAGS,common_CFLAGS,-Wextra))
+$(eval $(call CHECK_CFLAGS,common_CFLAGS,-Weverything))
+$(eval $(call CHECK_CFLAGS,common_CFLAGS,-Werror))
+$(eval $(call CHECK_CFLAGS,common_CFLAGS,-Wno-padded))
+$(eval $(call CHECK_CFLAGS,common_CFLAGS,-Werror=format-security))
+$(eval $(call CHECK_CFLAGS,common_CFLAGS,-Wno-disabled-macro-expansion))
+$(eval $(call CHECK_CFLAGS,common_CFLAGS,-Wno-format-nonliteral))
+$(eval $(call CHECK_CFLAGS,CPPFLAGS,-D_FORTIFY_SOURCE=2))
+$(eval $(call CHECK_CFLAGS,CPPFLAGS,-D_GLIBCXX_ASSERTIONS))
+# $(eval $(call CHECK_CFLAGS,CFLAGS,-Wp$$(comma)-D_FORTIFY_SOURCE=2))
+# $(eval $(call CHECK_CFLAGS,CFLAGS,-Wp$$(comma)-D_GLIBCXX_ASSERTIONS))
+$(eval $(call CHECK_CFLAGS,CFLAGS,-fasynchronous-unwind-tables))
+$(eval $(call CHECK_CFLAGS,CFLAGS,-fanalyzer))
+$(eval $(call CHECK_CFLAGS,CFLAGS,-fstack-protector-strong))
+$(eval $(call CHECK_CFLAGS,CFLAGS,-fstack-clash-protection))
+$(eval $(call CHECK_CFLAGS,CFLAGS,-fcf-protection))
+$(eval $(call CHECK_CFLAGS,CFLAGS,-fsanitize=undefined))
 
-ifneq ($(call pathsearch,$(COMPILER_clang)),)
-ifneq ($(COMPILER_clang),no)
-COMPILERS     += clang
-endif
-endif
+
+CFLAGS += -save-temps=obj
+
+
+$(info # common_CFLAGS=$(common_CFLAGS))
+$(info # CFLAGS=$(CFLAGS))
+$(info # CPPFLAGS=$(CPPFLAGS))
+
+
+# Create this file to override any of the make variables defined
+# above.
+-include local.mk
 
 
 ########################################################################
@@ -190,10 +210,8 @@ endif
 
 beep_LIBS     =
 
-beep-log.clang-o : override CFLAGS_clang += -D_GNU_SOURCE
-beep-log.gcc-o   : override CFLAGS_gcc   += -D_GNU_SOURCE
-
-beep-log.clang-o : override CFLAGS_clang += -Wno-format-nonliteral
+beep-log.o : override common_CPPFLAGS += -D_GNU_SOURCE
+# beep-log.clang-o : override CFLAGS_clang += -Wno-format-nonliteral
 
 # sbin_PROGRAMS += beep-foo
 # beep_foo_OBJS  =
@@ -228,45 +246,28 @@ beep-usage.c: beep-usage.txt
 ########################################################################
 
 
-# CALL: LINK_RULE <compiler> <executable> <executable_as_varname_part> <dircomponent>
-# To be called from PER_COMPILER. Defines the per-executable rules.
+# CALL: LINK_RULE <executable> <executable_as_varname_part> <dircomponent>
+# Defines the per-executable rules.
 define LINK_RULE
-$(4)_ALL_PROGRAMS += $(2).$(1)
-
-$(2).$(1): $(patsubst %.o,%.$(1)-o,$($(3)_OBJS))
+$(1): $$($(2)_OBJS)
 	@: echo "LINK_RULE $$@: $$^"
-	$(LINKER_$(1)) $(CFLAGS) $(CFLAGS_$(1)) $(LDFLAGS) $(LDFLAGS_$(1)) -o $$@ $$^ $($(3)_LIBS) $(LIBS_$(1)) $(LIBS)
+	$(CC) -Wl,-Map=$$(@:%=%.map),--cref $(CFLAGS) $(common_CFLAGS) $(LDFLAGS) $(common_LDFLAGS) -o $$@ $$^ $$($(2)_LIBS) $(common_LIBS) $(LIBS)
 
-$$(patsubst %.o,.deps/%.$(1)-o.dep,$($(3)_OBJS))):
+$$(patsubst %.o,.deps/%.o.dep,$$($(2)_OBJS))):
 
--include $$(wildcard $$(patsubst %.o,.deps/%.$(1)-o.dep,$($(3)_OBJS)))
+-include $$(wildcard $$(patsubst %.o,.deps/%.o.dep,$$($(2)_OBJS)))
 endef
 
 
-# CALL: PER_COMPILER <compiler>
-# To be called for each compiler. Defines the per-compiler rules for each executable.
-define PER_COMPILER
-$(foreach exec,$(bin_PROGRAMS),$(eval $(call LINK_RULE,$(1),$(exec),$(subst -,_,$(exec)),bin)))
-$(foreach exec,$(check_PROGRAMS),$(eval $(call LINK_RULE,$(1),$(exec),$(subst -,_,$(exec)),check)))
-$(foreach exec,$(sbin_PROGRAMS),$(eval $(call LINK_RULE,$(1),$(exec),$(subst -,_,$(exec)),sbin)))
+$(foreach exec,$(bin_PROGRAMS),  $(eval $(call LINK_RULE,$(exec),$(subst -,_,$(exec)),bin)))
+$(foreach exec,$(check_PROGRAMS),$(eval $(call LINK_RULE,$(exec),$(subst -,_,$(exec)),check)))
+$(foreach exec,$(sbin_PROGRAMS), $(eval $(call LINK_RULE,$(exec),$(subst -,_,$(exec)),sbin)))
 
-%.$(1)-o: %.c | .deps
-	$$(COMPILER_$(1)) -MT $$@ -MMD -MP -MF .deps/$$*.$(1)-o.dep $$(CPPFLAGS) $$(CPPFLAGS_COMMON) $$(CPPFLAGS_$(1)) $$(CFLAGS_COMMON) $$(CFLAGS) $$(CFLAGS_$(1)) -o $$@ -c $$<
-
-%.h-check.$(1)-o: %.h | .deps
-	$$(COMPILER_$(1)) -MT $$@ -MMD -MP -MF .deps/$$*.h-check.$(1)-o.dep $$(CPPFLAGS) $$(CPPFLAGS_COMMON) $$(CPPFLAGS_$(1)) $$(CFLAGS_COMMON) $$(CFLAGS) $$(CFLAGS_$(1)) -o $$@ -c $$<
-endef
-
-$(foreach compiler,$(COMPILERS),$(eval $(call PER_COMPILER,$(compiler))))
+%.o: %.c | .deps
+	$(CC) -MT $@ -MMD -MP -MF .deps/$*.o.dep $(common_CPPFLAGS) $(CPPFLAGS) $(common_CFLAGS) $(CFLAGS) -o $@ -c $<
 
 .deps:
 	@$(MKDIR_P) $@
-
-
-# For each executable, take the first from COMPILERS to determine the
-# variant to use as the default executables.
-%: $(firstword $(foreach comp,$(COMPILERS),%.$(comp)))
-	cp -f $< $@
 
 
 ########################################################################
@@ -276,47 +277,48 @@ $(foreach compiler,$(COMPILERS),$(eval $(call PER_COMPILER,$(compiler))))
 man1_DATA  += beep.1
 CLEANFILES += beep.1
 
-HTML_DATA += html/CREDITS.html
-HTML_DATA += html/DEVELOPMENT.html
-HTML_DATA += html/INSTALL.html
-HTML_DATA += html/NEWS.html
-HTML_DATA += html/PACKAGING.html
-HTML_DATA += html/PERMISSIONS.html
-HTML_DATA += html/README.html
+html_DATA        += html/CREDITS.html
+html_DATA        += html/NEWS.html
+html_DATA        += html/PERMISSIONS.html
+html_DATA        += html/README.html
+
+CLEANFILES       += html/pandoc.css
+html_DATA        += html/pandoc.css
+
+noinst_html_DATA += html/DEVELOPMENT.html
+noinst_html_DATA += html/INSTALL.html
+noinst_html_DATA += html/PACKAGING.html
 
 .PHONY: html
-html: $(HTML_DATA)
-	@mkdir -p html
-	cp -f pandoc.css html/
+html: $(html_DATA) $(noinst_html_DATA)
+	@$(MKDIR_P) html
 
-html/%.html: %.md
-	@mkdir -p  html
-	@if test -f $(PANDOC); then \
-		echo PANDOC $< -o $@; \
-		$(PANDOC) --from gfm --to html --standalone -M pagetitle="$$($(SED) -n 1p $<)" -M title="" -c pandoc.css $< -o $@; \
-	else \
-		echo "You need to install pandoc to generate the HTML files."; \
-		exit 1; \
-	fi
+html/%.css: %.css
+	$(MKDIR_P) html
+	$(INSTALL) -p $< $@
+
+html/%.html: %.md html/pandoc.css
+	@$(MKDIR_P) html
+	@echo PANDOC $< -o $@
+	$(PANDOC) --from gfm --to html --standalone -M pagetitle="$$($(SED) -n 1p $<)" -M title="" -c pandoc.css $< -o $@
 
 DEFAULT_FREQ   = 440
 DEFAULT_LENGTH = 200
 DEFAULT_DELAY  = 100
 
 REPLACEMENTS  =
-REPLACEMENTS += -e s/@PACKAGE_TARNAME@/$(PACKAGE_TARNAME)/g
-REPLACEMENTS += -e s/@PACKAGE_VERSION@/$(PACKAGE_VERSION)/g
+REPLACEMENTS += -e 's|@PACKAGE_TARNAME@|$(PACKAGE_TARNAME)|g'
+REPLACEMENTS += -e 's|@PACKAGE_VERSION@|$(PACKAGE_VERSION)|g'
 
-REPLACEMENTS += -e s/@DEFAULT_FREQ@/$(DEFAULT_FREQ)/g
-REPLACEMENTS += -e s/@DEFAULT_LENGTH@/$(DEFAULT_LENGTH)/g
-REPLACEMENTS += -e s/@DEFAULT_DELAY@/$(DEFAULT_DELAY)/g
+REPLACEMENTS += -e 's|@DEFAULT_FREQ@|$(DEFAULT_FREQ)|g'
+REPLACEMENTS += -e 's|@DEFAULT_LENGTH@|$(DEFAULT_LENGTH)|g'
+REPLACEMENTS += -e 's|@DEFAULT_DELAY@|$(DEFAULT_DELAY)|g'
 
-REPLACEMENTS += -e 's|[@]pkgdocdir@|$(pkgdocdir)|g'
+REPLACEMENTS += -e 's|[@]docdir@|$(docdir)|g'
 
 CLEANFILES    += beep-config.h
 BUILT_SOURCES += beep-config.h
-beep-main.clang-o : beep-config.h
-beep-main.gcc-o : beep-config.h
+beep-main.o : beep-config.h
 
 CLEANFILES += Doxyfile
 CLEANFILES += Doxyfile.new
@@ -335,17 +337,17 @@ doxygen.stamp: Doxyfile $(wildcard *.c) $(wildcard *.h)
 	$(DOXYGEN) $<
 	echo > $@
 
-html: doxygen.stamp
+dox: doxygen.stamp
 
-.PHONY: serve-html
-serve-html: html
-	$(PYTHON3) -m http.server --directory html/dox/html
+.PHONY: serve-dox
+serve-dox: dox
+	$(PYTHON3) -m http.server --directory dox/html
 
-pkgdoc_DATA += COPYING
-pkgdoc_DATA += CREDITS.md
-pkgdoc_DATA += NEWS.md
-pkgdoc_DATA += README.md
-pkgdoc_DATA += PERMISSIONS.md
+doc_DATA += COPYING
+doc_DATA += CREDITS.md
+doc_DATA += NEWS.md
+doc_DATA += README.md
+doc_DATA += PERMISSIONS.md
 
 contrib_SCRIPTS += contrib/failure-beeps
 contrib_SCRIPTS += contrib/success-beeps
@@ -357,114 +359,98 @@ contrib_SCRIPTS += contrib/morse/morse2beep.sed
 # Generic targets
 ########################################################################
 
-all_TARGETS += $(bin_PROGRAMS) $(bin_ALL_PROGRAMS)
-all_TARGETS += $(sbin_PROGRAMS) $(sbin_ALL_PROGRAMS)
+all_TARGETS += $(bin_PROGRAMS)
+all_TARGETS += $(sbin_PROGRAMS)
 all_TARGETS += $(man1_DATA)
 
 .PHONY: all-local
 all-local: $(all_TARGETS)
 
-SLOC_SOURCES  =
-SLOC_SOURCES += beep*.[ch]
-SLOC_SOURCES += gen-freq-table
-SLOC_SOURCES += tests/run-tests
-SLOC_SOURCES += tests/*.sh
-SLOC_SOURCES += GNUmakefile
-
-.PHONY: sloccount
-sloccount:
-	@if test -e $(SLOCCOUNT); then \
-		$(SLOCCOUNT) --details $(SLOC_SOURCES); \
-		$(SLOCCOUNT) $(SLOC_SOURCES); \
-	else \
-		echo "sloccount not found"; \
-	fi
-
-SPLINT = splint
-SPLINT_FLAGS += -standard
-# SPLINT_FLAGS += -checks
-# SPLINT_FLAGS += -strict
-SPLINT_FLAGS += +posixstrictlib
-SPLINT_FLAGS += +gnuextensions
-SPLINT_FLAGS += -preproc
-SPLINT_FLAGS += -syntax
-SPLINT_FLAGS += -D__signed__=signed
-SPLINT_FLAGS += $(CPPFLAGS_COMMON)
-
-.PHONY: lint
-lint:
-	$(SPLINT) $(SPLINT_FLAGS) beep*.c beep*.h
-
 check_TARGETS += $(all_TARGETS)
-check_TARGETS += $(check_PROGRAMS) $(check_ALL_PROGRAMS)
-check_TARGETS += $(foreach compiler,$(COMPILERS),$(foreach header,$(wildcard beep-*.h),$(basename $(header)).h-check.$(compiler)-o))
+check_TARGETS += $(check_PROGRAMS)
 
 .PHONY: check-targets
 check-targets: $(check_TARGETS)
 
 .PHONY: check
-check: $(foreach compiler,$(COMPILERS),beep.$(compiler)) $(check_TARGETS)
+check: tests/run-tests beep $(check_TARGETS)
 	env PACKAGE_VERSION="${PACKAGE_VERSION}" \
-	/bin/bash tests/run-tests tests $(foreach compiler,$(COMPILERS),beep.$(compiler))
+	/bin/bash $< $(<D) $(PWD)/beep
 
 .PHONY: clean
 clean:
-	rm -f $(bin_PROGRAMS) $(bin_ALL_PROGRAMS)
-	rm -f $(check_PROGRAMS) $(check_ALL_PROGRAMS)
-	rm -f $(sbin_PROGRAMS) $(sbin_ALL_PROGRAMS)
+	rm -f $(bin_PROGRAMS)
+	rm -f $(check_PROGRAMS)
+	rm -f $(sbin_PROGRAMS)
 	rm -f $(CLEANFILES)
-	rm -f $(foreach comp,$(COMPILERS),*.$(comp)-o)
 	rm -f *.dep
 	rm -rf .deps
 	rm -f *.lst *.gcc-lst
 	rm -f tests/*.new tests/*.actual
+	rm -rf dox
 	rm -rf html
-	rm -f *.o *.i *.s
+	rm -f *.o *.i *.s *.bc
 
 .PHONY: doc
-doc: $(pkgdoc_DATA)
+doc: $(doc_DATA)
 
 
 ########################################################################
 # install and uninstall targets
 ########################################################################
 
+
 DESTDIR =
 
+
+define install-data
+ifneq (,$$($(1)))
+install-$$(if $(2),$(2)-)targets += internal-install-$(1)
+.PHONY: internal-install-$(1)
+internal-install-$(1): $$($(1))
+	$$(INSTALL) -d -m 0755 $$(DESTDIR)$$($$(firstword $$(subst _, ,$(1)))dir)
+	$$(INSTALL) -p -m 0644 $$(if $$(srcdir),$$(foreach f,$$($(1)),$$(if $$(wildcard $$(f)),$$(f),$$(srcdir)/$$(f))),$$($(1))) $$(DESTDIR)$$($$(firstword $$(subst _, ,$(1)))dir)/
+
+uninstall-targets += internal-uninstall-$(1)
+.PHONY: internal-uninstall-$(1)
+internal-uninstall-$(1):
+	for f in $$(notdir $$($(1))); do rm -f "$$(DESTDIR)$$($$(firstword $$(subst _, ,$(1)))dir)/$$$$f"; done
+endif
+endef
+
+define install-programs
+ifneq (,$$($(1)))
+install-targets += internal-install-$(1)
+.PHONY: internal-install-$(1)
+internal-install-$(1): $$($(1))
+	$$(INSTALL) -d -m 0755 $$(DESTDIR)$$($$(firstword $$(subst _, ,$(1)))dir)
+	$$(INSTALL) -p -m 0755 $$(if $$(srcdir),$$(foreach f,$$($(1)),$$(if $$(wildcard $$(f)),$$(f),$$(srcdir)/$$(f))),$$($(1))) $$(DESTDIR)$$($$(firstword $$(subst _, ,$(1)))dir)/
+
+uninstall-targets += internal-uninstall-$(1)
+.PHONY: internal-uninstall-$(1)
+internal-uninstall-$(1):
+	for f in $$(notdir $$($(1))); do rm -f "$$(DESTDIR)$$($$(firstword $$(subst _, ,$(1)))dir)/$$$$f"; done
+endif
+endef
+
+
+$(eval $(call install-programs,bin_PROGRAMS))
+$(eval $(call install-programs,sbin_PROGRAMS))
+$(eval $(call install-data,man1_DATA))
+$(eval $(call install-data,doc_DATA))
+$(eval $(call install-data,html_DATA,html))
+$(eval $(call install-data,contrib_DATA))
+$(eval $(call install-programs,contrib_SCRIPTS))
+
+
 .PHONY: install
-install: all
-ifneq (,$(bin_PROGRAMS))
-	$(INSTALL) -m 0755 -d                 $(DESTDIR)$(bindir)
-	$(INSTALL) -m 0755 -p $(bin_PROGRAMS) $(DESTDIR)$(bindir)/
-endif
-ifneq (,$(sbin_PROGRAMS))
-	$(INSTALL) -m 0755 -d                  $(DESTDIR)$(sbindir)
-	$(INSTALL) -m 0755 -p $(sbin_PROGRAMS) $(DESTDIR)$(sbindir)/
-endif
-ifneq (,$(man1_DATA))
-	$(INSTALL) -m 0755 -d              $(DESTDIR)$(man1dir)
-	$(INSTALL) -m 0644 -p $(man1_DATA) $(DESTDIR)$(man1dir)/
-endif
-ifneq (,$(pkgdoc_DATA))
-	$(INSTALL) -m 0755 -d                $(DESTDIR)$(pkgdocdir)
-	$(INSTALL) -m 0644 -p $(pkgdoc_DATA) $(DESTDIR)$(pkgdocdir)/
-endif
-ifneq (,$(contrib_DATA)$(contrib_SCRIPTS))
-	$(INSTALL) -m 0755 -d                    $(DESTDIR)$(contribdir)
-endif
-ifneq (,$(contrib_DATA))
-	$(INSTALL) -m 0644 -p $(contrib_DATA)    $(DESTDIR)$(contribdir)/
-endif
-ifneq (,$(contrib_SCRIPTS))
-	$(INSTALL) -m 0755 -p $(contrib_SCRIPTS) $(DESTDIR)$(contribdir)/
-endif
+install: all $(install-targets)
+
+.PHONY: install-html
+install-html: html $(install-html-targets)
 
 .PHONY: uninstall
-uninstall:
-	for f in $(bin_PROGRAMS);  do rm -f "$(DESTDIR)$(bindir)/$$f";    done
-	for f in $(sbin_PROGRAMS); do rm -f "$(DESTDIR)$(sbindir)/$$f";   done
-	for f in $(man1_DATA);     do rm -f "$(DESTDIR)$(man1dir)/$$f";   done
-	for f in $(pkgdoc_DATA);   do rm -f "$(DESTDIR)$(pkgdocdir)/$$f"; done
+uninstall: $(uninstall-targets)
 
 
 ########################################################################
@@ -500,3 +486,5 @@ endif
 ########################################################################
 # End of GNUmakefile
 ########################################################################
+
+$(info #=======================================================================)

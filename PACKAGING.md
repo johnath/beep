@@ -16,51 +16,61 @@ The building and installing during a package build can be achieved with
 
 ```sh
 make
-make DESTDIR=/path/to/package-root install
+make install DESTDIR=/path/to/package-root CC=false
 ```
 
-If you want to replace the compiler flags, run `make` like e.g.
+While not strictly necessary, the `CC=false` makes sure that no
+compilation happens during the `make install` phase.
+
+You can also add to the default compiler flags by setting or adding to
+`CFLAGS`, `CPPFLAGS`, `LDFLAGS`, and `LIBS`, by running `make` like
+e.g.
 
 ```sh
-make CFLAGS_gcc="-O -gstabs,foo" CFLAGS_clang=""
+make CFLAGS="-O -g -flto=auto -ffat-lto-objects" CPPFLAGS="-I/opt/include" LDFLAGS="-f" LIBS="-L/opt/lib"
 ```
 
-You can also keep `beep`'s default flags and just add your own by setting
-`CFLAGS`. The same principle applies for `CPPFLAGS`, `LDFLAGS`, and
-`LIBS`.
-
-If the system you are building on has both `gcc` and `clang`, the
-`beep` buildsystem will compile with both by default and choose the
-first one from its COMPILERS make variable, which you can override
-from the command line.
+The buildsystem will use whatever compiler `CC` is set to. `clang` and
+`gcc` are known to work, other toolchains might.
 
 ```sh
-make COMPILERS="clang gcc"
+make CC=clang
 ```
 
-Or you can specifically disable one of the compilers to only build one
-variant:
+If you need to set any of the `*dir` variables like `prefix` or
+`docdir` on the `make` command line, you need to set them for both the
+build step (`make`) and for the install step (`make install`).  You
+might either give the very same command line for every invocation of
+`make`, or you can write those definitions into a make include file
+called `local.mk` once. For example, you might want to achieve the
+effect of
 
 ```sh
-make COMPILER_gcc=no
+make prefix='/usr' docdir='$(docdir)/$(PACKAGE_TARNAME)-$(PACKAGE_VERSION)'
+make prefix='/usr' docdir='$(docdir)/$(PACKAGE_TARNAME)-$(PACKAGE_VERSION)' DESTDIR=/path/to/package-root install
 ```
 
-Or you can specifically specify gcc compiler and linker executables
-and avoid the clang build:
+by creating a `local.mk` which might look as follows in e.g. an RPM
+spec file:
 
 ```sh
-make COMPILER_gcc=/path/to/aarch64-linux-gnu-gcc LINKER_gcc='$(COMPILER_gcc)' COMPILER_clang=no
+cat>local.mk<<EOF
+prefix = %{_prefix}
+docdir = %{_pkgdocdir}
+EOF
+make
+make install DESTDIR='%{buildroot}'
 ```
 
-If you need to set any of the `*dir` variables like `mandir` on the
-`make` command line, please set them both for the build step (`make`)
-and the install step (`make install`). For example, you might want to
+or in a Debian `debian/rules.mk` file (something along these lines,
+untested):
 
-```sh
-make pkgdocdir='$(docdir)/$(PACKAGE_TARNAME)-$(PACKAGE_VERSION)'
-make pkgdocdir='$(docdir)/$(PACKAGE_TARNAME)-$(PACKAGE_VERSION)' DESTDIR=/path/to/package-root install
 ```
-
+override_dh_auto_configure:
+	echo 'CC = $(CC)' > local.mk
+	echo 'prefix = /usr' >> local.mk
+	echo 'CFLAGS = $(shell dpkg-buildflags --get CFLAGS)' >> local.mk
+```
 
 Files to install for beep
 -------------------------

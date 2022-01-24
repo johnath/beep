@@ -15,15 +15,18 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
+    - name: create local.mk
+      run: |
+        echo "prefix = ${PWD}/_root" > local.mk
     - name: make
-      run: make prefix="$PWD/_root"
+      run: make
     - name: 'beep --help'
       run: |
         ./beep --help > beep-usage.from--help
         diff -u beep-usage.txt beep-usage.from--help
     - name: 'make check'
-      run: make check prefix="$PWD/_root"
+      run: make check
     - name: 'make install'
-      run: make install prefix="$PWD/_root"
+      run: make install CC=false
     - name: 'list installed files'
-      run: (cd "$PWD/_root" && ls -l $(find . -type f | env LC_ALL=C sort))
+      run: (cd "$PWD/_root" && ls -l $(find . -type f | env LC_ALL=C sort) | nl)
