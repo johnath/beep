@@ -6,20 +6,36 @@
 # exception: prefix is not /usr/local in order to keep beep's
 # traditional default installation location prefix /usr.
 
+
+########################################################################
+# Package metadata
+########################################################################
+
 PACKAGE_TARNAME = beep
 PACKAGE_VERSION = 1.4.11
 
-DESTDIR=
-prefix=/usr
-exec_prefix=$(prefix)
-bindir=$(exec_prefix)/bin
-sbindir=$(exec_prefix)/sbin
-datarootdir=$(prefix)/share
-mandir=$(datarootdir)/man
-man1dir=$(mandir)/man1
-docdir=$(datarootdir)/doc
-pkgdocdir=$(docdir)/$(PACKAGE_TARNAME)
-contribdir=$(pkgdocdir)/contrib
+
+########################################################################
+# Installation directories
+########################################################################
+
+prefix      = /usr
+exec_prefix = $(prefix)
+bindir      = $(exec_prefix)/bin
+sbindir     = $(exec_prefix)/sbin
+datarootdir = $(prefix)/share
+mandir      = $(datarootdir)/man
+man1dir     = $(mandir)/man1
+docdir      = $(datarootdir)/doc
+pkgdocdir   = $(docdir)/$(PACKAGE_TARNAME)
+contribdir  = $(pkgdocdir)/contrib
+
+# TODO: We might want to autodetect which kind of $(docdir) is used on
+#       this system.  Until then, people will just need to set
+#       docdir='$(datarootdir)/doc/$(PACKAGE_TARNAME)-$(PACKAGE_VERSION)'
+#       if they want to use that.  Note that what the GNU makefile
+#       conventions call $(docdir) is called other names by other
+#       software components, e.g. %{_pkgdocdir} in RPM spec files.
 
 
 ########################################################################
@@ -29,18 +45,18 @@ contribdir=$(pkgdocdir)/contrib
 pathsearch = $(firstword $(wildcard $(addsuffix /$(1),$(subst :, ,$(PATH)))))
 
 # Avoid running GNU make builtin rules based on $(CC) by mistake
-CC = false
+CC        = false
 
-DOT = $(call pathsearch,dot)
-DOXYGEN = $(call pathsearch,doxygen)
-EGREP = $(GREP) -E
-GIT = $(call pathsearch,git)
-GREP = $(call pathsearch,grep)
-INSTALL = $(call pathsearch,install)
-MKDIR_P = mkdir -p
-PANDOC = $(call pathsearch,pandoc)
-PYTHON3 = $(call pathsearch,python3)
-SED = $(call pathsearch,sed)
+DOT       = $(call pathsearch,dot)
+DOXYGEN   = $(call pathsearch,doxygen)
+EGREP     = $(GREP) -E
+GIT       = $(call pathsearch,git)
+GREP      = $(call pathsearch,grep)
+INSTALL   = $(call pathsearch,install)
+MKDIR_P   = mkdir -p
+PANDOC    = $(call pathsearch,pandoc)
+PYTHON3   = $(call pathsearch,python3)
+SED       = $(call pathsearch,sed)
 SLOCCOUNT = $(call pathsearch,sloccount)
 
 
@@ -61,20 +77,20 @@ all: all-local
 ########################################################################
 
 # targets to build for the "all" target
-all_TARGETS =
+all_TARGETS     =
 
 # targets to build for the "check" target
-check_TARGETS =
+check_TARGETS   =
 
-bin_PROGRAMS =
-check_PROGRAMS =
-contrib_DATA =
+bin_PROGRAMS    =
+check_PROGRAMS  =
+contrib_DATA    =
 contrib_SCRIPTS =
-sbin_PROGRAMS =
-CLEANFILES =
-HTML_DATA =
-man1_DATA =
-pkgdoc_DATA =
+sbin_PROGRAMS   =
+CLEANFILES      =
+HTML_DATA       =
+man1_DATA       =
+pkgdoc_DATA     =
 
 
 ########################################################################
@@ -82,7 +98,7 @@ pkgdoc_DATA =
 ########################################################################
 
 # CPPFLAGS common to all compilers
-CPPFLAGS_COMMON = 
+CPPFLAGS_COMMON  =
 CPPFLAGS_COMMON += -DPACKAGE_TARNAME='"$(PACKAGE_TARNAME)"'
 CPPFLAGS_COMMON += -DPACKAGE_VERSION='"$(PACKAGE_VERSION)"'
 
@@ -92,16 +108,16 @@ comma := ,
 # Example usage:
 #   $(eval $(call CHECK_CFLAGS_gcc,-fasynchronous-unwind-tables))
 define CHECK_CFLAGS_gcc
-CFLAGS_gcc += $$(if $$(shell if $$(COMPILER_gcc) $(1) -x c -o compile-check.gcc-o -c - < /dev/null > /dev/null 2>&1; then echo yes; else :; fi; rm -f compile-check.gcc-o > /dev/null 2>&1),$(1))
+CFLAGS_gcc  += $$(if $$(shell if $$(COMPILER_gcc) $(1) -x c -o compile-check.gcc-o -c - < /dev/null > /dev/null 2>&1; then echo yes; else :; fi; rm -f compile-check.gcc-o > /dev/null 2>&1),$(1))
 endef
 
 COMPILER_gcc = gcc
-LINKER_gcc = gcc
+LINKER_gcc   = gcc
 CPPFLAGS_gcc =
-CFLAGS_gcc =
-CFLAGS_gcc += -std=gnu99 -pedantic
-CFLAGS_gcc += -O -g
-CFLAGS_gcc += -Wa,-adhlns=$(@:-o=-lst)
+CFLAGS_gcc   =
+CFLAGS_gcc  += -std=gnu99 -pedantic
+CFLAGS_gcc  += -O -g
+CFLAGS_gcc  += -Wa,-adhlns=$(@:-o=-lst)
 $(eval $(call CHECK_CFLAGS_gcc,-Wall -Wextra -Werror -Werror=format-security))
 $(eval $(call CHECK_CFLAGS_gcc,-Wp$$(comma)-D_FORTIFY_SOURCE=2))
 $(eval $(call CHECK_CFLAGS_gcc,-Wp$$(comma)-D_GLIBCXX_ASSERTIONS))
@@ -109,32 +125,32 @@ $(eval $(call CHECK_CFLAGS_gcc,-fasynchronous-unwind-tables))
 $(eval $(call CHECK_CFLAGS_gcc,-fstack-protector-strong))
 $(eval $(call CHECK_CFLAGS_gcc,-fstack-clash-protection))
 $(eval $(call CHECK_CFLAGS_gcc,-fcf-protection))
-CFLAGS_gcc += -save-temps=obj
-LDFLAGS_gcc =
-LIBS_gcc =
+CFLAGS_gcc  += -save-temps=obj
+LDFLAGS_gcc  =
+LIBS_gcc     =
 
 ifneq ($(call pathsearch,$(COMPILER_gcc)),)
 ifneq ($(COMPILER_gcc)),no)
-COMPILERS += gcc
+COMPILERS   += gcc
 endif
 endif
 
 COMPILER_clang = clang
-LINKER_clang = clang
+LINKER_clang   = clang
 CPPFLAGS_clang =
-CFLAGS_clang += -Wall -Wextra
-CFLAGS_clang += -Weverything
-CFLAGS_clang += -Wno-padded
-CFLAGS_clang += -std=gnu99 -pedantic
-CFLAGS_clang += -Werror
-CFLAGS_clang += -fsanitize=undefined
-CFLAGS_clang += -O -g
-LDFLAGS_clang =
-LIBS_clang =
+CFLAGS_clang  += -Wall -Wextra
+CFLAGS_clang  += -Weverything
+CFLAGS_clang  += -Wno-padded
+CFLAGS_clang  += -std=gnu99 -pedantic
+CFLAGS_clang  += -Werror
+CFLAGS_clang  += -fsanitize=undefined
+CFLAGS_clang  += -O -g
+LDFLAGS_clang  =
+LIBS_clang     =
 
 ifneq ($(call pathsearch,$(COMPILER_clang)),)
 ifneq ($(COMPILER_clang),no)
-COMPILERS += clang
+COMPILERS     += clang
 endif
 endif
 
@@ -148,17 +164,17 @@ endif
 # Define executables and their flags
 ########################################################################
 
-check_PROGRAMS        += issue-6-benchmark
-issue_6_benchmark_OBJS = issue-6-benchmark.o
-issue_6_benchmark_LIBS = -lm
+check_PROGRAMS         += issue-6-benchmark
+issue_6_benchmark_OBJS  = issue-6-benchmark.o
+issue_6_benchmark_LIBS  = -lm
 
 bin_PROGRAMS += beep
-beep_OBJS =
-beep_OBJS += beep-log.o
-beep_OBJS += beep-main.o
-beep_OBJS += beep-library.o
-beep_OBJS += beep-usage.o
-beep_OBJS += beep-drivers.o
+beep_OBJS     =
+beep_OBJS    += beep-log.o
+beep_OBJS    += beep-main.o
+beep_OBJS    += beep-library.o
+beep_OBJS    += beep-usage.o
+beep_OBJS    += beep-drivers.o
 
 # The drivers here use `__attribute__((constructor))` functions to
 # register themselves with `beep_drivers_register()`, so the last one
@@ -166,13 +182,13 @@ beep_OBJS += beep-drivers.o
 # the latest time, and thus will have its `driver_detect()` function
 # called first.
 
-beep_OBJS += beep-driver-console.o
-beep_OBJS += beep-driver-evdev.o
+beep_OBJS    += beep-driver-console.o
+beep_OBJS    += beep-driver-evdev.o
 ifneq ($(BEEP_DEBUG_BUILD),)
-beep_OBJS += beep-driver-noop.o
+beep_OBJS    += beep-driver-noop.o
 endif
 
-beep_LIBS =
+beep_LIBS     =
 
 beep-log.clang-o : override CFLAGS_clang += -D_GNU_SOURCE
 beep-log.gcc-o   : override CFLAGS_gcc   += -D_GNU_SOURCE
@@ -180,16 +196,18 @@ beep-log.gcc-o   : override CFLAGS_gcc   += -D_GNU_SOURCE
 beep-log.clang-o : override CFLAGS_clang += -Wno-format-nonliteral
 
 # sbin_PROGRAMS += beep-foo
-# beep_foo_OBJS =
+# beep_foo_OBJS  =
 # beep_foo_OBJS += beep-log.o
 # beep_foo_OBJS += beep.o
-# beep_foo_LIBS =
+# beep_foo_LIBS  =
 # beep_foo_LIBS += -lm
 
 
 ########################################################################
 # Built sources
 ########################################################################
+
+CLEANFILES += beep-usage.txt
 
 CLEANFILES += beep-usage.c
 beep-usage.c: beep-usage.txt
@@ -200,8 +218,6 @@ beep-usage.c: beep-usage.txt
 		printf '  "%s\\n"\n' "$${line}" >> $@; \
 	done < $<
 	echo '  ;' >> $@
-
-CLEANFILES += beep-usage.txt
 
 
 ########################################################################
@@ -287,7 +303,7 @@ DEFAULT_FREQ   = 440
 DEFAULT_LENGTH = 200
 DEFAULT_DELAY  = 100
 
-REPLACEMENTS =
+REPLACEMENTS  =
 REPLACEMENTS += -e s/@PACKAGE_TARNAME@/$(PACKAGE_TARNAME)/g
 REPLACEMENTS += -e s/@PACKAGE_VERSION@/$(PACKAGE_VERSION)/g
 
@@ -348,7 +364,7 @@ all_TARGETS += $(man1_DATA)
 .PHONY: all-local
 all-local: $(all_TARGETS)
 
-SLOC_SOURCES =
+SLOC_SOURCES  =
 SLOC_SOURCES += beep*.[ch]
 SLOC_SOURCES += gen-freq-table
 SLOC_SOURCES += tests/run-tests
@@ -407,6 +423,13 @@ clean:
 
 .PHONY: doc
 doc: $(pkgdoc_DATA)
+
+
+########################################################################
+# install and uninstall targets
+########################################################################
+
+DESTDIR =
 
 .PHONY: install
 install: all
