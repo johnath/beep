@@ -1,4 +1,4 @@
-#!/usr/bin/env sed -f
+#!/usr/bin/sed -f
 # Turn Morse code into beeps.
 #
 # Copyright 2020 Hans Ulrich Niedermann <hun@n-dimensional.de>
