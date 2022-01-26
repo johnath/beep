@@ -25,5 +25,5 @@ jobs:
       run: make check
     - name: 'make install'
       run: make install prefix="$PWD/_root"
-    - name: 'installed files'
-      run: cd "$PWD/_root" && ls -l $(find . -type f)
+    - name: 'list installed files'
+      run: (cd "$PWD/_root" && ls -l $(find . -type f | env LC_ALL=C sort))
