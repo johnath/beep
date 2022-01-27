@@ -3,8 +3,8 @@ beep NEWS
 
 The big and user visible changes.
 
-1.4.x
------
+1.4.12
+------
   * Document how to override and disable packaged udev rules.
   * Changed the build system to be closer to the GNU makefile
     conventions, i.e. only one compiler/toolchain per build, default
