@@ -46,6 +46,16 @@ docdir      = $(datarootdir)/doc/$(PACKAGE_TARNAME)
 contribdir  = $(docdir)/contrib
 htmldir     = $(docdir)
 
+dir-vars  =
+dir-vars += bindir
+dir-vars += sbindir
+dir-vars += datarootdir
+dir-vars += mandir
+dir-vars += man1dir
+dir-vars += docdir
+dir-vars += contribdir
+dir-vars += htmldir
+
 # TODO: We might want to autodetect which kind of $(docdir) is used on
 #       this system.  Until then, people will just need to set
 #       docdir='$(datarootdir)/doc/$(PACKAGE_TARNAME)-$(PACKAGE_VERSION)'
@@ -297,7 +307,7 @@ html/%.css: %.css
 	$(MKDIR_P) html
 	$(INSTALL) -p $< $@
 
-html/%.html: %.md html/pandoc.css
+html/%.html: %.md | html/pandoc.css
 	@$(MKDIR_P) html
 	@echo PANDOC $< -o $@
 	$(PANDOC) --from gfm --to html --standalone -M pagetitle="$$($(SED) -n 1p $<)" -M title="" -c pandoc.css $< -o $@
@@ -403,54 +413,56 @@ doc: $(doc_DATA)
 DESTDIR =
 
 
-define install-data
-ifneq (,$$($(1)))
-install-$$(if $(2),$(2)-)targets += internal-install-$(1)
-.PHONY: internal-install-$(1)
-internal-install-$(1): $$($(1))
-	$$(INSTALL) -d -m 0755 $$(DESTDIR)$$($$(firstword $$(subst _, ,$(1)))dir)
-	$$(INSTALL) -p -m 0644 $$(if $$(srcdir),$$(foreach f,$$($(1)),$$(if $$(wildcard $$(f)),$$(f),$$(srcdir)/$$(f))),$$($(1))) $$(DESTDIR)$$($$(firstword $$(subst _, ,$(1)))dir)/
-
-uninstall-targets += internal-uninstall-$(1)
-.PHONY: internal-uninstall-$(1)
-internal-uninstall-$(1):
-	for f in $$(notdir $$($(1))); do rm -f "$$(DESTDIR)$$($$(firstword $$(subst _, ,$(1)))dir)/$$$$f"; done
-endif
+define make-installdir
+$$(DESTDIR)$(1):
+	$$(INSTALL) -d -m 0755 $$@
 endef
 
-define install-programs
-ifneq (,$$($(1)))
-install-targets += internal-install-$(1)
-.PHONY: internal-install-$(1)
-internal-install-$(1): $$($(1))
-	$$(INSTALL) -d -m 0755 $$(DESTDIR)$$($$(firstword $$(subst _, ,$(1)))dir)
-	$$(INSTALL) -p -m 0755 $$(if $$(srcdir),$$(foreach f,$$($(1)),$$(if $$(wildcard $$(f)),$$(f),$$(srcdir)/$$(f))),$$($(1))) $$(DESTDIR)$$($$(firstword $$(subst _, ,$(1)))dir)/
+$(foreach dir,$(sort $(foreach d,$(dir-vars),$($(d)))),$(eval $(call make-installdir,$(dir))))
 
-uninstall-targets += internal-uninstall-$(1)
-.PHONY: internal-uninstall-$(1)
-internal-uninstall-$(1):
-	for f in $$(notdir $$($(1))); do rm -f "$$(DESTDIR)$$($$(firstword $$(subst _, ,$(1)))dir)/$$$$f"; done
-endif
+
+# install-file target-accu-var filemode dirvar filetoinstall
+#
+# Example:
+#   $(eval $(call install-file,installed-files-html,0644,htmldir,html/foobar.html))
+define install-file
+$(1) += $$(DESTDIR)$$($(3))/$$(notdir $(4))
+$$(DESTDIR)$$($(3))/$$(notdir $(4)): $(4) | $$(DESTDIR)$$($(3))
+	$$(INSTALL) -p -m $(2) $$< $$@
 endef
 
 
-$(eval $(call install-programs,bin_PROGRAMS))
-$(eval $(call install-programs,sbin_PROGRAMS))
-$(eval $(call install-data,man1_DATA))
-$(eval $(call install-data,doc_DATA))
-$(eval $(call install-data,html_DATA,html))
-$(eval $(call install-data,contrib_DATA))
-$(eval $(call install-programs,contrib_SCRIPTS))
+# install-fileset bin_PROGRAMS [install-subtarget]
+#
+# Examples:
+#   $(eval $(call install-fileset,bin_PROGRAMS))
+#   $(eval $(call install-fileset,html_DATA,html))
+define install-fileset
+ifneq (,$$($(1)))
+$$(foreach f,$$($(1)),$$(eval $$(call install-file,installed-files$$(if $(2),-$(2)),$$(if $$(filter PROGRAMS SCRIPTS,$$(lastword $$(subst _, ,$(1)))),0755,0644),$$(firstword $$(subst _, ,$(1)))dir,$$(f))))
+endif
+endef
+
+
+$(eval $(call install-fileset,bin_PROGRAMS))
+$(eval $(call install-fileset,sbin_PROGRAMS))
+$(eval $(call install-fileset,man1_DATA))
+$(eval $(call install-fileset,doc_DATA))
+$(eval $(call install-fileset,html_DATA,html))
+$(eval $(call install-fileset,contrib_DATA))
+$(eval $(call install-fileset,contrib_SCRIPTS))
 
 
 .PHONY: install
-install: all $(install-targets)
+install: all $(installed-files)
 
 .PHONY: install-html
-install-html: html $(install-html-targets)
+install-html: html $(installed-files-html)
 
 .PHONY: uninstall
-uninstall: $(uninstall-targets)
+uninstall:
+	rm -f $(installed-files)
+	rm -f $(installed-files-html)
 
 
 ########################################################################
