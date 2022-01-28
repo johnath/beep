@@ -287,30 +287,36 @@ $(foreach exec,$(sbin_PROGRAMS), $(eval $(call LINK_RULE,$(exec),$(subst -,_,$(e
 man1_DATA  += beep.1
 CLEANFILES += beep.1
 
-html_DATA        += html/CREDITS.html
-html_DATA        += html/NEWS.html
-html_DATA        += html/PERMISSIONS.html
-html_DATA        += html/README.html
+CLEANFILES       += CREDITS.html
+CLEANFILES       += NEWS.html
+CLEANFILES       += PERMISSIONS.html
+CLEANFILES       += README.html
 
-CLEANFILES       += html/pandoc.css
-html_DATA        += html/pandoc.css
+CLEANFILES       += DEVELOPMENT.html
+CLEANFILES       += INSTALL.html
+CLEANFILES       += PACKAGING.html
 
-noinst_html_DATA += html/DEVELOPMENT.html
-noinst_html_DATA += html/INSTALL.html
-noinst_html_DATA += html/PACKAGING.html
+ifeq (yes,$(shell if $(PANDOC) --version > /dev/null 2>&1; then echo yes; else echo no; fi))
 
-.PHONY: html
-html: $(html_DATA) $(noinst_html_DATA)
-	@$(MKDIR_P) html
+html_DATA        += pandoc.css
 
-html/%.css: %.css
-	$(MKDIR_P) html
-	$(INSTALL) -p $< $@
+html_DATA        += CREDITS.html
+html_DATA        += NEWS.html
+html_DATA        += PERMISSIONS.html
+html_DATA        += README.html
 
-html/%.html: %.md | html/pandoc.css
-	@$(MKDIR_P) html
+noinst_html_DATA += DEVELOPMENT.html
+noinst_html_DATA += INSTALL.html
+noinst_html_DATA += PACKAGING.html
+
+%.html: %.md
 	@echo PANDOC $< -o $@
 	$(PANDOC) --from gfm --to html --standalone -M pagetitle="$$($(SED) -n 1p $<)" -M title="" -c pandoc.css $< -o $@
+endif
+
+.PHONY: html
+html:      $(html_DATA) $(noinst_html_DATA)
+all-local: $(html_DATA) $(noinst_html_DATA)
 
 DEFAULT_FREQ   = 440
 DEFAULT_LENGTH = 200
@@ -389,16 +395,13 @@ check: tests/run-tests beep $(check_TARGETS)
 
 .PHONY: clean
 clean:
-	rm -f $(bin_PROGRAMS)
-	rm -f $(check_PROGRAMS)
-	rm -f $(sbin_PROGRAMS)
+	rm -f $(bin_PROGRAMS) $(sbin_PROGRAMS) $(check_PROGRAMS)
 	rm -f $(CLEANFILES)
 	rm -f *.dep
 	rm -rf .deps
 	rm -f *.lst *.gcc-lst
 	rm -f tests/*.new tests/*.actual
 	rm -rf dox
-	rm -rf html
 	rm -f *.o *.i *.s *.bc
 
 .PHONY: doc
@@ -426,9 +429,9 @@ $(foreach dir,$(sort $(foreach d,$(dir-vars),$($(d)))),$(eval $(call make-instal
 # Example:
 #   $(eval $(call install-file,installed-files-html,0644,htmldir,html/foobar.html))
 define install-file
-$(1) += $$(DESTDIR)$$($(3))/$$(notdir $(4))
-$$(DESTDIR)$$($(3))/$$(notdir $(4)): $(4) | $$(DESTDIR)$$($(3))
-	$$(INSTALL) -p -m $(2) $$< $$@
+installed-files += $$(DESTDIR)$$($(2))/$$(notdir $(3))
+$$(DESTDIR)$$($(2))/$$(notdir $(3)): $(3) | $$(DESTDIR)$$($(2))
+	$$(INSTALL) -p -m $(1) $$< $$@
 endef
 
 
@@ -439,7 +442,7 @@ endef
 #   $(eval $(call install-fileset,html_DATA,html))
 define install-fileset
 ifneq (,$$($(1)))
-$$(foreach f,$$($(1)),$$(eval $$(call install-file,installed-files$$(if $(2),-$(2)),$$(if $$(filter PROGRAMS SCRIPTS,$$(lastword $$(subst _, ,$(1)))),0755,0644),$$(firstword $$(subst _, ,$(1)))dir,$$(f))))
+$$(foreach f,$$($(1)),$$(eval $$(call install-file,$$(if $$(filter PROGRAMS SCRIPTS,$$(lastword $$(subst _, ,$(1)))),0755,0644),$$(firstword $$(subst _, ,$(1)))dir,$$(f))))
 endif
 endef
 
@@ -448,7 +451,7 @@ $(eval $(call install-fileset,bin_PROGRAMS))
 $(eval $(call install-fileset,sbin_PROGRAMS))
 $(eval $(call install-fileset,man1_DATA))
 $(eval $(call install-fileset,doc_DATA))
-$(eval $(call install-fileset,html_DATA,html))
+$(eval $(call install-fileset,html_DATA))
 $(eval $(call install-fileset,contrib_DATA))
 $(eval $(call install-fileset,contrib_SCRIPTS))
 
@@ -456,13 +459,9 @@ $(eval $(call install-fileset,contrib_SCRIPTS))
 .PHONY: install
 install: all $(installed-files)
 
-.PHONY: install-html
-install-html: html $(installed-files-html)
-
 .PHONY: uninstall
 uninstall:
 	rm -f $(installed-files)
-	rm -f $(installed-files-html)
 
 
 ########################################################################
