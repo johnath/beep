@@ -82,6 +82,7 @@ MKDIR_P   = mkdir -p
 PANDOC    = pandoc
 PYTHON3   = python3
 SED       = sed
+TAR       = tar
 
 
 ########################################################################
@@ -101,6 +102,9 @@ LINK.c    = false LINK.c
 ########################################################################
 # Variables to add to later
 ########################################################################
+
+dist-files  =
+dist-files += GNUmakefile
 
 # targets to build for the "all" target
 all_TARGETS      =
@@ -194,17 +198,23 @@ $(info # CPPFLAGS=$(CPPFLAGS))
 # Define executables and their flags
 ########################################################################
 
-check_PROGRAMS         += issue-6-benchmark
-issue_6_benchmark_OBJS  = issue-6-benchmark.o
-issue_6_benchmark_LIBS  = -lm
+check_PROGRAMS            += issue-6-benchmark
+issue_6_benchmark_SOURCES  = issue-6-benchmark.c
+issue_6_benchmark_LIBS     = -lm
 
 bin_PROGRAMS += beep
-beep_OBJS     =
-beep_OBJS    += beep-log.o
-beep_OBJS    += beep-main.o
-beep_OBJS    += beep-library.o
-beep_OBJS    += beep-usage.o
-beep_OBJS    += beep-drivers.o
+beep_SOURCES  =
+beep_SOURCES += beep-compiler.h
+beep_SOURCES += beep-types.h
+beep_SOURCES += beep-log.c
+beep_SOURCES += beep-log.h
+beep_SOURCES += beep-main.c
+beep_SOURCES += beep-library.c
+beep_SOURCES += beep-library.h
+beep_SOURCES += beep-usage.c
+beep_SOURCES += beep-usage.h
+beep_SOURCES += beep-drivers.c
+beep_SOURCES += beep-drivers.h
 
 # The drivers here use `__attribute__((constructor))` functions to
 # register themselves with `beep_drivers_register()`, so the last one
@@ -212,10 +222,13 @@ beep_OBJS    += beep-drivers.o
 # the latest time, and thus will have its `driver_detect()` function
 # called first.
 
-beep_OBJS    += beep-driver-console.o
-beep_OBJS    += beep-driver-evdev.o
+beep_SOURCES += beep-driver.h
+beep_SOURCES += beep-driver-console.c
+beep_SOURCES += beep-driver-evdev.c
+
+EXTRA_DIST   += beep-driver-noop.c
 ifneq ($(BEEP_DEBUG_BUILD),)
-beep_OBJS    += beep-driver-noop.o
+beep_SOURCES += beep-driver-noop.c
 endif
 
 beep_LIBS     =
@@ -223,18 +236,19 @@ beep_LIBS     =
 beep-log.o : override common_CPPFLAGS += -D_GNU_SOURCE
 # beep-log.clang-o : override CFLAGS_clang += -Wno-format-nonliteral
 
-# sbin_PROGRAMS += beep-foo
-# beep_foo_OBJS  =
-# beep_foo_OBJS += beep-log.o
-# beep_foo_OBJS += beep.o
-# beep_foo_LIBS  =
-# beep_foo_LIBS += -lm
+# sbin_PROGRAMS    += beep-foo
+# beep_foo_SOURCES  =
+# beep_foo_SOURCES += beep-log.c
+# beep_foo_SOURCES += beep.c
+# beep_foo_LIBS     =
+# beep_foo_LIBS    += -lm
 
 
 ########################################################################
 # Built sources
 ########################################################################
 
+EXTRA_DIST += beep-usage.txt.in
 CLEANFILES += beep-usage.txt
 
 CLEANFILES += beep-usage.c
@@ -259,6 +273,9 @@ beep-usage.c: beep-usage.txt
 # CALL: LINK_RULE <executable> <executable_as_varname_part> <dircomponent>
 # Defines the per-executable rules.
 define LINK_RULE
+dist-files += $$($(2)_SOURCES)
+$(2)_OBJS := $$(foreach src,$$($(2)_SOURCES),$$(if $$(filter %.c,$$(src)),$$(src:%.c=%.o),$$(if $$(filter %.h,$$(src)),,$$(error Found unhandled source $$(src) in $(2)_SOURCES))))
+
 $(1): $$($(2)_OBJS)
 	@: echo "LINK_RULE $$@: $$^"
 	$(CC) -Wl,-Map=$$(@:%=%.map),--cref $(CFLAGS) $(common_CFLAGS) $(LDFLAGS) $(common_LDFLAGS) -o $$@ $$^ $$($(2)_LIBS) $(common_LIBS) $(LIBS)
@@ -284,6 +301,9 @@ $(foreach exec,$(sbin_PROGRAMS), $(eval $(call LINK_RULE,$(exec),$(subst -,_,$(e
 # Generate doc and similar files
 ########################################################################
 
+EXTRA_DIST += gen-freq-table
+
+EXTRA_DIST += beep.1.in
 man1_DATA  += beep.1
 CLEANFILES += beep.1
 
@@ -298,6 +318,7 @@ CLEANFILES       += PACKAGING.html
 
 ifeq (yes,$(shell if $(PANDOC) --version > /dev/null 2>&1; then echo yes; else echo no; fi))
 
+EXTRA_DIST       += pandoc.css
 html_DATA        += pandoc.css
 
 html_DATA        += CREDITS.html
@@ -332,10 +353,12 @@ REPLACEMENTS += -e 's|@DEFAULT_DELAY@|$(DEFAULT_DELAY)|g'
 
 REPLACEMENTS += -e 's|[@]docdir@|$(docdir)|g'
 
+EXTRA_DIST    += beep-config.h.in
 CLEANFILES    += beep-config.h
 BUILT_SOURCES += beep-config.h
 beep-main.o : beep-config.h
 
+EXTRA_DIST += Doxyfile.in
 CLEANFILES += Doxyfile
 CLEANFILES += Doxyfile.new
 
@@ -359,15 +382,32 @@ dox: doxygen.stamp
 serve-dox: dox
 	$(PYTHON3) -m http.server --directory dox/html
 
-doc_DATA += COPYING
-doc_DATA += CREDITS.md
-doc_DATA += NEWS.md
-doc_DATA += README.md
-doc_DATA += PERMISSIONS.md
+EXTRA_DIST += COPYING
+doc_DATA   += COPYING
 
+EXTRA_DIST += CREDITS.md
+doc_DATA   += CREDITS.md
+
+EXTRA_DIST += NEWS.md
+doc_DATA   += NEWS.md
+
+EXTRA_DIST += README.md
+doc_DATA   += README.md
+
+EXTRA_DIST += PERMISSIONS.md
+doc_DATA   += PERMISSIONS.md
+
+EXTRA_DIST += DEVELOPMENT.md
+EXTRA_DIST += INSTALL.md
+EXTRA_DIST += PACKAGING.md
+
+EXTRA_DIST      += contrib/failure-beeps
 contrib_SCRIPTS += contrib/failure-beeps
+EXTRA_DIST      += contrib/success-beeps
 contrib_SCRIPTS += contrib/success-beeps
+EXTRA_DIST      += contrib/morse/morse2beep.pl
 contrib_SCRIPTS += contrib/morse/morse2beep.pl
+EXTRA_DIST      += contrib/morse/morse2beep.sed
 contrib_SCRIPTS += contrib/morse/morse2beep.sed
 
 
@@ -392,6 +432,17 @@ check-targets: $(check_TARGETS)
 check: tests/run-tests beep $(check_TARGETS)
 	env PACKAGE_VERSION="${PACKAGE_VERSION}" \
 	/bin/bash $< $(<D) $(PWD)/beep
+
+dist-files += $(wildcard tests/README.md)
+dist-files += $(wildcard tests/run-tests)
+dist-files += $(wildcard tests/*.bash)
+dist-files += $(wildcard tests/*.sh)
+dist-files += $(wildcard tests/*.expected.[0-9])
+
+EXTRA_DIST += testbuild-all
+
+EXTRA_DIST += .gitignore
+EXTRA_DIST += .github/workflows/beep-build.yml
 
 .PHONY: clean
 clean:
@@ -465,6 +516,26 @@ uninstall:
 
 
 ########################################################################
+# "make dist" related rules and definitions
+########################################################################
+
+dist-files += $(EXTRA_DIST)
+
+# TODO: Should we implement nodist_beep_SOURCES instead of this
+#       filter-out hack for the generated beep-usage.c file?
+sorted-dist-files := $(filter-out beep-usage.c,$(sort $(dist-files)))
+
+distdir = $(PACKAGE_TARNAME)-$(PACKAGE_VERSION)
+
+.PHONY: dist
+dist: $(distdir).tar.gz
+
+$(distdir).tar.gz: $(sorted-dist-files)
+	@echo "Creating dist tarball: $@"
+	@$(TAR) --transform='s|^|$(distdir)/|' --auto-compress --create --file=$@ --verbose --show-transformed-names $(sorted-dist-files)
+
+
+########################################################################
 # Development helpers
 ########################################################################
 
@@ -486,8 +557,8 @@ todo fixme:
 
 # Generate a kind of dist tarball to help with preparing for release
 PACKAGE_TARBASE := $(PACKAGE_TARNAME)-$(shell $(GIT) describe --tags | $(SED) 's/^v\([0-9]\)/\1/')
-.PHONY: dist
-dist:
+.PHONY: git-dist
+git-dist:
 	$(GIT) archive --format=tar.gz --verbose --prefix=$(PACKAGE_TARBASE)/ --output=$(PACKAGE_TARBASE).tar.gz HEAD
 
 endif
