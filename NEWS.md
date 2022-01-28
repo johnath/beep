@@ -3,6 +3,9 @@ beep NEWS
 
 The big and user visible changes.
 
+1.4.xx
+------
+
 1.4.12
 ------
   * Document how to override and disable packaged udev rules.
