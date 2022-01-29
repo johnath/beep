@@ -179,14 +179,19 @@ $(eval $(call CHECK_CFLAGS,CFLAGS,-fsanitize=undefined))
 CFLAGS += -save-temps=obj
 
 
-$(info # common_CFLAGS=$(common_CFLAGS))
-$(info # CFLAGS=$(CFLAGS))
-$(info # CPPFLAGS=$(CPPFLAGS))
-
-
 # Create this file to override any of the make variables defined
 # above.
 -include local.mk
+
+
+$(info # common_CFLAGS=$(common_CFLAGS))
+$(info # common_CPPFLAGS=$(common_CPPFLAGS))
+$(info # common_LDFLAGS=$(common_LDFLAGS))
+$(info # common_LIBS=$(common_LIBS))
+$(info # CFLAGS=$(CFLAGS))
+$(info # CPPFLAGS=$(CPPFLAGS))
+$(info # LDFLAGS=$(LDFLAGS))
+$(info # LIBS=$(LIBS))
 
 
 ########################################################################
