@@ -16,11 +16,11 @@ The building and installing during a package build can be achieved with
 
 ```sh
 make
-make install DESTDIR=/path/to/package-root CC=false
+make install-nobuild DESTDIR=/path/to/package-root
 ```
 
-While not strictly necessary, the `CC=false` makes sure that no
-compilation happens during the `make install` phase.
+While not strictly necessary, using `make install-nobuild` makes sure
+that no compilation happens during the installation phase.
 
 You can also add to the default compiler flags by setting or adding to
 `CFLAGS`, `CPPFLAGS`, `LDFLAGS`, and `LIBS`, by running `make` like
@@ -30,12 +30,18 @@ e.g.
 make CFLAGS="-O -g -flto=auto -ffat-lto-objects" CPPFLAGS="-I/opt/include" LDFLAGS="-f" LIBS="-L/opt/lib"
 ```
 
+or putting those definitions into the `local.mk` file.
+
 The buildsystem will use whatever compiler `CC` is set to. `clang` and
 `gcc` are known to work, other toolchains might.
 
 ```sh
 make CC=clang
 ```
+
+If your package build has `pandoc` available and working, HTML files
+will be built from the markdown files and installed later. If you do
+not want HTML files built and installed, you can set `PANDOC=false`.
 
 If you need to set any of the `*dir` variables like `prefix` or
 `docdir` on the `make` command line, you need to set them for both the

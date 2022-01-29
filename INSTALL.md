@@ -20,40 +20,62 @@ Build requirements
 Compile and Install
 ===================
 
-The easy way is
+The basic way to build and install beep is
 
 ```
 [user@host beep]$ make
-[user@host beep]$ make install
+[user@host beep]$ make install-nobuild
 ```
 
-By default, `make install` will put the executable `beep` in
-`/usr/local/bin`.  If you do not like this, set override the common
-GNU Makefile convention variables (`prefix`, `bindir`, `docdir`,
-`htmldir`, `mandir`, etc.) as appropriate, e.g.
+`beep` does not have a `configure` script, so to make some
+configuration options last over different make invocations, do
+generate a `local.mk` file containing the appropriate definitions:
+
+The buildsystem will use whatever value `CC` is as a compiler, and use
+a few tools like `PANDOC` for building html from markdown. You can set
+these to your desired values, including `PANDOC=false` to disable
+building and installing html files.
+
+The installation location will be written into some files during
+`make`, and will then be used during `make install`.  The default
+installation location is `prefix=/usr/local`, with `bindir`, `docdir`,
+`htmldir`, `mandir`, etc. being used for more specialized installation
+directories.  For installing into a chroot environment, the `install`
+target(s) support `DESTDIR=/path/to/chroot`.
+
+You can override any of these variables from the `make` command line
+like e.g.
 
 ```
 [user@host beep]$ make prefix=$HOME/.local
 [user@host beep]$ make prefix=$HOME/.local install
 ```
 
-or
+or you can put that definition (and others) into a `local.mk` file:
 
 ```
 [user@host beep]$ cat>local.mk<<EOF
-CC = clang
-prefix = \$(HOME)/.local
+prefix = $HOME/.local
 EOF
 [user@host beep]$ make
 [user@host beep]$ make install
-[user@host beep]$ make install-html
 ```
 
-or
+If you need to run `make install` as another user to have the required
+permission to install file to special locations, we recommend the
+special `make install-nobuild` target: `make install-nobuild` will
+categorically **NOT** run any build processes as the priviledged user
+who is running `make install-nobuild`.
+
+If you run `make install` immediately after `make all`, there should
+be no build processes necessary, but if you have changed any of the
+source files after the `make all`, files **will** be rebuilt.
+
+So a system wide install into `/usr/local` would be best achieved with
 
 ```
 [user@host beep]$ make
-[user@host beep]$ make DESTDIR=$PWD/__installroot install
+[user@host beep]$ sudo make install-nobuild
 ```
 
 For the complete list of those variables, see the top of

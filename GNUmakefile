@@ -69,8 +69,10 @@ dir-vars += htmldir
 ########################################################################
 
 # This makes it easy to replace any of those tools with specific
-# versions, e.g. to test the portability of the SED commands, you can
-# run with SED="busybox sed".
+# versions, or to disable specific parts of the build. For example, to
+# test the portability of the SED commands, you can run with
+# SED="busybox sed", or to disable building HTML files from the
+# markdown files you can run with PANDOC="false".
 
 DOT       = dot
 DOXYGEN   = doxygen
@@ -97,6 +99,20 @@ all: all-local
 .SUFFIXES:
 COMPILE.c = false COMPILE.c
 LINK.c    = false LINK.c
+
+
+# This is for use with the "install-nobuild" target.
+#
+# For every recipe which creates/modifies a file in the build tree,
+# use $(inhibit-build-command) as the first command.
+#
+# The default value of @: produces no output and succeeds, so that the
+# further recipe lines can actually do the work.
+#
+# If you want to disable build, set this to "false" or "false
+# 'comment'", so that each invoked build rule will fail instantly
+# before doing any actual work.
+inhibit-build-command = @:
 
 
 ########################################################################
@@ -151,7 +167,6 @@ common_LIBS      =
 
 common_CPPFLAGS += -DPACKAGE_TARNAME='"$(PACKAGE_TARNAME)"'
 common_CPPFLAGS += -DPACKAGE_VERSION='"$(PACKAGE_VERSION)"'
-common_CFLAGS   += -O2 -g
 common_CFLAGS   += -std=gnu99
 common_CFLAGS   += $(if $(filter %.o,$@),-Wa$(comma)-adhlns=$(@:.o=.lst))
 common_CFLAGS   += -pedantic
@@ -176,6 +191,7 @@ $(eval $(call CHECK_CFLAGS,CFLAGS,-fcf-protection))
 $(eval $(call CHECK_CFLAGS,CFLAGS,-fsanitize=undefined))
 
 
+CFLAGS += -O2 -g
 CFLAGS += -save-temps=obj
 
 
@@ -258,6 +274,7 @@ CLEANFILES += beep-usage.txt
 
 CLEANFILES += beep-usage.c
 beep-usage.c: beep-usage.txt
+	$(inhibit-build-command)
 	echo '/* Auto-generated from `$<`. Modify that file instead. */' > $@
 	echo '#include "beep-usage.h"' >> $@
 	echo 'char beep_usage[] =' >> $@
@@ -282,7 +299,8 @@ dist-files += $$($(2)_SOURCES)
 $(2)_OBJS := $$(foreach src,$$($(2)_SOURCES),$$(if $$(filter %.c,$$(src)),$$(src:%.c=%.o),$$(if $$(filter %.h,$$(src)),,$$(error Found unhandled source $$(src) in $(2)_SOURCES))))
 
 $(1): $$($(2)_OBJS)
-	@: echo "LINK_RULE $$@: $$^"
+	$$(inhibit-build-command)
+	@echo "LINK     $$@: $$^"
 	$$(CC) -Wl,-Map=$(1).map,--cref $$(common_CFLAGS) $$(CFLAGS) $$(common_LDFLAGS) $$($(2)_LDFLAGS) $$(LDFLAGS) -o $$@ $$^ $$(common_LIBS) $$($(2)_LIBS) $$(LIBS)
 
 $$(patsubst %.o,.deps/%.o.dep,$$($(2)_OBJS))):
@@ -296,9 +314,12 @@ $(foreach exec,$(check_PROGRAMS),$(eval $(call LINK_RULE,$(exec),$(subst -,_,$(e
 $(foreach exec,$(sbin_PROGRAMS), $(eval $(call LINK_RULE,$(exec),$(subst -,_,$(exec)),sbin)))
 
 %.o: %.c | .deps
+	$(inhibit-build-command)
+	@echo "COMPILE $@: $<"
 	$(CC) -MT $@ -MMD -MP -MF .deps/$*.o.dep $(common_CPPFLAGS) $(CPPFLAGS) $(common_CFLAGS) $(CFLAGS) -o $@ -c $<
 
 .deps:
+	$(inhibit-build-command)
 	@$(MKDIR_P) $@
 
 
@@ -336,6 +357,7 @@ noinst_html_DATA += INSTALL.html
 noinst_html_DATA += PACKAGING.html
 
 %.html: %.md
+	$(inhibit-build-command)
 	@echo PANDOC $< -o $@
 	$(PANDOC) --from gfm --to html --standalone -M pagetitle="$$($(SED) -n 1p $<)" -M title="" -c pandoc.css $< -o $@
 endif
@@ -368,6 +390,7 @@ CLEANFILES += Doxyfile
 CLEANFILES += Doxyfile.new
 
 %: %.in GNUmakefile
+	$(inhibit-build-command)
 	$(SED) $(REPLACEMENTS) < $< > $@.new
 	@if $(EGREP) '@([A-Za-z][A-Za-z0-9_]*)@' $@.new; then \
 		echo "Error: GNUmakefile fails to substitute some of the variables in \`$<'."; \
@@ -378,6 +401,7 @@ CLEANFILES += Doxyfile.new
 CLEANFILES += doxygen.stamp
 .PHONY: doxygen.stamp
 doxygen.stamp: Doxyfile $(wildcard *.c) $(wildcard *.h)
+	$(inhibit-build-command)
 	$(DOXYGEN) $<
 	echo > $@
 
@@ -435,6 +459,7 @@ check-targets: $(check_TARGETS)
 
 .PHONY: check
 check: tests/run-tests beep $(check_TARGETS)
+	$(inhibit-build-command)
 	env PACKAGE_VERSION="${PACKAGE_VERSION}" \
 	/bin/bash $< $(<D) $(PWD)/beep
 
@@ -515,6 +540,10 @@ $(eval $(call install-fileset,contrib_SCRIPTS))
 .PHONY: install
 install: all $(installed-files)
 
+.PHONY: install-nobuild
+install-nobuild: install
+install-nobuild : inhibit-build-command=@printf "Error: 'make install-nobuild' inhibits all build rules.\n       Try running 'make' to build $@ first, or run\n       'make install' which implicitly builds $@ first.\n"; false
+
 .PHONY: uninstall
 uninstall:
 	rm -f $(installed-files)
@@ -536,6 +565,7 @@ distdir = $(PACKAGE_TARNAME)-$(PACKAGE_VERSION)
 dist: $(distdir).tar.gz
 
 $(distdir).tar.gz: $(sorted-dist-files)
+	$(inhibit-build-command)
 	@echo "Creating dist tarball: $@"
 	@$(TAR) --transform='s|^|$(distdir)/|' --auto-compress --create --file=$@ --verbose --show-transformed-names $(sorted-dist-files)
 
