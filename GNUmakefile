@@ -164,8 +164,8 @@ comma := ,
 
 # If supported by $(CC), add given flags to CFLAGS type variable.
 # Example usage:
-#   $(eval $(call CHECK_CFLAGS,common-CFLAGS,-fasynchronous-unwind-tables))
-define CHECK_CFLAGS
+#   $(eval $(call check-cflags,common-CFLAGS,-fasynchronous-unwind-tables))
+define check-cflags
 $(1) += $$(if $$(shell if $$(CC) $$(patsubst -Wno-%,-W%,$(2)) -x c -o compile-check.o -c - < /dev/null > /dev/null 2>&1; then echo yes; else :; fi; rm -f compile-check.o > /dev/null 2>&1),$(2))
 endef
 
@@ -186,25 +186,25 @@ common_CPPFLAGS += -DPACKAGE_VERSION='"$(PACKAGE_VERSION)"'
 common_CFLAGS   += -std=gnu99
 common_CFLAGS   += $(if $(filter %.o,$@),-Wa$(comma)-adhlns=$(@:.o=.lst))
 common_CFLAGS   += -pedantic
-$(eval $(call CHECK_CFLAGS,common_CFLAGS,-Werror=unknown-warning-option))
-$(eval $(call CHECK_CFLAGS,common_CFLAGS,-Wall))
-$(eval $(call CHECK_CFLAGS,common_CFLAGS,-Wextra))
-$(eval $(call CHECK_CFLAGS,common_CFLAGS,-Weverything))
-$(eval $(call CHECK_CFLAGS,common_CFLAGS,-Werror))
-$(eval $(call CHECK_CFLAGS,common_CFLAGS,-Wno-padded))
-$(eval $(call CHECK_CFLAGS,common_CFLAGS,-Werror=format-security))
-$(eval $(call CHECK_CFLAGS,common_CFLAGS,-Wno-disabled-macro-expansion))
-$(eval $(call CHECK_CFLAGS,common_CFLAGS,-Wno-format-nonliteral))
-$(eval $(call CHECK_CFLAGS,CPPFLAGS,-D_FORTIFY_SOURCE=2))
-$(eval $(call CHECK_CFLAGS,CPPFLAGS,-D_GLIBCXX_ASSERTIONS))
-# $(eval $(call CHECK_CFLAGS,CFLAGS,-Wp$$(comma)-D_FORTIFY_SOURCE=2))
-# $(eval $(call CHECK_CFLAGS,CFLAGS,-Wp$$(comma)-D_GLIBCXX_ASSERTIONS))
-$(eval $(call CHECK_CFLAGS,CFLAGS,-fasynchronous-unwind-tables))
-$(eval $(call CHECK_CFLAGS,CFLAGS,-fanalyzer))
-$(eval $(call CHECK_CFLAGS,CFLAGS,-fstack-protector-strong))
-$(eval $(call CHECK_CFLAGS,CFLAGS,-fstack-clash-protection))
-$(eval $(call CHECK_CFLAGS,CFLAGS,-fcf-protection))
-$(eval $(call CHECK_CFLAGS,CFLAGS,-fsanitize=undefined))
+$(eval $(call check-cflags,common_CFLAGS,-Werror=unknown-warning-option))
+$(eval $(call check-cflags,common_CFLAGS,-Wall))
+$(eval $(call check-cflags,common_CFLAGS,-Wextra))
+$(eval $(call check-cflags,common_CFLAGS,-Weverything))
+$(eval $(call check-cflags,common_CFLAGS,-Werror))
+$(eval $(call check-cflags,common_CFLAGS,-Wno-padded))
+$(eval $(call check-cflags,common_CFLAGS,-Werror=format-security))
+$(eval $(call check-cflags,common_CFLAGS,-Wno-disabled-macro-expansion))
+$(eval $(call check-cflags,common_CFLAGS,-Wno-format-nonliteral))
+$(eval $(call check-cflags,CPPFLAGS,-D_FORTIFY_SOURCE=2))
+$(eval $(call check-cflags,CPPFLAGS,-D_GLIBCXX_ASSERTIONS))
+# $(eval $(call check-cflags,CFLAGS,-Wp$$(comma)-D_FORTIFY_SOURCE=2))
+# $(eval $(call check-cflags,CFLAGS,-Wp$$(comma)-D_GLIBCXX_ASSERTIONS))
+$(eval $(call check-cflags,CFLAGS,-fasynchronous-unwind-tables))
+$(eval $(call check-cflags,CFLAGS,-fanalyzer))
+$(eval $(call check-cflags,CFLAGS,-fstack-protector-strong))
+$(eval $(call check-cflags,CFLAGS,-fstack-clash-protection))
+$(eval $(call check-cflags,CFLAGS,-fcf-protection))
+$(eval $(call check-cflags,CFLAGS,-fsanitize=undefined))
 
 
 CFLAGS += -O2 -g
@@ -318,9 +318,9 @@ beep-usage.c: beep-usage.txt
 ########################################################################
 
 
-# CALL: LINK_RULE <executable> <executable_as_varname_part> <dircomponent>
+# CALL: define-link-rule <executable> <executable_as_varname_part> <dircomponent>
 # Defines the per-executable rules.
-define LINK_RULE
+define define-link-rule
 CLEANFILES += $(1).map
 dist-files += $$($(2)_SOURCES)
 $(2)_OBJS := $$(foreach src,$$($(2)_SOURCES),$$(if $$(filter %.c,$$(src)),$$(src:%.c=%.o),$$(if $$(filter %.h,$$(src)),,$$(error Unhandled source type in $(2)_SOURCES: $$(src)))))
@@ -336,9 +336,9 @@ $$(patsubst %.o,.deps/%.o.dep,$$($(2)_OBJS))):
 endef
 
 
-$(foreach exec,$(bin_PROGRAMS),  $(eval $(call LINK_RULE,$(exec),$(subst -,_,$(exec)),bin)))
-$(foreach exec,$(check_PROGRAMS),$(eval $(call LINK_RULE,$(exec),$(subst -,_,$(exec)),check)))
-$(foreach exec,$(sbin_PROGRAMS), $(eval $(call LINK_RULE,$(exec),$(subst -,_,$(exec)),sbin)))
+$(foreach exec,$(bin_PROGRAMS),  $(eval $(call define-link-rule,$(exec),$(subst -,_,$(exec)),bin)))
+$(foreach exec,$(check_PROGRAMS),$(eval $(call define-link-rule,$(exec),$(subst -,_,$(exec)),check)))
+$(foreach exec,$(sbin_PROGRAMS), $(eval $(call define-link-rule,$(exec),$(subst -,_,$(exec)),sbin)))
 
 %.o: %.c | .deps
 	$(inhibit-build-command)
@@ -529,20 +529,20 @@ doc: $(doc_DATA)
 DESTDIR =
 
 
-define make-installdir
+define define-install-dir-rule
 $$(DESTDIR)$(1):
 	@$$(call silent-output,INSTALL,$$@/)
 	$$(INSTALL) -d -m 0755 $$@
 endef
 
-$(foreach dir,$(sort $(foreach d,$(dir-vars),$($(d)))),$(eval $(call make-installdir,$(dir))))
+$(foreach dir,$(sort $(foreach d,$(dir-vars),$($(d)))),$(eval $(call define-install-dir-rule,$(dir))))
 
 
-# install-file target-accu-var filemode dirvar filetoinstall
+# define-install-file-rule target-accu-var filemode dirvar filetoinstall
 #
 # Example:
-#   $(eval $(call install-file,installed-files-html,0644,htmldir,html/foobar.html))
-define install-file
+#   $(eval $(call define-install-file-rule,0644,htmldir,html/foobar.html))
+define define-install-file-rule
 installed-files += $$(DESTDIR)$$($(2))/$$(notdir $(3))
 $$(DESTDIR)$$($(2))/$$(notdir $(3)): $(3) | $$(DESTDIR)$$($(2))
 	@$$(call silent-output,INSTALL,$$@)
@@ -550,25 +550,25 @@ $$(DESTDIR)$$($(2))/$$(notdir $(3)): $(3) | $$(DESTDIR)$$($(2))
 endef
 
 
-# install-fileset bin_PROGRAMS [install-subtarget]
+# define-install-fileset-rules bin_PROGRAMS [install-subtarget]
 #
 # Examples:
-#   $(eval $(call install-fileset,bin_PROGRAMS))
-#   $(eval $(call install-fileset,html_DATA,html))
-define install-fileset
+#   $(eval $(call define-install-fileset-rules,bin_PROGRAMS))
+#   $(eval $(call define-install-fileset-rules,html_DATA,html))
+define define-install-fileset-rules
 ifneq (,$$($(1)))
-$$(foreach f,$$($(1)),$$(eval $$(call install-file,$$(if $$(filter PROGRAMS SCRIPTS,$$(lastword $$(subst _, ,$(1)))),0755,0644),$$(firstword $$(subst _, ,$(1)))dir,$$(f))))
+$$(foreach f,$$($(1)),$$(eval $$(call define-install-file-rule,$$(if $$(filter PROGRAMS SCRIPTS,$$(lastword $$(subst _, ,$(1)))),0755,0644),$$(firstword $$(subst _, ,$(1)))dir,$$(f))))
 endif
 endef
 
 
-$(eval $(call install-fileset,bin_PROGRAMS))
-$(eval $(call install-fileset,sbin_PROGRAMS))
-$(eval $(call install-fileset,man1_DATA))
-$(eval $(call install-fileset,doc_DATA))
-$(eval $(call install-fileset,html_DATA))
-$(eval $(call install-fileset,contrib_DATA))
-$(eval $(call install-fileset,contrib_SCRIPTS))
+$(eval $(call define-install-fileset-rules,bin_PROGRAMS))
+$(eval $(call define-install-fileset-rules,sbin_PROGRAMS))
+$(eval $(call define-install-fileset-rules,man1_DATA))
+$(eval $(call define-install-fileset-rules,doc_DATA))
+$(eval $(call define-install-fileset-rules,html_DATA))
+$(eval $(call define-install-fileset-rules,contrib_DATA))
+$(eval $(call define-install-fileset-rules,contrib_SCRIPTS))
 
 
 .PHONY: install
