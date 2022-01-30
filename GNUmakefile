@@ -278,7 +278,7 @@ $(2)_OBJS := $$(foreach src,$$($(2)_SOURCES),$$(if $$(filter %.c,$$(src)),$$(src
 
 $(1): $$($(2)_OBJS)
 	@: echo "LINK_RULE $$@: $$^"
-	$(CC) -Wl,-Map=$$(@:%=%.map),--cref $(CFLAGS) $(common_CFLAGS) $(LDFLAGS) $(common_LDFLAGS) -o $$@ $$^ $$($(2)_LIBS) $(common_LIBS) $(LIBS)
+	$$(CC) -Wl,-Map=$(1).map,--cref $$(common_CFLAGS) $$(CFLAGS) $$(common_LDFLAGS) $$($(2)_LDFLAGS) $$(LDFLAGS) -o $$@ $$^ $$(common_LIBS) $$($(2)_LIBS) $$(LIBS)
 
 $$(patsubst %.o,.deps/%.o.dep,$$($(2)_OBJS))):
 
