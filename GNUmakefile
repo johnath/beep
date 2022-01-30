@@ -157,13 +157,13 @@ endef
 CFLAGS   :=
 CPPFLAGS  =
 LDFLAGS   =
-LIBS      =
+LDADD     =
 
 # Flags common to all executable targets
 common_CFLAGS   :=
 common_CPPFLAGS  =
 common_LDFLAGS   =
-common_LIBS      =
+common_LDADD     =
 
 common_CPPFLAGS += -DPACKAGE_TARNAME='"$(PACKAGE_TARNAME)"'
 common_CPPFLAGS += -DPACKAGE_VERSION='"$(PACKAGE_VERSION)"'
@@ -202,12 +202,12 @@ CFLAGS += -save-temps=obj
 
 $(info # common_CFLAGS=$(common_CFLAGS))
 $(info # common_CPPFLAGS=$(common_CPPFLAGS))
+$(info # common_LDADD=$(common_LDADD))
 $(info # common_LDFLAGS=$(common_LDFLAGS))
-$(info # common_LIBS=$(common_LIBS))
 $(info # CFLAGS=$(CFLAGS))
 $(info # CPPFLAGS=$(CPPFLAGS))
+$(info # LDADD=$(LDADD))
 $(info # LDFLAGS=$(LDFLAGS))
-$(info # LIBS=$(LIBS))
 
 
 ########################################################################
@@ -221,7 +221,7 @@ $(info # LIBS=$(LIBS))
 
 check_PROGRAMS            += issue-6-benchmark
 issue_6_benchmark_SOURCES  = issue-6-benchmark.c
-issue_6_benchmark_LIBS     = -lm
+issue_6_benchmark_LDADD    = -lm
 
 bin_PROGRAMS += beep
 beep_SOURCES  =
@@ -252,7 +252,7 @@ ifneq ($(BEEP_DEBUG_BUILD),)
 beep_SOURCES += beep-driver-noop.c
 endif
 
-beep_LIBS     =
+beep_LDADD    =
 
 beep-log.o : override common_CPPFLAGS += -D_GNU_SOURCE
 # beep-log.clang-o : override CFLAGS_clang += -Wno-format-nonliteral
@@ -261,8 +261,8 @@ beep-log.o : override common_CPPFLAGS += -D_GNU_SOURCE
 # beep_foo_SOURCES  =
 # beep_foo_SOURCES += beep-log.c
 # beep_foo_SOURCES += beep.c
-# beep_foo_LIBS     =
-# beep_foo_LIBS    += -lm
+# beep_foo_LDADD    =
+# beep_foo_LDADD   += -lm
 
 
 ########################################################################
@@ -302,7 +302,7 @@ $(2)_OBJS := $$(foreach src,$$($(2)_SOURCES),$$(if $$(filter %.c,$$(src)),$$(src
 $(1): $$($(2)_OBJS)
 	$$(inhibit-build-command)
 	@echo "LINK     $$@: $$^"
-	$$(CC) -Wl,-Map=$(1).map,--cref $$(common_CFLAGS) $$(CFLAGS) $$(common_LDFLAGS) $$($(2)_LDFLAGS) $$(LDFLAGS) -o $$@ $$^ $$(common_LIBS) $$($(2)_LIBS) $$(LIBS)
+	$$(CC) -Wl,-Map=$(1).map,--cref $$(common_CFLAGS) $$(CFLAGS) $$(common_LDFLAGS) $$($(2)_LDFLAGS) $$(LDFLAGS) -o $$@ $$^ $$(common_LDADD) $$($(2)_LDADD) $$(LDADD)
 
 $$(patsubst %.o,.deps/%.o.dep,$$($(2)_OBJS))):
 

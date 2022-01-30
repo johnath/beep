@@ -23,11 +23,11 @@ While not strictly necessary, using `make install-nobuild` makes sure
 that no compilation happens during the installation phase.
 
 You can also add to the default compiler flags by setting or adding to
-`CFLAGS`, `CPPFLAGS`, `LDFLAGS`, and `LIBS`, by running `make` like
+`CFLAGS`, `CPPFLAGS`, `LDFLAGS`, and `LDADD`, by running `make` like
 e.g.
 
 ```sh
-make CFLAGS="-O -g -flto=auto -ffat-lto-objects" CPPFLAGS="-I/opt/include" LDFLAGS="-f" LIBS="-L/opt/lib"
+make CFLAGS="-O -g -flto=auto -ffat-lto-objects" CPPFLAGS="-I/opt/include" LDFLAGS="-f" LDADD="-L/opt/lib -lmoo"
 ```
 
 or putting those definitions into the `local.mk` file.
