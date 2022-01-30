@@ -571,10 +571,12 @@ distdir = $(PACKAGE_TARNAME)-$(PACKAGE_VERSION)
 .PHONY: dist
 dist: $(distdir).tar.gz
 
+TAR_VERBOSE = --verbose --show-transformed-names
+TAR_VERBOSE =
 $(distdir).tar.gz: $(sorted-dist-files)
 	$(inhibit-build-command)
 	@echo "Creating dist tarball: $@"
-	@$(TAR) --transform='s|^|$(distdir)/|' --auto-compress --create --file=$@ --verbose --show-transformed-names $(sorted-dist-files)
+	@$(TAR) --transform='s|^|$(distdir)/|' --auto-compress --create --file=$@ $(TAR_VERBOSE) $(sorted-dist-files)
 
 .PHONY: distcheck
 distcheck: dist-check-install-uninstall
@@ -644,7 +646,7 @@ todo fixme:
 PACKAGE_TARBASE := $(PACKAGE_TARNAME)-$(shell $(GIT) describe --tags | $(SED) 's/^v\([0-9]\)/\1/')
 .PHONY: git-dist
 git-dist:
-	$(GIT) archive --format=tar.gz --verbose --prefix=$(PACKAGE_TARBASE)/ --output=$(PACKAGE_TARBASE).tar.gz HEAD
+	$(GIT) archive --format=tar.gz --prefix=$(PACKAGE_TARBASE)/ --output=$(PACKAGE_TARBASE).tar.gz HEAD
 
 # Check that the lists of files inside the "git archive" and the "tar"
 # dist tarballs are the same.
