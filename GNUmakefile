@@ -18,9 +18,6 @@
 ########################################################################
 
 
-$(info #=======================================================================)
-
-
 ########################################################################
 # Package metadata
 ########################################################################
@@ -88,6 +85,7 @@ PANDOC    = pandoc
 PYTHON3   = python3
 SED       = sed
 TAR       = tar
+TPUT      = tput
 WC        = wc
 
 DIFF_U    = $(DIFF) -u
@@ -101,10 +99,22 @@ DIFF_U    = $(DIFF) -u
 all: all-local
 
 
+########################################################################
+# Initialize some things for the build system
+########################################################################
+
+
 # Prevent make from using its built-in rules
 .SUFFIXES:
 COMPILE.c = false COMPILE.c
 LINK.c    = false LINK.c
+
+
+# Silent rules (part 1/2)
+#
+# Set V to empty to disable silent rules, non-empty to enable them.
+V=1
+V=
 
 
 # This is for use with the "install-nobuild" target.
@@ -206,6 +216,14 @@ CFLAGS += -save-temps=obj
 -include local.mk
 
 
+ifneq (,$(V))
+$(info #=======================================================================)
+else
+$(info In case of problems, re-running `make' with V=1 for non-silent build might help.)
+endif
+
+
+ifneq (,$(V))
 $(info # common_CFLAGS=$(common_CFLAGS))
 $(info # common_CPPFLAGS=$(common_CPPFLAGS))
 $(info # common_LDADD=$(common_LDADD))
@@ -214,6 +232,7 @@ $(info # CFLAGS=$(CFLAGS))
 $(info # CPPFLAGS=$(CPPFLAGS))
 $(info # LDADD=$(LDADD))
 $(info # LDFLAGS=$(LDFLAGS))
+endif
 
 
 ########################################################################
@@ -282,13 +301,13 @@ BUILT_SOURCES += beep-usage.c
 CLEANFILES    += beep-usage.c
 beep-usage.c: beep-usage.txt
 	$(inhibit-build-command)
-	echo '/* Auto-generated from `$<`. Modify that file instead. */' > $@
-	echo '#include "beep-usage.h"' >> $@
-	echo 'char beep_usage[] =' >> $@
+	printf '%s\n' '/* Auto-generated from `$<`. Modify that file instead. */' > $@
+	printf '%s\n' '#include "beep-usage.h"' >> $@
+	printf '%s\n' 'char beep_usage[] =' >> $@
 	set -e; IFS=""; while read line; do \
 		printf '  "%s\\n"\n' "$${line}" >> $@; \
 	done < $<
-	echo '  ;' >> $@
+	printf '%s\n' '  ;' >> $@
 
 
 ########################################################################
@@ -308,7 +327,7 @@ $(2)_OBJS := $$(foreach src,$$($(2)_SOURCES),$$(if $$(filter %.c,$$(src)),$$(src
 
 $(1): $$($(2)_OBJS)
 	$$(inhibit-build-command)
-	@echo "LINK     $$@: $$^"
+	@$$(call silent-output,LINK,$$@)
 	$$(CC) -Wl,-Map=$(1).map,--cref $$(common_CFLAGS) $$(CFLAGS) $$(common_LDFLAGS) $$($(2)_LDFLAGS) $$(LDFLAGS) -o $$@ $$^ $$(common_LDADD) $$($(2)_LDADD) $$(LDADD)
 
 $$(patsubst %.o,.deps/%.o.dep,$$($(2)_OBJS))):
@@ -323,7 +342,7 @@ $(foreach exec,$(sbin_PROGRAMS), $(eval $(call LINK_RULE,$(exec),$(subst -,_,$(e
 
 %.o: %.c | .deps
 	$(inhibit-build-command)
-	@echo "COMPILE $@: $<"
+	@$(call silent-output,COMPILE,$@)
 	$(CC) -MT $@ -MMD -MP -MF .deps/$*.o.dep $(common_CPPFLAGS) $(CPPFLAGS) $(common_CFLAGS) $(CFLAGS) -o $@ -c $<
 
 .deps:
@@ -367,7 +386,7 @@ noinst_html_DATA += PACKAGING.html
 
 %.html: %.md
 	$(inhibit-build-command)
-	@echo PANDOC $< -o $@
+	@$(call silent-output,PANDOC,$@)
 	$(PANDOC) --from gfm --to html --standalone -M pagetitle="$$($(SED) -n 1p $<)" -M title="" -c pandoc.css $< -o $@
 endif
 
@@ -400,6 +419,7 @@ CLEANFILES += Doxyfile.new
 
 %: %.in GNUmakefile
 	$(inhibit-build-command)
+	@$(call silent-output,SUBSTITUTE,$@)
 	$(SED) $(REPLACEMENTS) < $< > $@.new
 	@if $(EGREP) '@([A-Za-z][A-Za-z0-9_]*)@' $@.new; then \
 		echo "Error: GNUmakefile fails to substitute some of the variables in \`$<'."; \
@@ -411,6 +431,7 @@ CLEANFILES += doxygen.stamp
 .PHONY: doxygen.stamp
 doxygen.stamp: Doxyfile $(wildcard *.c) $(wildcard *.h)
 	$(inhibit-build-command)
+	@$(call silent-output,DOXYGEN,html dox)
 	$(DOXYGEN) $<
 	echo > $@
 
@@ -418,6 +439,7 @@ dox: doxygen.stamp
 
 .PHONY: serve-dox
 serve-dox: dox
+	@$(call silent-output,SERVING,doxygen html files on HTTP server)
 	$(PYTHON3) -m http.server --directory dox/html
 
 EXTRA_DIST += COPYING
@@ -485,6 +507,7 @@ EXTRA_DIST += .github/workflows/beep-build.yml
 
 .PHONY: clean
 clean:
+	@$(call silent-output,CLEANUP,all built files)
 	rm -f $(bin_PROGRAMS) $(sbin_PROGRAMS) $(check_PROGRAMS)
 	rm -f $(CLEANFILES)
 	rm -f *.dep
@@ -508,6 +531,7 @@ DESTDIR =
 
 define make-installdir
 $$(DESTDIR)$(1):
+	@$$(call silent-output,INSTALL,$$@/)
 	$$(INSTALL) -d -m 0755 $$@
 endef
 
@@ -521,6 +545,7 @@ $(foreach dir,$(sort $(foreach d,$(dir-vars),$($(d)))),$(eval $(call make-instal
 define install-file
 installed-files += $$(DESTDIR)$$($(2))/$$(notdir $(3))
 $$(DESTDIR)$$($(2))/$$(notdir $(3)): $(3) | $$(DESTDIR)$$($(2))
+	@$$(call silent-output,INSTALL,$$@)
 	$$(INSTALL) -p -m $(1) $$< $$@
 endef
 
@@ -555,6 +580,7 @@ install-nobuild : inhibit-build-command=@printf "Error: 'make install-nobuild' i
 
 .PHONY: uninstall
 uninstall:
+	@$(call silent-output,UNINSTALL,all installed files)
 	rm -f $(installed-files)
 
 
@@ -575,7 +601,7 @@ TAR_VERBOSE = --verbose --show-transformed-names
 TAR_VERBOSE =
 $(distdir).tar.gz: $(sorted-dist-files)
 	$(inhibit-build-command)
-	@echo "Creating dist tarball: $@"
+	@$(call silent-output,CREATING,dist tarball $@)
 	@$(TAR) --transform='s|^|$(distdir)/|' --auto-compress --create --file=$@ $(TAR_VERBOSE) $(sorted-dist-files)
 
 .PHONY: distcheck
@@ -664,7 +690,22 @@ endif
 
 
 ########################################################################
+# Silent rules (part 2/2)
+########################################################################
+
+$(V).SILENT:
+
+ifeq (,$(V))
+silent-output = printf "%s  %11s %s%s\n" "$(color-bold)" "$(1)" "$(2)" "$(color-normal)"
+else
+silent-output = :
+endif
+
+
+########################################################################
 # End of GNUmakefile
 ########################################################################
 
+ifneq (,$(V))
 $(info #=======================================================================)
+endif
