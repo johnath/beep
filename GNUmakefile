@@ -90,6 +90,12 @@ WC        = wc
 
 DIFF_U    = $(DIFF) -u
 
+# The _DATA and _PROGRAM variants are GNU makefile convention.
+# The _DIR variant is our idea.
+INSTALL_DIR     = $(INSTALL) -m 0755 -d
+INSTALL_DATA    = $(INSTALL) -m 0644 -p
+INSTALL_PROGRAM = $(INSTALL) -m 0755 -p
+
 
 ########################################################################
 # This needs to be the first rule
@@ -532,21 +538,21 @@ DESTDIR =
 define define-install-dir-rule
 $$(DESTDIR)$(1):
 	@$$(call silent-output,INSTALL,$$@/)
-	$$(INSTALL) -d -m 0755 $$@
+	$$(INSTALL_DIR) $$@
 endef
 
 $(foreach dir,$(sort $(foreach d,$(dir-vars),$($(d)))),$(eval $(call define-install-dir-rule,$(dir))))
 
 
-# define-install-file-rule target-accu-var filemode dirvar filetoinstall
+# define-install-file-rule target-accu-var installvar dirvar filetoinstall
 #
 # Example:
-#   $(eval $(call define-install-file-rule,0644,htmldir,html/foobar.html))
+#   $(eval $(call define-install-file-rule,INSTALL_DATA,htmldir,html/foobar.html))
 define define-install-file-rule
 installed-files += $$(DESTDIR)$$($(2))/$$(notdir $(3))
 $$(DESTDIR)$$($(2))/$$(notdir $(3)): $(3) | $$(DESTDIR)$$($(2))
 	@$$(call silent-output,INSTALL,$$@)
-	$$(INSTALL) -p -m $(1) $$< $$@
+	$$($(1)) $$< $$@
 endef
 
 
@@ -557,7 +563,7 @@ endef
 #   $(eval $(call define-install-fileset-rules,html_DATA,html))
 define define-install-fileset-rules
 ifneq (,$$($(1)))
-$$(foreach f,$$($(1)),$$(eval $$(call define-install-file-rule,$$(if $$(filter PROGRAMS SCRIPTS,$$(lastword $$(subst _, ,$(1)))),0755,0644),$$(firstword $$(subst _, ,$(1)))dir,$$(f))))
+$$(foreach f,$$($(1)),$$(eval $$(call define-install-file-rule,$$(if $$(filter PROGRAMS SCRIPTS,$$(lastword $$(subst _, ,$(1)))),INSTALL_PROGRAM,INSTALL_DATA),$$(firstword $$(subst _, ,$(1)))dir,$$(f))))
 endif
 endef
 
