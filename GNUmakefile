@@ -343,9 +343,10 @@ CLEANFILES       += DEVELOPMENT.html
 CLEANFILES       += INSTALL.html
 CLEANFILES       += PACKAGING.html
 
+EXTRA_DIST       += pandoc.css
+
 ifeq (yes,$(shell if $(PANDOC) --version > /dev/null 2>&1; then echo yes; else echo no; fi))
 
-EXTRA_DIST       += pandoc.css
 html_DATA        += pandoc.css
 
 html_DATA        += CREDITS.html
