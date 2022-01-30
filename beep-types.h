@@ -28,22 +28,28 @@
 /**
  * Whether to to delay after the current repetition set of tones.
  */
-typedef enum
-    {
-     END_DELAY_NO = 0,
-     END_DELAY_YES = 1,
-    } end_delay_E;
+typedef enum {
+    END_DELAY_NO = 0,
+    END_DELAY_YES = 1,
+} end_delay_E;
 
 
 /**
  * Whether to and how to react to data from stdin.
  */
-typedef enum
-    {
-     STDIN_BEEP_NONE = 0,
-     STDIN_BEEP_LINE = 1,
-     STDIN_BEEP_CHAR = 2,
-    } stdin_beep_E;
+typedef enum {
+    STDIN_BEEP_NONE = 0,
+    STDIN_BEEP_LINE = 1,
+    STDIN_BEEP_CHAR = 2,
+} stdin_beep_E;
 
 
 #endif /* !defined(BEEP_TYPES_H) */
+
+
+/*
+ * Local Variables:
+ * c-basic-offset: 4
+ * indent-tabs-mode: nil
+ * End:
+ */
