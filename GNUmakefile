@@ -74,9 +74,12 @@ dir-vars += htmldir
 # SED="busybox sed", or to disable building HTML files from the
 # markdown files you can run with PANDOC="false".
 
+CMP       = cmp
+DIFF      = diff
 DOT       = dot
 DOXYGEN   = doxygen
 EGREP     = $(GREP) -E
+FIND      = find
 GIT       = git
 GREP      = grep
 INSTALL   = install
@@ -85,6 +88,9 @@ PANDOC    = pandoc
 PYTHON3   = python3
 SED       = sed
 TAR       = tar
+WC        = wc
+
+DIFF_U    = $(DIFF) -u
 
 
 ########################################################################
@@ -296,6 +302,7 @@ beep-usage.c: beep-usage.txt
 # CALL: LINK_RULE <executable> <executable_as_varname_part> <dircomponent>
 # Defines the per-executable rules.
 define LINK_RULE
+CLEANFILES += $(1).map
 dist-files += $$($(2)_SOURCES)
 $(2)_OBJS := $$(foreach src,$$($(2)_SOURCES),$$(if $$(filter %.c,$$(src)),$$(src:%.c=%.o),$$(if $$(filter %.h,$$(src)),,$$(error Unhandled source type in $(2)_SOURCES: $$(src)))))
 
@@ -569,6 +576,49 @@ $(distdir).tar.gz: $(sorted-dist-files)
 	@echo "Creating dist tarball: $@"
 	@$(TAR) --transform='s|^|$(distdir)/|' --auto-compress --create --file=$@ --verbose --show-transformed-names $(sorted-dist-files)
 
+.PHONY: distcheck
+distcheck: dist-check-install-uninstall
+
+# Check that this distribution satisfies a few conditions, such as
+#   * After "make" and "make clean", the source tree is the same.
+#   * After "make install" and "make uninstall", there are no files
+#     left installed.
+#   * After "make", "make install" does not need to build anything,
+#     i.e. "make install-nobuild" succeeds after "make".
+.PHONY: dist-check-install-uninstall
+dist-check-install-uninstall: $(distdir).tar.gz
+	rm -rf __tmp
+	mkdir __tmp
+	cd __tmp && $(TAR) xf ../$(distdir).tar.gz
+	echo "prefix = ${PWD}/__tmp/_prefix" > __tmp/$(distdir)/local.mk
+	(cd __tmp/$(distdir) && $(FIND) . -type f) | env LC_ALL=C sort > __tmp/before-build.filelist
+	cd __tmp/$(distdir) && $(MAKE)
+	cd __tmp/$(distdir) && $(MAKE) check
+	cd __tmp/$(distdir) && $(MAKE) install-nobuild
+	(cd __tmp/_prefix && $(FIND) . -type f) | env LC_ALL=C sort > __tmp/after-install.filelist
+	@n="$$($(WC) -l < __tmp/after-install.filelist)"; \
+	if test "$$n" -eq 0; then \
+	  echo "Error: Found no installed files"; \
+	  exit 1; \
+	elif test "$$n" -gt 10; then \
+	  echo "Found $${n} installed files: good."; \
+	else \
+	  echo "Error: Found only $${n} installed files"; \
+	  exit 1; \
+	fi
+	cd __tmp/$(distdir) && $(MAKE) uninstall
+	(cd __tmp/_prefix && $(FIND) . -type f) | env LC_ALL=C sort > __tmp/after-uninstall.filelist
+	@n="$$($(WC) -l < __tmp/after-uninstall.filelist)"; \
+	if test "$$n" -gt 0; then \
+	  echo "Error: Found $${n} left over installed files after uninstall"; \
+	  exit 1; \
+	else \
+	  echo "Found no installed files after uninstall"; \
+	fi
+	cd __tmp/$(distdir) && $(MAKE) clean
+	(cd __tmp/$(distdir) && $(FIND) . -type f) | env LC_ALL=C sort > __tmp/after-clean.filelist
+	cd __tmp && $(DIFF_U) before-build.filelist after-clean.filelist
+
 
 ########################################################################
 # Development helpers
@@ -595,6 +645,17 @@ PACKAGE_TARBASE := $(PACKAGE_TARNAME)-$(shell $(GIT) describe --tags | $(SED) 's
 .PHONY: git-dist
 git-dist:
 	$(GIT) archive --format=tar.gz --verbose --prefix=$(PACKAGE_TARBASE)/ --output=$(PACKAGE_TARBASE).tar.gz HEAD
+
+# Check that the lists of files inside the "git archive" and the "tar"
+# dist tarballs are the same.
+.PHONY: compare-tarballs
+distcheck: compare-tarballs
+compare-tarballs: dist git-dist
+	rm -rf tarball-dist tarball-git-dist
+	mkdir tarball-dist     && cd tarball-dist     && $(TAR) xf ../$(distdir).tar.gz
+	mkdir tarball-git-dist && cd tarball-git-dist && $(TAR) xf ../$(PACKAGE_TARBASE).tar.gz
+	diff -ruN tarball-git-dist/$(PACKAGE_TARBASE) tarball-dist/$(distdir)
+	rm -rf tarball-dist tarball-git-dist
 
 endif
 endif

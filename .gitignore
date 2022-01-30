@@ -32,6 +32,9 @@
 /dox/
 /html/
 /*.html
+/__tmp/
+/tarball-dist/
+/tarball-git-dist/
 /beep-*.tar.gz
 /beep-*.tar.xz
 
