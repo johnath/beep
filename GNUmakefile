@@ -297,7 +297,7 @@ beep-usage.c: beep-usage.txt
 # Defines the per-executable rules.
 define LINK_RULE
 dist-files += $$($(2)_SOURCES)
-$(2)_OBJS := $$(foreach src,$$($(2)_SOURCES),$$(if $$(filter %.c,$$(src)),$$(src:%.c=%.o),$$(if $$(filter %.h,$$(src)),,$$(error Found unhandled source $$(src) in $(2)_SOURCES))))
+$(2)_OBJS := $$(foreach src,$$($(2)_SOURCES),$$(if $$(filter %.c,$$(src)),$$(src:%.c=%.o),$$(if $$(filter %.h,$$(src)),,$$(error Unhandled source type in $(2)_SOURCES: $$(src)))))
 
 $(1): $$($(2)_OBJS)
 	$$(inhibit-build-command)
