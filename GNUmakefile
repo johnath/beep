@@ -269,10 +269,11 @@ beep-log.o : override common_CPPFLAGS += -D_GNU_SOURCE
 # Built sources
 ########################################################################
 
-EXTRA_DIST += beep-usage.txt.in
-CLEANFILES += beep-usage.txt
+EXTRA_DIST    += beep-usage.txt.in
+CLEANFILES    += beep-usage.txt
 
-CLEANFILES += beep-usage.c
+BUILT_SOURCES += beep-usage.c
+CLEANFILES    += beep-usage.c
 beep-usage.c: beep-usage.txt
 	$(inhibit-build-command)
 	echo '/* Auto-generated from `$<`. Modify that file instead. */' > $@
@@ -555,9 +556,7 @@ uninstall:
 
 dist-files += $(EXTRA_DIST)
 
-# TODO: Should we implement nodist_beep_SOURCES instead of this
-#       filter-out hack for the generated beep-usage.c file?
-sorted-dist-files := $(filter-out beep-usage.c,$(sort $(dist-files)))
+sorted-dist-files := $(filter-out $(BUILT_SOURCES),$(sort $(dist-files)))
 
 distdir = $(PACKAGE_TARNAME)-$(PACKAGE_VERSION)
 
