@@ -228,11 +228,7 @@ int run_cycles(const unsigned long repeats,
         close(fd);
     }
 
-    if (counters[false] > 0) {
-        return EXIT_FAILURE;
-    } else {
-        return EXIT_SUCCESS;
-    }
+    return (counters[false] > 0) ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
 
