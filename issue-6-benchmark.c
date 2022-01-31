@@ -20,6 +20,10 @@
  *
  * Usage: See print_usage() function just below the "#include"s.
  *
+ * Build command (also works with all warnings on, -Werror, and clang):
+ *
+ *     $ gcc -o issue-6-benchmark issue-6-benchmark.c -lm
+ *
  * @{
  *
  */
