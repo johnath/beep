@@ -626,9 +626,9 @@ dist-check-install-uninstall: $(distdir).tar.gz
 	cd __tmp && $(TAR) xf ../$(distdir).tar.gz
 	echo "prefix = ${PWD}/__tmp/_prefix" > __tmp/$(distdir)/local.mk
 	(cd __tmp/$(distdir) && $(FIND) . -type f) | env LC_ALL=C sort > __tmp/before-build.filelist
-	cd __tmp/$(distdir) && $(MAKE)
-	cd __tmp/$(distdir) && $(MAKE) check
-	cd __tmp/$(distdir) && $(MAKE) install-nobuild
+	$(MAKE) -C __tmp/$(distdir)
+	$(MAKE) -C __tmp/$(distdir) check
+	$(MAKE) -C __tmp/$(distdir) install-nobuild
 	(cd __tmp/_prefix && $(FIND) . -type f) | env LC_ALL=C sort > __tmp/after-install.filelist
 	@n="$$($(WC) -l < __tmp/after-install.filelist)"; \
 	if test "$$n" -eq 0; then \
@@ -640,7 +640,7 @@ dist-check-install-uninstall: $(distdir).tar.gz
 	  echo "Error: Found only $${n} installed files"; \
 	  exit 1; \
 	fi
-	cd __tmp/$(distdir) && $(MAKE) uninstall
+	$(MAKE) -C __tmp/$(distdir) uninstall
 	(cd __tmp/_prefix && $(FIND) . -type f) | env LC_ALL=C sort > __tmp/after-uninstall.filelist
 	@n="$$($(WC) -l < __tmp/after-uninstall.filelist)"; \
 	if test "$$n" -gt 0; then \
@@ -649,7 +649,7 @@ dist-check-install-uninstall: $(distdir).tar.gz
 	else \
 	  echo "Found no installed files after uninstall"; \
 	fi
-	cd __tmp/$(distdir) && $(MAKE) clean
+	$(MAKE) -C __tmp/$(distdir) clean
 	(cd __tmp/$(distdir) && $(FIND) . -type f) | env LC_ALL=C sort > __tmp/after-clean.filelist
 	cd __tmp && $(DIFF_U) before-build.filelist after-clean.filelist
 
