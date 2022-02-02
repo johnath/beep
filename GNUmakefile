@@ -668,7 +668,7 @@ todo fixme:
 	$(GIT) grep -n -E '(TODO:|FIXME:|\\todo\s|@todo\s)'
 
 # Generate a kind of dist tarball to help with preparing for release
-PACKAGE_TARBASE := $(PACKAGE_TARNAME)-$(shell $(GIT) describe --tags | $(SED) 's/^v\([0-9]\)/\1/')
+PACKAGE_TARBASE = $(eval PACKAGE_TARBASE := $$(PACKAGE_TARNAME)-$$(shell $$(GIT) describe --tags | $$(SED) 's/^v\([0-9]\)/\1/'))$(PACKAGE_TARBASE)
 .PHONY: git-dist
 git-dist:
 	$(GIT) archive --format=tar.gz --prefix=$(PACKAGE_TARBASE)/ --output=$(PACKAGE_TARBASE).tar.gz HEAD
