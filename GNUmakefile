@@ -154,13 +154,13 @@ $(1) += $$(if $$(shell if $$(CC) $$(patsubst -Wno-%,-W%,$(2)) -x c -o compile-ch
 endef
 
 # This might be useful or not.
-CFLAGS   :=
+CFLAGS    =
 CPPFLAGS  =
 LDFLAGS   =
 LDADD     =
 
 # Flags common to all executable targets
-common_CFLAGS   :=
+common_CFLAGS    =
 common_CPPFLAGS  =
 common_LDFLAGS   =
 common_LDADD     =
