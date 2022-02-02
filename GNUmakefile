@@ -115,13 +115,6 @@ COMPILE.c = false COMPILE.c
 LINK.c    = false LINK.c
 
 
-# Silent rules (part 1/2)
-#
-# Set V to empty to disable silent rules, non-empty to enable them.
-V=1
-V=
-
-
 ########################################################################
 # Variables to add to later
 ########################################################################
@@ -210,7 +203,7 @@ CFLAGS += -save-temps=obj
 ifneq (,$(V))
 $(info #=======================================================================)
 else
-$(info In case of problems, re-running `make' with V=1 for non-silent build might help.)
+$(info In case of build problems, try running `make' with V=1 to help find the cause.)
 endif
 
 
@@ -318,7 +311,7 @@ $(2)_OBJS := $$(foreach src,$$($(2)_SOURCES),$$(if $$(filter %.c,$$(src)),$$(src
 
 $(1): $$($(2)_OBJS)
 	$$(inhibit-build-command)
-	@$$(call silent-output,LINK,$$@)
+	@$$(call print-rule-description,LINK,$$@)
 	$$(CC) -Wl,-Map=$(1).map,--cref $$(common_CFLAGS) $$(CFLAGS) $$(common_LDFLAGS) $$($(2)_LDFLAGS) $$(LDFLAGS) -o $$@ $$^ $$(common_LDADD) $$($(2)_LDADD) $$(LDADD)
 
 $$(patsubst %.o,.deps/%.o.dep,$$($(2)_OBJS))):
@@ -333,7 +326,7 @@ $(foreach exec,$(sbin_PROGRAMS), $(eval $(call define-link-rule,$(exec),$(subst 
 
 %.o: %.c | .deps
 	$(inhibit-build-command)
-	@$(call silent-output,COMPILE,$@)
+	@$(call print-rule-description,COMPILE,$@)
 	$(CC) -MT $@ -MMD -MP -MF .deps/$*.o.dep $(common_CPPFLAGS) $(CPPFLAGS) $(common_CFLAGS) $(CFLAGS) -o $@ -c $<
 
 .deps:
@@ -377,7 +370,7 @@ noinst_html_DATA += PACKAGING.html
 
 %.html: %.md
 	$(inhibit-build-command)
-	@$(call silent-output,PANDOC,$@)
+	@$(call print-rule-description,PANDOC,$@)
 	$(PANDOC) --from gfm --to html --standalone -M pagetitle="$$($(SED) -n 1p $<)" -M title="" -c pandoc.css $< -o $@
 endif
 
@@ -410,7 +403,7 @@ CLEANFILES += Doxyfile.new
 
 %: %.in GNUmakefile
 	$(inhibit-build-command)
-	@$(call silent-output,SUBSTITUTE,$@)
+	@$(call print-rule-description,SUBSTITUTE,$@)
 	$(SED) $(REPLACEMENTS) < $< > $@.new
 	@if $(EGREP) '@([A-Za-z][A-Za-z0-9_]*)@' $@.new; then \
 		echo "Error: GNUmakefile fails to substitute some of the variables in \`$<'."; \
@@ -422,7 +415,7 @@ CLEANFILES += doxygen.stamp
 .PHONY: doxygen.stamp
 doxygen.stamp: Doxyfile $(wildcard *.c) $(wildcard *.h)
 	$(inhibit-build-command)
-	@$(call silent-output,DOXYGEN,html dox)
+	@$(call print-rule-description,DOXYGEN,html dox)
 	$(DOXYGEN) $<
 	echo > $@
 
@@ -430,7 +423,7 @@ dox: doxygen.stamp
 
 .PHONY: serve-dox
 serve-dox: dox
-	@$(call silent-output,SERVING,doxygen html files on HTTP server)
+	@$(call print-rule-description,SERVING,doxygen html files on HTTP server)
 	$(PYTHON3) -m http.server --directory dox/html
 
 EXTRA_DIST += COPYING
@@ -482,6 +475,7 @@ check-targets: $(check_TARGETS)
 .PHONY: check
 check: tests/run-tests beep $(check_TARGETS)
 	$(inhibit-build-command)
+	@$(call print-rule-description,CHECK,$(PWD)/beep)
 	env PACKAGE_VERSION="${PACKAGE_VERSION}" \
 	/bin/bash $< $(<D) $(PWD)/beep
 
@@ -498,7 +492,7 @@ EXTRA_DIST += .github/workflows/beep-build.yml
 
 .PHONY: clean
 clean:
-	@$(call silent-output,CLEANUP,all built files)
+	@$(call print-rule-description,CLEANUP,all built files)
 	rm -f $(bin_PROGRAMS) $(sbin_PROGRAMS) $(check_PROGRAMS)
 	rm -f $(CLEANFILES)
 	rm -f *.dep
@@ -522,7 +516,7 @@ DESTDIR =
 
 define define-install-dir-rule
 $$(DESTDIR)$(1):
-	@$$(call silent-output,INSTALL,$$@/)
+	@$$(call print-rule-description,INSTALL,$$@/)
 	$$(INSTALL_DIR) $$@
 endef
 
@@ -538,7 +532,7 @@ $(foreach dir,$(sort $(foreach d,$(dir-vars),$($(d)))),$(eval $(call define-inst
 define define-install-file-rule
 installed-files += $$(DESTDIR)$$($(2))/$$(notdir $(3))
 $$(DESTDIR)$$($(2))/$$(notdir $(3)): $(3) | $$(DESTDIR)$$($(2))
-	@$$(call silent-output,INSTALL,$$@)
+	@$$(call print-rule-description,INSTALL,$$@)
 	$$($(1)) $$< $$@
 endef
 
@@ -587,7 +581,7 @@ install-nobuild : inhibit-build-command=@printf "Error: 'make install-nobuild' i
 
 .PHONY: uninstall
 uninstall:
-	@$(call silent-output,UNINSTALL,all installed files)
+	@$(call print-rule-description,UNINSTALL,all installed files)
 	rm -f $(installed-files)
 
 
@@ -608,7 +602,7 @@ TAR_VERBOSE = --verbose --show-transformed-names
 TAR_VERBOSE =
 $(distdir).tar.gz: $(sorted-dist-files)
 	$(inhibit-build-command)
-	@$(call silent-output,CREATING,dist tarball $@)
+	@$(call print-rule-description,DIST TARBALL,$@)
 	@$(TAR) --transform='s|^|$(distdir)/|' --auto-compress --create --file=$@ $(TAR_VERBOSE) $(sorted-dist-files)
 
 .PHONY: distcheck
@@ -622,6 +616,7 @@ distcheck: dist-check-install-uninstall
 #     i.e. "make install-nobuild" succeeds after "make".
 .PHONY: dist-check-install-uninstall
 dist-check-install-uninstall: $(distdir).tar.gz
+	@$(call print-rule-description,DIST CHECK,all and clean, install and uninstall)
 	rm -rf __tmp
 	mkdir __tmp
 	cd __tmp && $(TAR) xf ../$(distdir).tar.gz
@@ -679,6 +674,7 @@ todo fixme:
 PACKAGE_TARBASE = $(eval PACKAGE_TARBASE := $$(PACKAGE_TARNAME)-$$(shell $$(GIT) describe --tags | $$(SED) 's/^v\([0-9]\)/\1/'))$(PACKAGE_TARBASE)
 .PHONY: git-dist
 git-dist:
+	@$(call print-rule-description,GIT ARCHIVE,$(PACKAGE_TARBASE).tar.gz)
 	$(GIT) archive --format=tar.gz --prefix=$(PACKAGE_TARBASE)/ --output=$(PACKAGE_TARBASE).tar.gz HEAD
 
 # Check that the lists of files inside the "git archive" and the "tar"
@@ -686,6 +682,7 @@ git-dist:
 .PHONY: compare-tarballs
 distcheck: compare-tarballs
 compare-tarballs: dist git-dist
+	@$(call print-rule-description,COMPARE,contents of git archive and dist tarball)
 	rm -rf tarball-dist tarball-git-dist
 	mkdir tarball-dist     && cd tarball-dist     && $(TAR) xf ../$(distdir).tar.gz
 	mkdir tarball-git-dist && cd tarball-git-dist && $(TAR) xf ../$(PACKAGE_TARBASE).tar.gz
@@ -697,15 +694,36 @@ endif
 
 
 ########################################################################
-# Silent rules (part 2/2)
+# Print rule descriptions and silent rules
+#
+# This is a bit more complex than mad scientist's simple silent
+# rules[1]:
+#
+#   * In silent mode, we print aligned descriptions for each target
+#     being built.
+#
+#   * In non-silent mode, we print a description of the recipe before
+#     each recipe is actually run, but highlighted a bit to stand out
+#     from the endless sequence of recipe command text: The description
+#     line always starts with a "#", and on a TTY, it will be printed
+#     in bold.
+#
+# [1]: http://make.mad-scientist.net/managing-recipe-echoing/
 ########################################################################
 
-$(V).SILENT:
+# Set V to empty to disable silent rules, non-empty to enable them.
+V=1
+V=
+
+# Note that we cannot use "test -t 1" inside a $(shell ) command, as
+# the $(shell) will capture stdout into a variable, so the "test -t 1"
+# will always test negative.
 
 ifeq (,$(V))
-silent-output = printf "%s  %11s %s%s\n" "$(color-bold)" "$(1)" "$(2)" "$(color-normal)"
+.SILENT:
+print-rule-description = printf "%12s %s\n" "$(1)" "$(2)"
 else
-silent-output = :
+print-rule-description = if test -t 1; then cb="$$($(TPUT) bold)"; cn="$$($(TPUT) sgr0)"; fi; printf "%s\# %s %s%s\n" "$$cb" "$(1)" "$(2)" "$$cn"
 endif
 
 
