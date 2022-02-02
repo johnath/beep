@@ -43,15 +43,6 @@ docdir      = $(datarootdir)/doc/$(PACKAGE_TARNAME)
 contribdir  = $(docdir)/contrib
 htmldir     = $(docdir)
 
-dir-vars  =
-dir-vars += bindir
-dir-vars += sbindir
-dir-vars += datarootdir
-dir-vars += mandir
-dir-vars += man1dir
-dir-vars += docdir
-dir-vars += contribdir
-dir-vars += htmldir
 
 # TODO: We might want to autodetect which kind of $(docdir) is used on
 #       this system.  Until then, people will just need to set
@@ -540,6 +531,8 @@ $$(DESTDIR)$(1):
 	@$$(call silent-output,INSTALL,$$@/)
 	$$(INSTALL_DIR) $$@
 endef
+
+dir-vars = $(sort $(foreach varname,$(sort $(.VARIABLES)),$(if $(filter %dir,$(varname)),$(varname))))
 
 $(foreach dir,$(sort $(foreach d,$(dir-vars),$($(d)))),$(eval $(call define-install-dir-rule,$(dir))))
 
