@@ -114,20 +114,6 @@ V=1
 V=
 
 
-# This is for use with the "install-nobuild" target.
-#
-# For every recipe which creates/modifies a file in the build tree,
-# use $(inhibit-build-command) as the first command.
-#
-# The default value of @: produces no output and succeeds, so that the
-# further recipe lines can actually do the work.
-#
-# If you want to disable build, set this to "false" or "false
-# 'comment'", so that each invoked build rule will fail instantly
-# before doing any actual work.
-inhibit-build-command = @:
-
-
 ########################################################################
 # Variables to add to later
 ########################################################################
@@ -572,6 +558,20 @@ $(eval $(call define-install-fileset-rules,contrib_SCRIPTS))
 
 .PHONY: install
 install: all $(installed-files)
+
+
+# This is for use with the "install-nobuild" target.
+#
+# For every recipe which creates/modifies a file in the build tree,
+# use $(inhibit-build-command) as the first command.
+#
+# The default value of @: produces no output and succeeds, so that the
+# further recipe lines can actually do the work.
+#
+# If you want to disable build, set this to "false" or "false
+# 'comment'", so that each invoked build rule will fail instantly
+# before doing any actual work.
+inhibit-build-command = @:
 
 .PHONY: install-nobuild
 install-nobuild: install
