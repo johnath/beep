@@ -285,6 +285,7 @@ BUILT_SOURCES += beep-usage.c
 CLEANFILES    += beep-usage.c
 beep-usage.c: beep-usage.txt
 	$(inhibit-build-command)
+	@$(call print-rule-description,CONVERT,$@,$<)
 	printf '%s\n' '/* Auto-generated from `$<`. Modify that file instead. */' > $@
 	printf '%s\n' '#include "beep-usage.h"' >> $@
 	printf '%s\n' 'char beep_usage[] =' >> $@
@@ -326,7 +327,7 @@ $(foreach exec,$(sbin_PROGRAMS), $(eval $(call define-link-rule,$(exec),$(subst 
 
 %.o: %.c | .deps
 	$(inhibit-build-command)
-	@$(call print-rule-description,COMPILE,$@)
+	@$(call print-rule-description,COMPILE,$@,$<)
 	$(CC) -MT $@ -MMD -MP -MF .deps/$*.o.dep $(common_CPPFLAGS) $(CPPFLAGS) $(common_CFLAGS) $(CFLAGS) -o $@ -c $<
 
 .deps:
@@ -370,7 +371,7 @@ noinst_html_DATA += PACKAGING.html
 
 %.html: %.md
 	$(inhibit-build-command)
-	@$(call print-rule-description,PANDOC,$@)
+	@$(call print-rule-description,PANDOC,$@,$<)
 	$(PANDOC) --from gfm --to html --standalone -M pagetitle="$$($(SED) -n 1p $<)" -M title="" -c pandoc.css $< -o $@
 endif
 
@@ -403,7 +404,7 @@ CLEANFILES += Doxyfile.new
 
 %: %.in GNUmakefile
 	$(inhibit-build-command)
-	@$(call print-rule-description,SUBSTITUTE,$@)
+	@$(call print-rule-description,SUBSTITUTE,$@,$<)
 	$(SED) $(REPLACEMENTS) < $< > $@.new
 	@if $(EGREP) '@([A-Za-z][A-Za-z0-9_]*)@' $@.new; then \
 		echo "Error: GNUmakefile fails to substitute some of the variables in \`$<'."; \
@@ -423,7 +424,7 @@ dox: doxygen.stamp
 
 .PHONY: serve-dox
 serve-dox: dox
-	@$(call print-rule-description,SERVING,doxygen html files on HTTP server)
+	@$(call print-rule-description,SERVING,doxygen html files,dox/html)
 	$(PYTHON3) -m http.server --directory dox/html
 
 EXTRA_DIST += COPYING
@@ -721,9 +722,16 @@ V=
 
 ifeq (,$(V))
 .SILENT:
-print-rule-description = printf "%12s %s\n" "$(1)" "$(2)"
+print-rule-description = $(or\
+$(if $(3),printf "%12s %-22s FROM %s\n" "$(1)" "$(2)" "$(3)"),\
+$(if $(2),printf "%12s %s\n" "$(1)" "$(2)"),\
+$(error $(0) requires at least two parameters))
 else
-print-rule-description = if test -t 1; then cb="$$($(TPUT) bold)"; cn="$$($(TPUT) sgr0)"; fi; printf "%s\# %s %s%s\n" "$$cb" "$(1)" "$(2)" "$$cn"
+set-color-vars = if test -t 1; then cb="$$($(TPUT) bold)"; cn="$$($(TPUT) sgr0)"; fi
+print-rule-description = $(set-color-vars); $(or\
+$(if $(3),printf "%s# %s %s FROM %s%s\n" "$$cb" "$(1)" "$(2)" "$(3)" "$$cn"),\
+$(if $(2),printf "%s# %s %s%s\n" "$$cb" "$(1)" "$(2)" "$$cn"),\
+$(error $(0) requires at least two parameters))
 endif
 
 
