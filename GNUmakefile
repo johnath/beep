@@ -14,7 +14,15 @@
 # Automake (e.g. bin_PROGRAMS variables), but uses features specific
 # to GNU make to implement those Automake like features.
 #
+# This GNUmakefile makes extensive use of GNU make features and some
+# tricks for using GNU make, such as
+#   * Advanced Auto Dependency Generation[2]
+#   * Deferred Simple Variable Expansion[3]
+#
 # [1]: https://www.gnu.org/prep/standards/html_node/Makefile-Conventions.html
+# [2]: http://make.mad-scientist.net/papers/advanced-auto-dependency-generation/
+# [3]: http://make.mad-scientist.net/deferred-simple-variable-expansion/
+#
 ########################################################################
 
 
