@@ -416,7 +416,7 @@ CLEANFILES += doxygen.stamp
 doxygen.stamp: Doxyfile $(wildcard *.c) $(wildcard *.h)
 	$(inhibit-build-command)
 	@$(call print-rule-description,DOXYGEN,html dox)
-	$(DOXYGEN) $<
+	cat $< $(if $(V),,| $(SED) -e 's!^QUIET *=.*!QUIET = YES!') | $(DOXYGEN) -
 	echo > $@
 
 dox: doxygen.stamp
