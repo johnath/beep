@@ -24,15 +24,27 @@
 *.lst
 *.gcc-lst
 /beep.1
+/compile-check
 
 # The compressed man page
 /beep.1.gz
+
+# autoconf related stuff
+/aclocal.m4
+/auto-aux/
+/auto-config.h.in
+/autom4te.cache/
+/config.log
+/config.status
+/configure
+/Makefile.in
 
 # Built stuff
 /dox/
 /html/
 /*.html
 /__tmp/
+/stamp-h
 /tarball-dist/
 /tarball-git-dist/
 /beep-*.tar.gz

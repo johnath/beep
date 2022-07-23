@@ -6,9 +6,10 @@ export LC_ALL=C
 
 set -ex
 
-# We need to remove the built files from the $(srcdir) in order to
-# make the VPATH search work properly for the test builds.
-make clean
+if test -f Makefile
+then
+    make distclean
+fi
 
 while read id cc cflags
 do
@@ -19,24 +20,16 @@ do
     (
 	mkdir "$builddir"
 	cd "$builddir"
-	srcdir="${abs_top_srcdir}"
-	cat>local.mk<<EOF
-VPATH    = $srcdir
-srcdir   = $srcdir
-CC       = $cc
-CFLAGS   = $cflags
-CPPFLAGS = -I. -I$srcdir
-prefix   = $prefix
-EOF
+	../configure --prefix="$prefix" CC="$cc"
 
 	run_make() {
-	    make -j -f "$srcdir/GNUmakefile" "$@"
+	    make -j$(nproc) -l$(nproc) CFLAGS="$cflags" "$@"
 	}
 
 	run_make
 	run_make check
 
-	run_make install-nobuild
+	run_make install
 	(cd "$prefix" && find . -type f | sort) > after-installation.txt
 	nl after-installation.txt
 	if test -s after-installation.txt; then
@@ -55,9 +48,6 @@ EOF
 	fi
     )
 done <<EOF
-native-clang	clang	-Dbuilt_with="clang"
-native-gcc	gcc	-Dbuilt_with="gcc"
+native-clang	clang	-O2 -g -Wall -Wextra -Wmost -Werror -Wno-padded
+native-gcc	gcc	-O2 -g -fanalyzer -fsanitize=undefined -Wall -Wextra -Werror
 EOF
-
-# Note that at this time, the cflags part of the parameter list is
-# only used as a placeholder.

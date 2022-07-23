@@ -15,9 +15,14 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    - name: create local.mk
+    - name: apt-get
       run: |
-        echo "prefix = ${PWD}/_root" > local.mk
+        sudo apt-get update
+        sudo apt-get install -y automake autoconf
+    - name: autoreconf
+      run: autoreconf -vis
+    - name: configure
+      run: ./configure --prefix="${PWD}/_root"
     - name: make
       run: make
     - name: 'beep --help'
@@ -26,7 +31,9 @@ jobs:
         diff -u beep-usage.txt beep-usage.from--help
     - name: 'make check'
       run: make check
-    - name: 'make install-nobuild'
-      run: make install-nobuild
+    - name: 'make install'
+      run: make install
     - name: 'list installed files'
       run: (cd "$PWD/_root" && ls -l $(find . -type f | env LC_ALL=C sort) | nl)
+    - name: 'make distcheck'
+      run: make distcheck
