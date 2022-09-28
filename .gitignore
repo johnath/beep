@@ -38,6 +38,7 @@
 /config.status
 /configure
 /Makefile.in
+/GNUmakefile
 
 # Built stuff
 /dox/
